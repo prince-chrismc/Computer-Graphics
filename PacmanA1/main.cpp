@@ -24,13 +24,44 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 1.0f, 0.0f);
-const glm::vec3 eye(0.0f, 0.0f, 3.0f);
+const glm::vec3 eye(2.0f, 2.0f, 3.0f);
+
+// rotation globals
+static GLfloat view_rotx = 20.f, view_roty = 30.f, view_rotz = 0.f;
 
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	std::cout << key << std::endl;	
+	std::cout << key << std::endl;
+
+	if (action != GLFW_PRESS) return;
+
+	switch (key) {
+	case GLFW_KEY_Z:
+		if (mode & GLFW_MOD_SHIFT)
+			view_rotz -= 5.0;
+		else
+			view_rotz += 5.0;
+		break;
+	case GLFW_KEY_ESCAPE:
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+		break;
+	case GLFW_KEY_UP:
+		view_rotx += 5.0;
+		break;
+	case GLFW_KEY_DOWN:
+		view_rotx -= 5.0;
+		break;
+	case GLFW_KEY_LEFT:
+		view_roty += 5.0;
+		break;
+	case GLFW_KEY_RIGHT:
+		view_roty -= 5.0;
+		break;
+	default:
+		return;
+	};
 }
 
 // The MAIN function, from here we start the application and run the game loop
@@ -184,7 +215,7 @@ int main()
 
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
-	triangle_scale = glm::vec3(1.0f);
+	triangle_scale = glm::vec3(0.5f); // cmc-edit : this scales the view
 
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
 	GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
