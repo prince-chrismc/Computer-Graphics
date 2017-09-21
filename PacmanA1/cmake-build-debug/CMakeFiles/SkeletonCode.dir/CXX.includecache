@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/main.cpp
+GL/glew.h
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/GL/glew.h
+GLFW/glfw3.h
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/GLFW/glfw3.h
+stdio.h
+-
+iostream
+-
+string
+-
+fstream
+-
+glm/glm.hpp
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/glm/glm.hpp
+glm/gtc/matrix_transform.hpp
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/glm/gtc/matrix_transform.hpp
+glm/gtc/type_ptr.hpp
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/glm/gtc/type_ptr.hpp
+objloader.hpp
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/objloader.hpp
+
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/objloader.cpp
+vector
+-
+stdio.h
+-
+string
+-
+glm/glm.hpp
+-
+objloader.hpp
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/objloader.hpp
+
+/home/charalambos/Documents/CODE/COMP371/2017/FALL/SkeletonCode/objloader.hpp
+vector
+-
+

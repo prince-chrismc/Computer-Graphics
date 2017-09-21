@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DC453752-DF68-379D-9A16-549B56E8D077}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>Pacman</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\obj\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pacman</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\obj\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pacman</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">bin\obj\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Pacman</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">bin\obj\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Pacman</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>E:\Programming\OpenGL\glew-2.1.0\lib\glew32d.lib;glu32.lib;opengl32.lib;E:\Program Files\GLFW\lib\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/Debug/SkeletonCode.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/bin/Debug/SkeletonCode.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>E:\Programming\OpenGL\glew-2.1.0\lib\glew32d.lib;glu32.lib;opengl32.lib;E:\Program Files\GLFW\lib\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64 -s</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/Release/SkeletonCode.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/bin/Release/SkeletonCode.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>E:\Programming\OpenGL\glew-2.1.0\lib\glew32d.lib;glu32.lib;opengl32.lib;E:\Program Files\GLFW\lib\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/MinSizeRel/SkeletonCode.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/bin/MinSizeRel/SkeletonCode.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_BUILD_TYPE=Release;GLM_FORCE_RADIANS;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>E:\Programming\OpenGL\Computer-Graphics\PacmanA1;E:\Programming\OpenGL\glm-9.8.5;E:\Programming\OpenGL\glew-2.1.0\include;E:\Programming\OpenGL\glfw-3.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>E:\Programming\OpenGL\glew-2.1.0\lib\glew32d.lib;glu32.lib;opengl32.lib;E:\Program Files\GLFW\lib\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/RelWithDebInfo/SkeletonCode.lib</ImportLibrary>
+      <ProgramDataBaseFile>E:/Programming/OpenGL/Computer-Graphics/PacmanA1/bin/RelWithDebInfo/SkeletonCode.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"E:\Program Files\CMake\bin\cmake.exe" -HE:/Programming/OpenGL/Computer-Graphics/PacmanA1 -BE:/Programming/OpenGL/Computer-Graphics/PacmanA1 --check-stamp-file E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCCompiler.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCXXCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeRCCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLM.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLEW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLFW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"E:\Program Files\CMake\bin\cmake.exe" -HE:/Programming/OpenGL/Computer-Graphics/PacmanA1 -BE:/Programming/OpenGL/Computer-Graphics/PacmanA1 --check-stamp-file E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCCompiler.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCXXCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeRCCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLM.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLEW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLFW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"E:\Program Files\CMake\bin\cmake.exe" -HE:/Programming/OpenGL/Computer-Graphics/PacmanA1 -BE:/Programming/OpenGL/Computer-Graphics/PacmanA1 --check-stamp-file E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCCompiler.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCXXCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeRCCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLM.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLEW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLFW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"E:\Program Files\CMake\bin\cmake.exe" -HE:/Programming/OpenGL/Computer-Graphics/PacmanA1 -BE:/Programming/OpenGL/Computer-Graphics/PacmanA1 --check-stamp-file E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInitialize.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCCompiler.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeCXXCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeSystemSpecificInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeGenericSystem.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\WindowsPaths.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-C.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\3.9.2\CMakeRCCompiler.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeRCInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCXXInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeLanguageInformation.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Compiler\CMakeCommonCompilerMacros.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC-CXX.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\Platform\Windows-MSVC.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\CMakeCommonLanguageInclude.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLM.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLEW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindOpenGL.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\cmake\FindGLFW.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageHandleStandardArgs.cmake;E:\Program Files\CMake\share\cmake-3.9\Modules\FindPackageMessage.cmake;E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\Programming\OpenGL\Computer-Graphics\PacmanA1\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\main.cpp" />
+    <ClCompile Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\objloader.cpp" />
+    <ClInclude Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\objloader.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\ZERO_CHECK.vcxproj">
+      <Project>{F56CB390-7C8B-3573-8CD3-F909AA7F53BD}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
