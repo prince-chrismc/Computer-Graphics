@@ -182,38 +182,56 @@ int main()
 
 	glUseProgram(shaderProgram);
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> UVs;
-	loadOBJ("cube.obj", vertices, normals, UVs); //read the vertices from the cube.obj file
+	std::vector<glm::vec3> vertices_cube;
+	std::vector<glm::vec3> normals_cube;
+	std::vector<glm::vec2> UVs_cube;
+	loadOBJ("cube.obj", vertices_cube, normals_cube, UVs_cube); //read the vertices_cube from the cube.obj file
 
-	GLuint VAO, VBO,EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	GLuint VAO_cube;
+	glGenVertexArrays(1, &VAO_cube);
 	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
 	GLuint vertices_VBO, normals_VBO;
-
-	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &vertices_VBO);
+	glGenBuffers(1, &normals_VBO);
 
 	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAO_cube);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_cube.size() * sizeof(glm::vec3), &vertices_cube.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
-	glGenBuffers(1, &normals_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals.front(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, normals_cube.size() * sizeof(glm::vec3), &normals_cube.front(), GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+	glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+
+	// ----------------------------------------------------------------------------------------------------------------------------------------------
+	// cmc-edit : This will be a test for drawing a the axises
+	std::vector<glm::vec3> vertices_axis = { { -2.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f },	  // cmc-edit this is the x axis
+											 { 0.0f, -2.5f, 0.0f }, { 0.0f, 2.5f, 0.0f },	  // cmc-edit this is the y axis
+											 { 0.0f, 0.0f, -2.5f }, { 0.0f, 0.0f, 2.5f } };	  // cmc-edit this is the z axis
+
+	GLuint VAO_axis, VBO_axis;		 // cmc-edit : basic memory buffers
+	glGenVertexArrays(2, &VAO_axis); // cmc-edit : get mem_buf for index 2
+	glGenBuffers(2, &VBO_axis);		 // cmc-edit : associate buffer within index 2
+
+	glBindVertexArray(VAO_axis);	 // cmc-edit : now we start to work with our mem_buf
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_axis); // cmc-edit : bind array buffer for use
+	glBufferData(GL_ARRAY_BUFFER, vertices_axis.size() * sizeof(glm::vec3), &vertices_axis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 1
+	glEnableVertexAttribArray(0);		// cmc-edit : close verticies
+	glBindBuffer(GL_ARRAY_BUFFER, 0);	// cmc-edit : close buffer
+
+
+	glBindVertexArray(0);			 // cmc-edit : Unbind VAO_xaxis (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+	// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 	triangle_scale = glm::vec3(0.5f); // cmc-edit : this scales the view
 
@@ -242,9 +260,15 @@ int main()
 		glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glBindVertexArray(VAO_cube);
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
 		glBindVertexArray(0);
+
+		// ----------------------------------------------------------------------------------------------------------------------------------------------
+		glBindVertexArray(VAO_axis);						  // cmc-edit : lets displays the axis
+		glDrawArrays(GL_LINES, 0, (GLsizei)vertices_axis.size());	  // cmc-edit : lets displays the axis
+		glBindVertexArray(0);								  // cmc-edit : lets displays the axis
+		// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
