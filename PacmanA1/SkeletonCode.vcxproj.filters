@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\main.cpp">
@@ -23,5 +23,16 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{BFD597EB-EDF1-3E86-8C29-5D78FEEF2BE1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{c30f3495-30ee-4320-8332-b18618221dce}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment.shader">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="vertex.shader">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
 </Project>
