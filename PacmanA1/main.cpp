@@ -256,8 +256,75 @@ int main()
 
    glBindVertexArray(0);
    // ----------------------------------------------------------------------------------------------------------------------------------------------
+   // cmc-edit : this will be the grid lines
+   std::vector<glm::vec3> vertices_grid = { 
+      // center plus
+      { -10.5f, 0.0f, 0.0f }, { 10.5f, 0.0f, 0.0f },
+      { 0.0f, -10.5f, 0.0f },{ 0.0f, 10.5f, 0.0f },
 
-   triangle_scale = glm::vec3(0.5f); // cmc-edit : this scales the view
+      // lines - horizontal (x-plane)
+      { -10.5f, -10.0f, 0.0f },{ 10.5f, -10.0f,0.0f },
+      { -10.5f, -9.0f, 0.0f },{ 10.5f, -9.0f, 0.0f },
+      { -10.5f, -8.0f, 0.0f },{ 10.5f, -8.0f, 0.0f },
+      { -10.5f, -7.0f, 0.0f },{ 10.5f, -7.0f, 0.0f },
+      { -10.5f, -6.0f, 0.0f },{ 10.5f, -6.0f, 0.0f },
+      { -10.5f, -5.0f, 0.0f },{ 10.5f, -5.0f, 0.0f },
+      { -10.5f, -4.0f, 0.0f },{ 10.5f, -4.0f, 0.0f },
+      { -10.5f, -3.0f, 0.0f },{ 10.5f, -3.0f, 0.0f },
+      { -10.5f, -2.0f, 0.0f },{ 10.5f, -2.0f, 0.0f },
+      { -10.5f, -1.0f, 0.0f },{ 10.5f, -1.0f, 0.0f },
+
+      { -10.5f, 1.0f, 0.0f },{ 10.5f, 1.0f, 0.0f },
+      { -10.5f, 2.0f, 0.0f },{ 10.5f, 2.0f, 0.0f },
+      { -10.5f, 3.0f, 0.0f },{ 10.5f, 3.0f, 0.0f },
+      { -10.5f, 4.0f, 0.0f },{ 10.5f, 4.0f, 0.0f },
+      { -10.5f, 5.0f, 0.0f },{ 10.5f, 5.0f, 0.0f },
+      { -10.5f, 6.0f, 0.0f },{ 10.5f, 6.0f, 0.0f },
+      { -10.5f, 7.0f, 0.0f },{ 10.5f, 7.0f, 0.0f },
+      { -10.5f, 8.0f, 0.0f },{ 10.5f, 8.0f, 0.0f },
+      { -10.5f, 9.0f, 0.0f },{ 10.5f, 9.0f, 0.0f },
+      { -10.5f, 10.0f, 0.0f },{ 10.5f, 10.0f,0.0f },
+
+      // lines - horizontal (y-plane)
+      { 1.0f,  -10.5f, 0.0f },{ 1.0f,  10.5f, 0.0f },
+      { 2.0f,  -10.5f, 0.0f },{ 2.0f,  10.5f, 0.0f },
+      { 3.0f,  -10.5f, 0.0f },{ 3.0f,  10.5f, 0.0f },
+      { 4.0f,  -10.5f, 0.0f },{ 4.0f,  10.5f, 0.0f },
+      { 5.0f,  -10.5f, 0.0f },{ 5.0f,  10.5f, 0.0f },
+      { 6.0f,  -10.5f, 0.0f },{ 6.0f,  10.5f, 0.0f },
+      { 7.0f,  -10.5f, 0.0f },{ 7.0f,  10.5f, 0.0f },
+      { 8.0f,  -10.5f, 0.0f },{ 8.0f,  10.5f, 0.0f },
+      { 9.0f,  -10.5f, 0.0f },{ 9.0f,  10.5f, 0.0f },
+      { 10.0f, -10.5f, 0.0f },{ 10.0f, 10.5f, 0.0f },
+
+      { -1.0f,  -10.5f, 0.0f },{ -1.0f,  10.5f, 0.0f },
+      { -2.0f,  -10.5f, 0.0f },{ -2.0f,  10.5f, 0.0f },
+      { -3.0f,  -10.5f, 0.0f },{ -3.0f,  10.5f, 0.0f },
+      { -4.0f,  -10.5f, 0.0f },{ -4.0f,  10.5f, 0.0f },
+      { -5.0f,  -10.5f, 0.0f },{ -5.0f,  10.5f, 0.0f },
+      { -6.0f,  -10.5f, 0.0f },{ -6.0f,  10.5f, 0.0f },
+      { -7.0f,  -10.5f, 0.0f },{ -7.0f,  10.5f, 0.0f },
+      { -8.0f,  -10.5f, 0.0f },{ -8.0f,  10.5f, 0.0f },
+      { -9.0f,  -10.5f, 0.0f },{ -9.0f,  10.5f, 0.0f },
+      { -10.0f, -10.5f, 0.0f },{ -10.0f, 10.5f, 0.0f },
+   };
+   GLuint VAO_grid, VBO_grid;
+   glGenVertexArrays(1, &VAO_grid);
+   glBindVertexArray(VAO_grid);
+
+   glGenBuffers(1, &VBO_grid);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_grid);
+   glBufferData(GL_ARRAY_BUFFER, vertices_grid.size() * sizeof(glm::vec3), &vertices_grid.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0);
+
+   // -----------------------------------------------------------------------------------------------------------------------------------------------
+   // -----------------------------------------------------------------------------------------------------------------------------------------------
+
+   triangle_scale = glm::vec3(0.1f); // cmc-edit : this scales the view
 
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
@@ -290,6 +357,11 @@ int main()
       //glBindVertexArray(VAO_cube);
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
       //glBindVertexArray(0);
+      // Grid -------------------------------------------------------------------------------------------------------------------------------------
+      glUniform1i(objectTypeLoc, 3);
+      glBindVertexArray(VAO_grid);
+      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
+      glBindVertexArray(0);
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectTypeLoc, 0);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
