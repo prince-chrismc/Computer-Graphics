@@ -32,30 +32,51 @@ static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
 static GLfloat scalar = 0.0f;
 
 // Is called whenever a key is pressed/released via GLFW
+// Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+   // we are only concerned about key presses not releases
+   if (action != GLFW_PRESS) 
+   return;
 
-   std::cout << glfwGetKeyName(key, scancode) << std::endl; // function found at https://github.com/glfw/glfw/pull/117
+   // lets print the key in human readable if possible
+   const char* keyname = glfwGetKeyName(key, scancode); // function found at https://github.com/glfw/glfw/pull/117
+   if (keyname)
+      std::cout << keyname << std::endl;
+   else
+      std::cout << key << std::endl;
 
-   if (action != GLFW_PRESS) return;
-
-   switch (key) {
-      break;
+   switch (key)
+   {
+   // windows close
    case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, GLFW_TRUE);
       break;
+
+   // move camera
    case GLFW_KEY_UP:
-      view_rotx += 5.0;
+      view_rotx += 1.0;
       break;
    case GLFW_KEY_DOWN:
-      view_rotx -= 5.0;
+      view_rotx -= 1.0;
       break;
    case GLFW_KEY_LEFT:
-      view_roty += 5.0;
+      view_roty += 1.0;
       break;
    case GLFW_KEY_RIGHT:
-      view_roty -= 5.0;
+      view_roty -= 1.0;
       break;
+
+   // zoom in out
+   case GLFW_KEY_U:
+      scalar += 0.25f;
+      break;
+   case GLFW_KEY_J:
+      if (scalar > -0.25f)
+         scalar -= 0.25f;
+      break;
+
+   // move pacman
    case GLFW_KEY_W:
       pacman_transx += 1.0;
       break;
@@ -355,7 +376,6 @@ int main()
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-   triangle_scale = glm::vec3(0.25f); // cmc-edit : this scales the view
 
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
@@ -377,6 +397,7 @@ int main()
       view_matrix = glm::lookAt(eye, center, up);
 
       glm::mat4 model_matrix;
+      triangle_scale = glm::vec3(0.25f + scalar); // cmc-edit : this scales the view
       model_matrix = glm::scale(model_matrix, triangle_scale);
 
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
