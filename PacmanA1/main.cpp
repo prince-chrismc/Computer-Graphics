@@ -428,7 +428,7 @@ int main()
       view_matrix = glm::lookAt(eye, center, up);
 
       glm::mat4 model_matrix;
-      triangle_scale = glm::vec3(0.25f + scalar); // cmc-edit : this scales the view
+      triangle_scale = glm::vec3(0.25f); // cmc-edit : this scales the view
       model_matrix = glm::scale(model_matrix, triangle_scale);
 
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
@@ -445,11 +445,18 @@ int main()
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
       glBindVertexArray(0);
-      // pacman ------------------------------------------------------------------------------------------------------------------------------------- 
+      // pacman -------------------------------------------------------------------------------------------------------------------------------------
+      glm::mat4 pacman_model_matrix;
+      glm::vec3 pacman_scale(0.01f); // cmc-edit : this scales the object
+      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
+      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
+
       glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
       glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
       glBindVertexArray(0);
+
+      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
