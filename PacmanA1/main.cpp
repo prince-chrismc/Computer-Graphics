@@ -181,34 +181,34 @@ int main()
 
    glUseProgram(shaderProgram);
 
-   std::vector<glm::vec3> vertices_cube;
-   std::vector<glm::vec3> normals_cube;
-   std::vector<glm::vec2> UVs_cube;
-   loadOBJ("cube.obj", vertices_cube, normals_cube, UVs_cube); //read the vertices_cube from the cube.obj file
-
-   GLuint VAO_cube;
-   glGenVertexArrays(1, &VAO_cube);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   GLuint vertices_VBO, normals_VBO;
-   glGenBuffers(1, &vertices_VBO);
-   glGenBuffers(1, &normals_VBO);
-
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   glBindVertexArray(VAO_cube);
-
-   glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
-   glBufferData(GL_ARRAY_BUFFER, vertices_cube.size() * sizeof(glm::vec3), &vertices_cube.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-
-   glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
-   glBufferData(GL_ARRAY_BUFFER, normals_cube.size() * sizeof(glm::vec3), &normals_cube.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(1);
-
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+   //std::vector<glm::vec3> vertices_cube;
+   //std::vector<glm::vec3> normals_cube;
+   //std::vector<glm::vec2> UVs_cube;
+   //loadOBJ("cube.obj", vertices_cube, normals_cube, UVs_cube); //read the vertices_cube from the cube.obj file
+   //
+   //GLuint VAO_cube;
+   //glGenVertexArrays(1, &VAO_cube);
+   //// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   //GLuint vertices_VBO, normals_VBO;
+   //glGenBuffers(1, &vertices_VBO);
+   //glGenBuffers(1, &normals_VBO);
+   //
+   //// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   //glBindVertexArray(VAO_cube);
+   //
+   //glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
+   //glBufferData(GL_ARRAY_BUFFER, vertices_cube.size() * sizeof(glm::vec3), &vertices_cube.front(), GL_STATIC_DRAW);
+   //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   //glEnableVertexAttribArray(0);
+   //
+   //glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
+   //glBufferData(GL_ARRAY_BUFFER, normals_cube.size() * sizeof(glm::vec3), &normals_cube.front(), GL_STATIC_DRAW);
+   //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   //glEnableVertexAttribArray(1);
+   //
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //
+   //glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
    // ----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : This will be a test for drawing a the xaxis
@@ -285,25 +285,26 @@ int main()
       glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
       glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
+      // Cube -------------------------------------------------------------------------------------------------------------------------------------
+      //glUniform1i(objectTypeLoc, 3);
       //glBindVertexArray(VAO_cube);
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
       //glBindVertexArray(0);
-
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectTypeLoc, 0);
-      glBindVertexArray(VAO_xaxis);                                  // cmc-edit : lets displays the axis
+      glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
+      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectTypeLoc, 1);
-      glBindVertexArray(VAO_yaxis);                                  // cmc-edit : lets displays the axis
+      glBindVertexArray(VAO_yaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
+      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectTypeLoc, 2);
-      glBindVertexArray(VAO_zaxis);                                  // cmc-edit : lets displays the axis
+      glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
+      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // --------------------------------------------------------------------------------------------------------------------------------------------
 
       // Swap the screen buffers
