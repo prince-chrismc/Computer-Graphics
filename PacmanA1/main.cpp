@@ -71,11 +71,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // zoom in out
    case GLFW_KEY_U:
-      scalar += 0.25f;
+      scalar += 0.01f;
       break;
    case GLFW_KEY_J:
-      if (scalar > -0.25f)
-         scalar -= 0.25f;
+      if (scalar > -0.01f)
+         scalar -= 0.01f;
       break;
 
    // move pacman
@@ -447,7 +447,7 @@ int main()
       glBindVertexArray(0);
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
-      glm::vec3 pacman_scale(0.01f); // cmc-edit : this scales the object
+      glm::vec3 pacman_scale(0.01f + scalar); // cmc-edit : this scales the object
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
 
