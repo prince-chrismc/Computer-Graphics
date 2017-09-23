@@ -1,7 +1,8 @@
 #version 330 core
 
-in vec3 col;
 out vec4 color;
+
+in vec3 col;
 
 void main()
 {
