@@ -31,6 +31,8 @@ static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
 static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
 static GLfloat scalar = 0.0f;
 
+enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
+
 // Is called whenever a key is pressed/released via GLFW
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -409,7 +411,7 @@ int main()
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-   GLuint objectTypeLoc = glGetUniformLocation(shaderProgram, "object_type");
+   GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -439,27 +441,27 @@ int main()
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
       //glBindVertexArray(0);
       // Grid -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectTypeLoc, 3);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREY);
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
       glBindVertexArray(0);
       // pacman ------------------------------------------------------------------------------------------------------------------------------------- 
-      glUniform1i(objectTypeLoc, 4);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
       glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
       glBindVertexArray(0);
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectTypeLoc, 0);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectTypeLoc, 1);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREEN);
       glBindVertexArray(VAO_yaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectTypeLoc, 2);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
       glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
