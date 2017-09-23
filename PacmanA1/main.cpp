@@ -211,34 +211,50 @@ int main()
    glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
    // ----------------------------------------------------------------------------------------------------------------------------------------------
-   // cmc-edit : This will be a test for drawing a the axises
-   std::vector<glm::vec3> vertices_axis = { { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f },    // cmc-edit : this is the start-end points for the x axis
-                                            { 0.0f, -0.5f, 0.0f }, { 0.0f, 2.5f, 0.0f },    // cmc-edit : this is the start-end points for the y axis
-                                            { 0.0f, 0.0f, -0.5f }, { 0.0f, 0.0f, 2.5f } };  // cmc-edit : this is the start-end points for the z axis
+   // cmc-edit : This will be a test for drawing a the xaxis
+   std::vector<glm::vec3> vertices_xaxis = { { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } };  // cmc-edit : this is the start-end points for the x axis
+   GLuint VAO_xaxis, VBO_xaxis;                // cmc-edit : basic memory buffers
+   glGenVertexArrays(1, &VAO_xaxis);          // cmc-edit : get mem_buf https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml should always be one for this usage
+   glBindVertexArray(VAO_xaxis);              // cmc-edit : now we start to work with our mem_buf
 
-   std::vector<glm::vec3> colors_axis = { { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f },       // cmc-edit : red
-                                          { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f },       // cmc-edit : blue
-                                          { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } };     // cmc-edit : green
-
-   GLuint VAO_axis, VBO_axis, VBO_colors;    // cmc-edit : basic memory buffers
-   glGenVertexArrays(1, &VAO_axis);          // cmc-edit : get mem_buf https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml should always be one for this usage
-   glBindVertexArray(VAO_axis);              // cmc-edit : now we start to work with our mem_buf
-
-   glGenBuffers(1, &VBO_axis);               // cmc-edit : associate buffer within index 0 (matches vertex.shader)
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_axis);  // cmc-edit : bind array buffer for use
-   glBufferData(GL_ARRAY_BUFFER, vertices_axis.size() * sizeof(glm::vec3), &vertices_axis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
+   glGenBuffers(1, &VBO_xaxis);               // cmc-edit : associate buffer within index 0 (matches vertex.shader)
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_xaxis);  // cmc-edit : bind array buffer for use
+   glBufferData(GL_ARRAY_BUFFER, vertices_xaxis.size() * sizeof(glm::vec3), &vertices_xaxis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 0
    glEnableVertexAttribArray(0);             // cmc-edit : close verticies at 0
    glBindBuffer(GL_ARRAY_BUFFER, 0);         // cmc-edit : close buffer
 
-   glGenBuffers(1, &VBO_colors);             // cmc-edit : associate buffer within index 1 (matches vertex.shader)
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_colors);// cmc-edit : bind array buffer for use
-   glBufferData(GL_ARRAY_BUFFER, colors_axis.size() * sizeof(glm::vec3), &colors_axis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 1
-   glEnableVertexAttribArray(1);             // cmc-edit : close verticies at 1
-   glBindBuffer(GL_ARRAY_BUFFER, 1);         // cmc-edit : close buffer
-
    glBindVertexArray(0);                     // cmc-edit : Unbind VAO_xaxis (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+
+   // Y-axis ----------------------------------------------------------------------------------------------------------------------------------------
+   std::vector<glm::vec3> vertices_yaxis = { { 0.0f, -0.5f, 0.0f },{ 0.0f, 2.5f, 0.0f } };
+   GLuint VAO_yaxis, VBO_yaxis;
+   glGenVertexArrays(1, &VAO_yaxis);
+   glBindVertexArray(VAO_yaxis);
+
+   glGenBuffers(1, &VBO_yaxis);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_yaxis);
+   glBufferData(GL_ARRAY_BUFFER, vertices_yaxis.size() * sizeof(glm::vec3), &vertices_yaxis.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0);
+
+   // Z-axis ----------------------------------------------------------------------------------------------------------------------------------------
+   std::vector<glm::vec3> vertices_zaxis = { { 0.0f, 0.0f, -0.5f },{ 0.0f, 0.0f, 2.5f } };
+   GLuint VAO_zaxis, VBO_zaxis;
+   glGenVertexArrays(1, &VAO_zaxis);
+   glBindVertexArray(VAO_zaxis);
+
+   glGenBuffers(1, &VBO_zaxis);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_zaxis);
+   glBufferData(GL_ARRAY_BUFFER, vertices_zaxis.size() * sizeof(glm::vec3), &vertices_zaxis.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0);
    // ----------------------------------------------------------------------------------------------------------------------------------------------
 
    triangle_scale = glm::vec3(0.5f); // cmc-edit : this scales the view
@@ -246,6 +262,7 @@ int main()
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+   GLuint objectTypeLoc = glGetUniformLocation(shaderProgram, "object_type");
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -255,7 +272,7 @@ int main()
 
       // Render
       // Clear the colorbuffer
-      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
       glm::mat4 view_matrix;
@@ -272,11 +289,22 @@ int main()
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
       //glBindVertexArray(0);
 
-      // ----------------------------------------------------------------------------------------------------------------------------------------------
-      glBindVertexArray(VAO_axis);                                   // cmc-edit : lets displays the axis
-      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_axis.size());      // cmc-edit : lets displays the axis
+      // X-axis -------------------------------------------------------------------------------------------------------------------------------------
+      glUniform1i(objectTypeLoc, 0);
+      glBindVertexArray(VAO_xaxis);                                  // cmc-edit : lets displays the axis
+      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
-      // ----------------------------------------------------------------------------------------------------------------------------------------------
+      // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
+      glUniform1i(objectTypeLoc, 1);
+      glBindVertexArray(VAO_yaxis);                                  // cmc-edit : lets displays the axis
+      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
+      glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
+      // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
+      glUniform1i(objectTypeLoc, 2);
+      glBindVertexArray(VAO_zaxis);                                  // cmc-edit : lets displays the axis
+      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
+      glBindVertexArray(0);                                          // cmc-edit : lets displays the axis
+      // --------------------------------------------------------------------------------------------------------------------------------------------
 
       // Swap the screen buffers
       glfwSwapBuffers(window);
