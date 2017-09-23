@@ -262,6 +262,35 @@ int main()
    //
    //glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
+   std::vector<glm::vec3> vertices_pacman;
+   std::vector<glm::vec3> normals_pacman;
+   std::vector<glm::vec2> UVs_pacman;
+   loadOBJ("pacman.obj", vertices_pacman, normals_pacman, UVs_pacman); //read the vertices_pacman from the pacman.obj file 
+
+   GLuint VAO_pacman;
+   glGenVertexArrays(1, &VAO_pacman);
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   GLuint vertices_VBO, normals_VBO;
+   glGenBuffers(1, &vertices_VBO);
+   glGenBuffers(1, &normals_VBO);
+
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   glBindVertexArray(VAO_pacman);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
+   glBufferData(GL_ARRAY_BUFFER, vertices_pacman.size() * sizeof(glm::vec3), &vertices_pacman.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+
+   glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
+   glBufferData(GL_ARRAY_BUFFER, normals_pacman.size() * sizeof(glm::vec3), &normals_pacman.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(1);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs) 
+
    // ----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : This will be a test for drawing a the xaxis
    std::vector<glm::vec3> vertices_xaxis = { { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } };  // cmc-edit : this is the start-end points for the x axis
@@ -413,6 +442,11 @@ int main()
       glUniform1i(objectTypeLoc, 3);
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
+      glBindVertexArray(0);
+      // pacman ------------------------------------------------------------------------------------------------------------------------------------- 
+      glUniform1i(objectTypeLoc, 4);
+      glBindVertexArray(VAO_pacman);
+      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
       glBindVertexArray(0);
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectTypeLoc, 0);
