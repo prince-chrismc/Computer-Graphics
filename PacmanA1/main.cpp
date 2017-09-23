@@ -216,9 +216,13 @@ int main()
                                             { 0.0f, -0.5f, 0.0f }, { 0.0f, 2.5f, 0.0f },    // cmc-edit : this is the start-end points for the y axis
                                             { 0.0f, 0.0f, -0.5f }, { 0.0f, 0.0f, 2.5f } };  // cmc-edit : this is the start-end points for the z axis
 
-   std::vector<glm::vec3> colors_axis = { { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f },       // cmc-edit : white to red
-                                          { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f },       // cmc-edit : white to blue
-                                          { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } };     // cmc-edit : white to green
+   //std::vector<glm::vec3> colors_axis = { { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f },       // cmc-edit : white to red
+   //                                       { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f },       // cmc-edit : white to blue
+   //                                       { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } };     // cmc-edit : white to green
+
+   float axis_colors[] = { 1.0f, 1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+                           1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 0.0f, 
+                           1.0f, 1.0f, 1.0f,     0.0f, 0.0f, 1.0f };
 
    GLuint VAO_axis, VBO_axis, VBO_colors;    // cmc-edit : basic memory buffers
    glGenVertexArrays(1, &VAO_axis);          // cmc-edit : get mem_buf https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml should always be one for this usage
@@ -232,8 +236,10 @@ int main()
 
    glGenBuffers(1, &VBO_colors);             // cmc-edit : associate buffer within index 1 (matches vertex.shader)
    glBindBuffer(GL_ARRAY_BUFFER, VBO_colors);// cmc-edit : bind array buffer for use
-   glBufferData(GL_ARRAY_BUFFER, colors_axis.size() * sizeof(glm::vec3), &colors_axis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 1
+   //glBufferData(GL_ARRAY_BUFFER, colors_axis.size() * sizeof(glm::vec3), &colors_axis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
+   //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 1
+   glBufferData(GL_ARRAY_BUFFER, sizeof(axis_colors), axis_colors, GL_STATIC_DRAW);
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
    glEnableVertexAttribArray(1);             // cmc-edit : close verticies at 1
 
    glBindBuffer(GL_ARRAY_BUFFER, 0);         // cmc-edit : close buffer
