@@ -24,24 +24,22 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 1.0f, 0.0f);
-const glm::vec3 eye(2.0f, 2.0f, 3.0f);
+const glm::vec3 eye(2.0f, 2.0f, 5.0f);
 
-// rotation globals
-static GLfloat view_rotx = 20.f, view_roty = 30.f, view_rotz = 0.f;
+// rotation, translation and scalar globals
+static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
+static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
+static GLfloat scalar = 0.0f;
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-   std::cout << key << std::endl;
+
+   std::cout << glfwGetKeyName(key, scancode) << std::endl; // function found at https://github.com/glfw/glfw/pull/117
 
    if (action != GLFW_PRESS) return;
 
    switch (key) {
-   case GLFW_KEY_Z:
-      if (mode & GLFW_MOD_SHIFT)
-         view_rotz -= 5.0;
-      else
-         view_rotz += 5.0;
       break;
    case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -58,9 +56,41 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_RIGHT:
       view_roty -= 5.0;
       break;
+   case GLFW_KEY_W:
+      pacman_transx += 1.0;
+      break;
+   case GLFW_KEY_S:
+      pacman_transx -= 1.0;
+      break;
+   case GLFW_KEY_D:
+      pacman_transy += 1.0;
+      break;
+   case GLFW_KEY_A:
+      pacman_transy -= 1.0;
+      break;
    default:
       return;
    };
+}
+
+// inspiration https://stackoverflow.com/questions/37194845/using-glfw-to-capture-mouse-dragging-c for below
+void mouse_callback(GLFWwindow* window, int button, int action, int mods)
+{
+   double x;
+   double y;
+   if (button == GLFW_MOUSE_BUTTON_LEFT) {
+      if (GLFW_PRESS == action)
+      {
+         // zoom with mouse movement
+         glfwGetCursorPos(window, &x, &y); // probly only on x (unspecified by a1)
+      }
+   }
+   else if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
+      // tilt on y movement
+   }
+   else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+      // pan on x movemnt (and y too)
+   }
 }
 
 // The MAIN function, from here we start the application and run the game loop
@@ -85,6 +115,7 @@ int main()
    glfwMakeContextCurrent(window);
    // Set the required callback functions
    glfwSetKeyCallback(window, key_callback);
+   glfwSetMouseButtonCallback(window, mouse_callback);
 
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
@@ -324,7 +355,7 @@ int main()
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-   triangle_scale = glm::vec3(0.1f); // cmc-edit : this scales the view
+   triangle_scale = glm::vec3(0.25f); // cmc-edit : this scales the view
 
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
