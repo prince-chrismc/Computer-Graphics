@@ -12,11 +12,10 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "objloader.hpp"  //include the object loader
 
-using namespace std;
-
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
 
+// OpenGL matrixes
 glm::vec3 camera_position;
 glm::vec3 triangle_scale;
 glm::mat4 projection_matrix;
@@ -29,11 +28,10 @@ const glm::vec3 eye(5.0f, 1.0f, 3.0f);
 // rotation, translation and scalar globals
 static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
 static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
-static GLfloat scalar = 0.0f;
+static GLfloat objects_scalar = 0.0f;
 
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
 
-// Is called whenever a key is pressed/released via GLFW
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -71,11 +69,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // zoom in out
    case GLFW_KEY_U:
-      scalar += 0.01f;
+      objects_scalar += 0.01f;
       break;
    case GLFW_KEY_J:
-      if (scalar > -0.01f)
-         scalar -= 0.01f;
+      if (objects_scalar > -0.01f)
+         objects_scalar -= 0.01f;
       break;
 
    // move pacman
@@ -165,13 +163,13 @@ int main()
    // Vertex shader
 
    // Read the Vertex Shader code from the file
-   string vertex_shader_path = "vertex.shader";
-   string VertexShaderCode;
-   std::ifstream VertexShaderStream(vertex_shader_path, ios::in);
+   std::string vertex_shader_path = "vertex.shader";
+   std::string VertexShaderCode;
+   std::ifstream VertexShaderStream(vertex_shader_path, std::ios::in);
 
    if (VertexShaderStream.is_open()) {
-      string Line = "";
-      while (getline(VertexShaderStream, Line))
+      std::string Line = "";
+      while (std::getline(VertexShaderStream, Line))
          VertexShaderCode += "\n" + Line;
       VertexShaderStream.close();
    }
@@ -182,7 +180,7 @@ int main()
    }
 
    // Read the Fragment Shader code from the file
-   string fragment_shader_path = "fragment.shader";
+   std::string fragment_shader_path = "fragment.shader";
    std::string FragmentShaderCode;
    std::ifstream FragmentShaderStream(fragment_shader_path, std::ios::in);
 
@@ -451,7 +449,7 @@ int main()
       glBindVertexArray(0);
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
-      glm::vec3 pacman_scale(0.01f + scalar); // cmc-edit : this scales the object
+      glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
       pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
