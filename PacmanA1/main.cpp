@@ -32,6 +32,8 @@ static GLfloat objects_scalar = 0.0f;
 
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
 
+GLuint grid_size = 20;
+
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -121,8 +123,10 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 // The MAIN function, from here we start the application and run the game loop
 int main()
 {
-   std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
+   // cmc-edit : get grid size
+
    // Init GLFW
+   std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
    glfwInit();
    // Set all the required options for GLFW
    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -342,7 +346,7 @@ int main()
    glBindVertexArray(0);
    // ----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : this will be the grid lines
-   std::vector<glm::vec3> vertices_grid = { 
+   std::vector<glm::vec3> vertices_grid; /*= { 
       // center plus
       { -10.5f, 0.0f, 0.0f }, { 10.5f, 0.0f, 0.0f },
       { 0.0f, -10.5f, 0.0f },{ 0.0f, 10.5f, 0.0f },
@@ -392,7 +396,24 @@ int main()
       { -8.0f,  -10.5f, 0.0f },{ -8.0f,  10.5f, 0.0f },
       { -9.0f,  -10.5f, 0.0f },{ -9.0f,  10.5f, 0.0f },
       { -10.0f, -10.5f, 0.0f },{ -10.0f, 10.5f, 0.0f },
-   };
+   };*/
+
+   float half_grid(grid_size / 2.0f);
+   float half_length(half_grid + 0.5f);
+
+   for (int index = 0; index <= grid_size; index++)
+   {
+      // line of x-axis
+      vertices_grid.emplace_back(glm::vec3(float(index - half_grid), 0 - half_length, 0.0f));
+      vertices_grid.emplace_back(glm::vec3(float(index - half_grid), half_length, 0.0f));
+
+      // line of y-axis
+      vertices_grid.emplace_back(glm::vec3(0 - half_length, float(index - half_grid), 0.0f));
+      vertices_grid.emplace_back(glm::vec3(half_length, float(index - half_grid), 0.0f));
+   }
+
+
+
    GLuint VAO_grid, VBO_grid;
    glGenVertexArrays(1, &VAO_grid);
    glBindVertexArray(VAO_grid);
