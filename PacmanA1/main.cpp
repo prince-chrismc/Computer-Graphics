@@ -24,7 +24,7 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 0.0f, 1.0f);
-const glm::vec3 eye(1.0f, 5.0f, 2.0f);
+const glm::vec3 eye(5.0f, 1.0f, 3.0f);
 
 // rotation, translation and scalar globals
 static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
@@ -80,16 +80,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move pacman
    case GLFW_KEY_W:
-      pacman_transx += 1.0;
+      pacman_transx -= 0.25;
       break;
    case GLFW_KEY_S:
-      pacman_transx -= 1.0;
+      pacman_transx += 0.25;
       break;
    case GLFW_KEY_D:
-      pacman_transy += 1.0;
+      pacman_transy += 0.25;
       break;
    case GLFW_KEY_A:
-      pacman_transy -= 1.0;
+      pacman_transy -= 0.25;
       break;
    default:
       return;
@@ -448,6 +448,7 @@ int main()
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
       glm::vec3 pacman_scale(0.01f + scalar); // cmc-edit : this scales the object
+      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
 
