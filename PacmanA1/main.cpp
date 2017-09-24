@@ -80,16 +80,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move pacman
    case GLFW_KEY_W:
-      pacman_transx -= 0.25;
+      if(pacman_transx > -2.5f)
+         pacman_transx -= 0.25f;
       break;
    case GLFW_KEY_S:
-      pacman_transx += 0.25;
+      if (pacman_transx < 2.5f)
+         pacman_transx += 0.25f;
       break;
    case GLFW_KEY_D:
-      pacman_transy += 0.25;
+      if (pacman_transy < 2.5f)
+         pacman_transy += 0.25f;
       break;
    case GLFW_KEY_A:
-      pacman_transy -= 0.25;
+      if (pacman_transy > -2.5f)
+         pacman_transy -= 0.25f;
       break;
    default:
       return;
