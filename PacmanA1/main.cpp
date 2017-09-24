@@ -23,8 +23,8 @@ glm::mat4 projection_matrix;
 
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
-const glm::vec3 up(0.0f, 1.0f, 0.0f);
-const glm::vec3 eye(2.0f, 2.0f, 5.0f);
+const glm::vec3 up(0.0f, 0.0f, 1.0f);
+const glm::vec3 eye(1.0f, 5.0f, 2.0f);
 
 // rotation, translation and scalar globals
 static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
