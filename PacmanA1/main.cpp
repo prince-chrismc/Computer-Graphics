@@ -229,6 +229,11 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    }
 }
 
+void windows_callback(GLFWwindow* window, int width, int height)
+{
+   glViewport(0, 0, width, height);
+   projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
+}
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -257,6 +262,7 @@ int main()
    glfwSetKeyCallback(window, key_callback);
    glfwSetMouseButtonCallback(window, mouse_callback);
    glfwSetCursorPosCallback(window, cursor_callback);
+   glfwSetWindowSizeCallback(window, windows_callback);
 
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
@@ -546,7 +552,6 @@ int main()
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
    GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
-   glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -570,6 +575,9 @@ int main()
       model_scale = glm::vec3(0.25f); // cmc-edit : this scales the objects
       model_matrix = glm::scale(model_matrix, model_scale);
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
+
+      // handled by call back
+      glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
       // Cube -------------------------------------------------------------------------------------------------------------------------------------
       //glUniform1i(objectTypeLoc, 3);
