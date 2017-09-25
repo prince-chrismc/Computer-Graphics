@@ -26,11 +26,11 @@ const glm::vec3 up(0.0f, 0.0f, 1.0f);
 const glm::vec3 eye(-1.0f, -5.0f, 3.0f);
 
 // rotation, translation and scalar globals
-GLfloat view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
-GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
-GLfloat pacman_rotation_dec = 0.0f;                             // controll : wasd
-const GLfloat pacman_viewing_offset_dec = 35.0f;
-GLfloat objects_scalar = 0.0f;                                  // controll : uj
+float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
+float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
+float pacman_rotation_dec = 0.0f;                             // controll : wasd
+const float pacman_viewing_offset_dec = 35.0f;
+float objects_scalar = 0.0f;                                  // controll : uj
 
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
@@ -82,6 +82,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_RIGHT:
       view_roty -= 1.0;
       break;
+
+   // reset everything
    case GLFW_KEY_HOME:
       view_rotx = 0.0;
       view_roty = 0.0;
@@ -188,7 +190,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
    if (pan)
    {
-      double xoffset = xpos - lastX;
+      float xoffset = static_cast<float>(xpos - lastX);
       lastX = xpos;
       xoffset *= sensitivity/10;
       
@@ -198,7 +200,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    }
    else if (tilt)
    {
-      double yoffset = lastY - ypos;
+      float yoffset = static_cast<float>(lastY - ypos);
       lastY = ypos;
       yoffset *= sensitivity;
 
@@ -213,7 +215,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    }
    else if (zoom)
    {
-      double xoffset = xpos - lastX;
+      float xoffset = static_cast<float>(xpos - lastX);
       lastX = xpos;
       xoffset *= sensitivity;
 
