@@ -28,9 +28,11 @@ const glm::vec3 eye(5.0f, 1.0f, 3.0f);
 // rotation, translation and scalar globals
 static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
 static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
+static GLfloat pacman_rotation_dec = 0.0f;
 static GLfloat objects_scalar = 0.0f;
 
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
+enum class PacmanDirection { W_KEY, D_KEY, S_KEY, A_KEY };
 
 GLuint grid_size = 20;
 
@@ -474,7 +476,9 @@ int main()
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
       glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
+      pacman_rotation_dec += 0.1f;
       pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));
+      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
 
