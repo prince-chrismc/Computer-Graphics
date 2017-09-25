@@ -23,22 +23,27 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 0.0f, 1.0f);
-const glm::vec3 eye(5.0f, 1.0f, 3.0f);
+const glm::vec3 eye(-1.0f, -5.0f, 3.0f);
 
 // rotation, translation and scalar globals
-GLfloat view_rotx = 0.0f, view_roty = 0.0f;
-GLfloat view_tranx = 0.0f, view_trany = 0.0f;
-GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
-GLfloat pacman_rotation_dec = 0.0f;
+GLfloat view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
+GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
+GLfloat pacman_rotation_dec = 0.0f;                             // controll : wasd
 const GLfloat pacman_viewing_offset_dec = 35.0f;
-GLfloat objects_scalar = 0.0f;
+GLfloat objects_scalar = 0.0f;                                  // controll : uj
 
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
-enum class PacmanDirection { W_KEY = 0, D_KEY = 90, S_KEY = 180, A_KEY = 270 };
+enum class PacmanDirection { W_KEY = 180, D_KEY = 270, S_KEY = 0, A_KEY = 90 };
 
 // dynamic user set values
 GLuint grid_size = 20;
+
+// mouse and cursor callback variables
+bool zoom = false, tilt = false, pan = false;
+double lastX, lastY;
+float view_panx = 0.0f, view_tilty = 0.0f, view_zoomz = 1.0f;
+const float sensitivity = 0.05f;
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -66,20 +71,24 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move camera
    case GLFW_KEY_UP:
-      view_tranx += 1.0;
+      view_rotx += 1.0;
       break;
    case GLFW_KEY_DOWN:
-      view_tranx -= 1.0;
+      view_rotx -= 1.0;
       break;
    case GLFW_KEY_LEFT:
-      view_trany += 1.0;
+      view_roty += 1.0;
       break;
    case GLFW_KEY_RIGHT:
-      view_trany -= 1.0;
+      view_roty -= 1.0;
       break;
    case GLFW_KEY_HOME:
-      view_tranx = 0.0;
-      view_trany = 0.0;
+      view_rotx = 0.0;
+      view_roty = 0.0;
+
+      view_panx = 0.0;
+      view_tilty = 0.0;
+      view_zoomz = 1.0;
       break;
 
    // zoom in out
@@ -94,23 +103,23 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    // move pacman
    case GLFW_KEY_W:
       pacman_rotation_dec = (float)PacmanDirection::W_KEY + pacman_viewing_offset_dec;
-      if(pacman_transx > lower_move_limit)
-         pacman_transx -= 0.25f;
-      break;
-   case GLFW_KEY_S:
-      pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
       if (pacman_transx < upper_move_limit)
          pacman_transx += 0.25f;
       break;
+   case GLFW_KEY_S:
+      pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
+      if (pacman_transx > lower_move_limit)
+         pacman_transx -= 0.25f;
+      break;
    case GLFW_KEY_D:
       pacman_rotation_dec = (float)PacmanDirection::D_KEY + pacman_viewing_offset_dec;
-      if (pacman_transy < upper_move_limit)
-         pacman_transy += 0.25f;
+      if (pacman_transy > lower_move_limit)
+         pacman_transy -= 0.25f;
       break;
    case GLFW_KEY_A:
       pacman_rotation_dec = (float)PacmanDirection::A_KEY + pacman_viewing_offset_dec;
-      if (pacman_transy > lower_move_limit)
-         pacman_transy -= 0.25f;
+      if (pacman_transy < upper_move_limit)
+         pacman_transy += 0.25f;
       break;
    default:
       return;
@@ -120,22 +129,106 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 // inspiration https://stackoverflow.com/questions/37194845/using-glfw-to-capture-mouse-dragging-c for below
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
-   double x;
-   double y;
    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-      if (GLFW_PRESS == action)
+      if (action == GLFW_PRESS)
       {
+         std::cout << "allow zooming" << std::endl;
+
          // zoom with mouse movement
-         glfwGetCursorPos(window, &x, &y); // probly only on x (unspecified by a1)
+         glfwGetCursorPos(window, &lastX, &lastY); // probly only on x (unspecified by a1)
+         lastY = 0.0; // not required
+         zoom = true;
+      }
+      else
+      {
+         std::cout << "disable zooming" << std::endl;
+         lastX = 0.0;
+         lastY = 0.0;
+         zoom = false;
       }
    }
    else if (button == GLFW_MOUSE_BUTTON_MIDDLE) {
-      // tilt on y movement
+      if (action == GLFW_PRESS)
+      {
+         std::cout << "allow tilting" << std::endl;
+         // tile-y with mouse movement
+         glfwGetCursorPos(window, &lastX, &lastY);
+         lastX = 0.0; // not required
+         tilt = true;
+      }
+      else
+      {
+         std::cout << "disable tilting" << std::endl;
+         lastX = 0.0;
+         lastY = 0.0;
+         tilt = false;
+      }
    }
    else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-      // pan on x movemnt (and y too)
+      if (action == GLFW_PRESS)
+      {
+         std::cout << "allow paning" << std::endl;
+         // pan on x movemnt (and y too)
+         glfwGetCursorPos(window, &lastX, &lastY);
+         lastY = 0.0; // not required
+         pan = true;
+      }
+      else
+      {
+         std::cout << "disable panning" << std::endl;
+         lastX = 0.0;
+         lastY = 0.0;
+         pan = false;
+      }
    }
 }
+
+// inspiration https://learnopengl.com/#!Getting-started/Camera
+void cursor_callback(GLFWwindow* window, double xpos, double ypos)
+{
+   if (pan)
+   {
+      double xoffset = xpos - lastX;
+      lastX = xpos;
+      xoffset *= sensitivity/10;
+      
+      view_panx += xoffset;
+
+      std::cout << "panx: " << view_panx << std::endl;
+   }
+   else if (tilt)
+   {
+      double yoffset = lastY - ypos;
+      lastY = ypos;
+      yoffset *= sensitivity;
+
+      view_tilty += yoffset;
+
+      if (view_tilty > 89.0f)
+         view_tilty = 89.0f;
+      if (view_tilty < -89.0f)
+         view_tilty = -89.0f;
+
+      std::cout << "tilty: " << view_tilty << std::endl;
+   }
+   else if (zoom)
+   {
+      double xoffset = xpos - lastX;
+      lastX = xpos;
+      xoffset *= sensitivity;
+
+      view_zoomz += xoffset;
+
+      if(view_zoomz < 0.5f)
+         view_zoomz = 0.5f;
+
+      if (view_zoomz > 5.0f)
+         view_zoomz = 5.0f;
+
+      std::cout << "zoomz: " << view_zoomz << std::endl;
+   }
+}
+
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -159,9 +252,11 @@ int main()
       return -1;
    }
    glfwMakeContextCurrent(window);
+
    // Set the required callback functions
    glfwSetKeyCallback(window, key_callback);
    glfwSetMouseButtonCallback(window, mouse_callback);
+   glfwSetCursorPosCallback(window, cursor_callback);
 
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
@@ -451,6 +546,7 @@ int main()
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
    GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
+   glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -465,15 +561,15 @@ int main()
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
-      view_matrix = glm::translate(view_matrix, glm::vec3(view_tranx, view_trany, 0.0f));
+      view_matrix = glm::translate(view_matrix, glm::vec3(view_panx, 0.0f, 0.0f));
+      view_matrix = glm::rotate(view_matrix, glm::radians(view_tilty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply tilt on y axis
+      view_matrix = glm::scale(view_matrix, glm::vec3(view_zoomz));
+      glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
       glm::mat4 model_matrix;
       model_scale = glm::vec3(0.25f); // cmc-edit : this scales the objects
       model_matrix = glm::scale(model_matrix, model_scale);
-
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
-      glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
-      glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
       // Cube -------------------------------------------------------------------------------------------------------------------------------------
       //glUniform1i(objectTypeLoc, 3);
@@ -485,20 +581,6 @@ int main()
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
       glBindVertexArray(0);
-      // pacman -------------------------------------------------------------------------------------------------------------------------------------
-      glm::mat4 pacman_model_matrix;
-      glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
-      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));                    // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
-
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
-      glBindVertexArray(VAO_pacman);
-      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
-      glBindVertexArray(0);
-
-      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
@@ -514,7 +596,21 @@ int main()
       glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
+
+      // pacman -------------------------------------------------------------------------------------------------------------------------------------
+      glm::mat4 pacman_model_matrix;
+      glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
+      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0f));                   // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
+      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
+      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
+      glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
+
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
+      glBindVertexArray(VAO_pacman);
+      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
+      glBindVertexArray(0);
       // --------------------------------------------------------------------------------------------------------------------------------------------
+
 
       // Swap the screen buffers
       glfwSwapBuffers(window);
