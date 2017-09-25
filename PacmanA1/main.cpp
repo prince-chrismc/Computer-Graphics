@@ -1,16 +1,17 @@
 //example skeleton code
 //modified from http://learnopengl.com/
 
-#include "GL/glew.h"      // include GL Extension Wrangler
-#include "GLFW/glfw3.h"   // include GLFW helper library
+#include "GL/glew.h"       // include GL Extension Wrangler
+#include "GLFW/glfw3.h"    // include GLFW helper library
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <random>          //std::mt19937
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "objloader.hpp"  //include the object loader
+#include "objloader.hpp"   //include the object loader
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -23,14 +24,15 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 0.0f, 1.0f);
-const glm::vec3 eye(-1.0f, -5.0f, 3.0f);
+const glm::vec3 eye(1.0f, -5.0f, 3.0f);
 
 // rotation, translation and scalar globals
 float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
 float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
 float pacman_rotation_dec = 0.0f;                             // controll : wasd
 const float pacman_viewing_offset_dec = 35.0f;
-float objects_scalar = 0.0f;                                  // controll : uj
+float pacman_scalar = 0.0f;                                  // controll : uj
+float food_scalar = 0.0f;                                    // controll : uj
 
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
@@ -44,6 +46,18 @@ bool zoom = false, tilt = false, pan = false;
 double lastX, lastY;
 float view_panx = 0.0f, view_tilty = 0.0f, view_zoomz = 1.0f;
 const float sensitivity = 0.05f;
+
+// food structure and variables
+struct FoodPos
+{
+   float transx = 0.0f;
+   float transy = 0.0f;
+
+   FoodPos(float x, float y) { transx = x; transy = y; }
+};
+std::vector<FoodPos> Foods;
+std::random_device rd;
+std::mt19937 rand_gen(rd());
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -95,30 +109,33 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // zoom in out
    case GLFW_KEY_U:
-      objects_scalar += 0.01f;
+      pacman_scalar += 0.01f;
+      food_scalar += 0.075f;
       break;
    case GLFW_KEY_J:
-      if (objects_scalar > -0.01f)
-         objects_scalar -= 0.01f;
+      if (pacman_scalar > -0.01f)
+         pacman_scalar -= 0.01f;
+      if(food_scalar > -0.075f)
+         food_scalar -= 0.075f;
       break;
 
    // move pacman
-   case GLFW_KEY_W:
+   case GLFW_KEY_D:
       pacman_rotation_dec = (float)PacmanDirection::W_KEY + pacman_viewing_offset_dec;
       if (pacman_transx < upper_move_limit)
          pacman_transx += 0.25f;
       break;
-   case GLFW_KEY_S:
+   case GLFW_KEY_A:
       pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
       if (pacman_transx > lower_move_limit)
          pacman_transx -= 0.25f;
       break;
-   case GLFW_KEY_D:
+   case GLFW_KEY_S:
       pacman_rotation_dec = (float)PacmanDirection::D_KEY + pacman_viewing_offset_dec;
       if (pacman_transy > lower_move_limit)
          pacman_transy -= 0.25f;
       break;
-   case GLFW_KEY_A:
+   case GLFW_KEY_W:
       pacman_rotation_dec = (float)PacmanDirection::A_KEY + pacman_viewing_offset_dec;
       if (pacman_transy < upper_move_limit)
          pacman_transy += 0.25f;
@@ -361,70 +378,10 @@ int main()
 
    glUseProgram(shaderProgram);
 
-   // cube example ----------------------------------------------------------------------------------------------------------------------------------------------
-   //std::vector<glm::vec3> vertices_cube;
-   //std::vector<glm::vec3> normals_cube;
-   //std::vector<glm::vec2> UVs_cube;
-   //loadOBJ("cube.obj", vertices_cube, normals_cube, UVs_cube); //read the vertices_cube from the cube.obj file
-   //
-   //GLuint VAO_cube;
-   //glGenVertexArrays(1, &VAO_cube);
-   //// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   //GLuint vertices_VBO, normals_VBO;
-   //glGenBuffers(1, &vertices_VBO);
-   //glGenBuffers(1, &normals_VBO);
-   //
-   //// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   //glBindVertexArray(VAO_cube);
-   //
-   //glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
-   //glBufferData(GL_ARRAY_BUFFER, vertices_cube.size() * sizeof(glm::vec3), &vertices_cube.front(), GL_STATIC_DRAW);
-   //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   //glEnableVertexAttribArray(0);
-   //
-   //glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
-   //glBufferData(GL_ARRAY_BUFFER, normals_cube.size() * sizeof(glm::vec3), &normals_cube.front(), GL_STATIC_DRAW);
-   //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   //glEnableVertexAttribArray(1);
-   //
-   //glBindBuffer(GL_ARRAY_BUFFER, 0);
-   //
-   //glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
-
-   // pacman ----------------------------------------------------------------------------------------------------------------------------------------------
-   std::vector<glm::vec3> vertices_pacman;
-   std::vector<glm::vec3> normals_pacman;
-   std::vector<glm::vec2> UVs_pacman;
-   loadOBJ("pacman.obj", vertices_pacman, normals_pacman, UVs_pacman); //read the vertices_pacman from the pacman.obj file 
-
-   GLuint VAO_pacman;
-   glGenVertexArrays(1, &VAO_pacman);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
-   GLuint vertices_VBO, normals_VBO;
-   glGenBuffers(1, &vertices_VBO);
-   glGenBuffers(1, &normals_VBO);
-
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
-   glBindVertexArray(VAO_pacman);
-
-   glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
-   glBufferData(GL_ARRAY_BUFFER, vertices_pacman.size() * sizeof(glm::vec3), &vertices_pacman.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-
-   glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
-   glBufferData(GL_ARRAY_BUFFER, normals_pacman.size() * sizeof(glm::vec3), &normals_pacman.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(1);
-
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs) 
-
-   // ----------------------------------------------------------------------------------------------------------------------------------------------
+   // -----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : This will be a test for drawing a the xaxis
    std::vector<glm::vec3> vertices_xaxis = { { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } };  // cmc-edit : this is the start-end points for the x axis
-   GLuint VAO_xaxis, VBO_xaxis;                // cmc-edit : basic memory buffers
+   GLuint VAO_xaxis, VBO_xaxis;               // cmc-edit : basic memory buffers
    glGenVertexArrays(1, &VAO_xaxis);          // cmc-edit : get mem_buf https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml should always be one for this usage
    glBindVertexArray(VAO_xaxis);              // cmc-edit : now we start to work with our mem_buf
 
@@ -466,7 +423,7 @@ int main()
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
    glBindVertexArray(0);
-   // ----------------------------------------------------------------------------------------------------------------------------------------------
+   // -----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : this will be the grid lines
    std::vector<glm::vec3> vertices_grid;
    float half_grid(grid_size / 2.0f);
@@ -496,6 +453,64 @@ int main()
 
    glBindVertexArray(0);
 
+   // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
+   std::vector<glm::vec3> cube_vertices;
+   std::vector<glm::vec3> cube_normals;
+   loadOBJ("cube.obj", cube_vertices, cube_normals, std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
+
+   GLuint VAO_cube;
+   glGenVertexArrays(1, &VAO_cube);
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   GLuint cube_vertices_VBO, cube_normals_VBO;
+   glGenBuffers(1, &cube_vertices_VBO);
+   glGenBuffers(1, &cube_normals_VBO);
+
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   glBindVertexArray(VAO_cube);
+
+   glBindBuffer(GL_ARRAY_BUFFER, cube_vertices_VBO);
+   glBufferData(GL_ARRAY_BUFFER, cube_vertices.size() * sizeof(glm::vec3), &cube_vertices.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+
+   glBindBuffer(GL_ARRAY_BUFFER, cube_normals_VBO);
+   glBufferData(GL_ARRAY_BUFFER, cube_normals.size() * sizeof(glm::vec3), &cube_normals.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(1);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+
+   // pacman ----------------------------------------------------------------------------------------------------------------------------------------
+   std::vector<glm::vec3> pacman_vertices;
+   std::vector<glm::vec3> pacman_normals;
+   loadOBJ("pacman.obj", pacman_vertices, pacman_normals, std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
+
+   GLuint VAO_pacman;
+   glGenVertexArrays(1, &VAO_pacman);
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   GLuint pacman_vertices_VBO, pacman_normals_VBO;
+   glGenBuffers(1, &pacman_vertices_VBO);
+   glGenBuffers(1, &pacman_normals_VBO);
+
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   glBindVertexArray(VAO_pacman);
+
+   glBindBuffer(GL_ARRAY_BUFFER, pacman_vertices_VBO);
+   glBufferData(GL_ARRAY_BUFFER, pacman_vertices.size() * sizeof(glm::vec3), &pacman_vertices.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+
+   glBindBuffer(GL_ARRAY_BUFFER, pacman_normals_VBO);
+   glBufferData(GL_ARRAY_BUFFER, pacman_normals.size() * sizeof(glm::vec3), &pacman_normals.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(1);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs) 
+
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -503,6 +518,12 @@ int main()
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
    GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
+
+   unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size/20);
+   for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
+   {
+      Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size)-float(grid_size/2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
+   }
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -533,7 +554,7 @@ int main()
       // Cube -------------------------------------------------------------------------------------------------------------------------------------
       //glUniform1i(objectTypeLoc, 3);
       //glBindVertexArray(VAO_cube);
-      //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_cube.size());
+      //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
       //glBindVertexArray(0);
       // Grid -------------------------------------------------------------------------------------------------------------------------------------
       glUniform1i(objectColorLoc, (GLint)ObjectColors::GREY);
@@ -556,9 +577,24 @@ int main()
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
 
+      // foods --------------------------------------------------------------------------------------------------------------------------------------
+      for each (FoodPos food in Foods)
+      {
+         glm::mat4 food_model_matrix;
+         glm::vec3 food_scale(0.075f + food_scalar); // cmc-edit : this scales the object
+         food_model_matrix = glm::translate(food_model_matrix, glm::vec3(food.transx, food.transy, 0.0f));
+         food_model_matrix = glm::scale(food_model_matrix, food_scale);
+         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(food_model_matrix));
+
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
+         glBindVertexArray(VAO_cube);
+         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
+         glBindVertexArray(0);
+      }
+
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
-      glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
+      glm::vec3 pacman_scale(0.01f + pacman_scalar); // cmc-edit : this scales the object
       pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0f));                   // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
@@ -566,7 +602,7 @@ int main()
 
       glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
-      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_pacman.size());
+      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)pacman_vertices.size());
       glBindVertexArray(0);
       // --------------------------------------------------------------------------------------------------------------------------------------------
 
