@@ -17,7 +17,7 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 
 // OpenGL matrixes
 glm::vec3 camera_position;
-glm::vec3 triangle_scale;
+glm::vec3 model_scale;
 glm::mat4 projection_matrix;
 
 // Constant vectors
@@ -27,6 +27,7 @@ const glm::vec3 eye(5.0f, 1.0f, 3.0f);
 
 // rotation, translation and scalar globals
 GLfloat view_rotx = 0.0f, view_roty = 0.0f;
+GLfloat view_tranx = 0.0f, view_trany = 0.0f;
 GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
 GLfloat pacman_rotation_dec = 0.0f;
 const GLfloat pacman_viewing_offset_dec = 35.0f;
@@ -65,16 +66,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move camera
    case GLFW_KEY_UP:
-      view_rotx += 1.0;
+      view_tranx += 1.0;
       break;
    case GLFW_KEY_DOWN:
-      view_rotx -= 1.0;
+      view_tranx -= 1.0;
       break;
    case GLFW_KEY_LEFT:
-      view_roty += 1.0;
+      view_trany += 1.0;
       break;
    case GLFW_KEY_RIGHT:
-      view_roty -= 1.0;
+      view_trany -= 1.0;
+      break;
+   case GLFW_KEY_HOME:
+      view_tranx = 0.0;
+      view_trany = 0.0;
       break;
 
    // zoom in out
@@ -442,7 +447,6 @@ int main()
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-
    GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection_matrix");
    GLuint viewMatrixLoc = glGetUniformLocation(shaderProgram, "view_matrix");
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
@@ -461,10 +465,11 @@ int main()
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
+      view_matrix = glm::translate(view_matrix, glm::vec3(view_tranx, view_trany, 0.0f));
 
       glm::mat4 model_matrix;
-      triangle_scale = glm::vec3(0.25f); // cmc-edit : this scales the view
-      model_matrix = glm::scale(model_matrix, triangle_scale);
+      model_scale = glm::vec3(0.25f); // cmc-edit : this scales the objects
+      model_matrix = glm::scale(model_matrix, model_scale);
 
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model_matrix));
       glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
@@ -483,9 +488,9 @@ int main()
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
       glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
-      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));
-      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));
-      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
+      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));                    // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
+      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
+      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(pacman_model_matrix));
 
       glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
