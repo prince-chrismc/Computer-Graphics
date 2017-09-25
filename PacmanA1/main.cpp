@@ -48,6 +48,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    else
       std::cout << key << std::endl;
 
+   float upper_move_limit = float((grid_size / 2.0)*0.25);
+   float lower_move_limit = float(0 - ((grid_size / 2.0)*0.25));
+
    switch (key)
    {
    // windows close
@@ -80,19 +83,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move pacman
    case GLFW_KEY_W:
-      if(pacman_transx > -2.5f)
+      if(pacman_transx > lower_move_limit)
          pacman_transx -= 0.25f;
       break;
    case GLFW_KEY_S:
-      if (pacman_transx < 2.5f)
+      if (pacman_transx < upper_move_limit)
          pacman_transx += 0.25f;
       break;
    case GLFW_KEY_D:
-      if (pacman_transy < 2.5f)
+      if (pacman_transy < upper_move_limit)
          pacman_transy += 0.25f;
       break;
    case GLFW_KEY_A:
-      if (pacman_transy > -2.5f)
+      if (pacman_transy > lower_move_limit)
          pacman_transy -= 0.25f;
       break;
    default:
@@ -241,6 +244,7 @@ int main()
 
    glUseProgram(shaderProgram);
 
+   // cube example ----------------------------------------------------------------------------------------------------------------------------------------------
    //std::vector<glm::vec3> vertices_cube;
    //std::vector<glm::vec3> normals_cube;
    //std::vector<glm::vec2> UVs_cube;
@@ -270,6 +274,7 @@ int main()
    //
    //glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
+   // pacman ----------------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> vertices_pacman;
    std::vector<glm::vec3> normals_pacman;
    std::vector<glm::vec2> UVs_pacman;
@@ -401,7 +406,7 @@ int main()
    float half_grid(grid_size / 2.0f);
    float half_length(half_grid + 0.5f);
 
-   for (int index = 0; index <= grid_size; index++)
+   for (unsigned int index = 0; index <= grid_size; index++)
    {
       // line of x-axis
       vertices_grid.emplace_back(glm::vec3(float(index - half_grid), 0 - half_length, 0.0f));
@@ -411,8 +416,6 @@ int main()
       vertices_grid.emplace_back(glm::vec3(0 - half_length, float(index - half_grid), 0.0f));
       vertices_grid.emplace_back(glm::vec3(half_length, float(index - half_grid), 0.0f));
    }
-
-
 
    GLuint VAO_grid, VBO_grid;
    glGenVertexArrays(1, &VAO_grid);
