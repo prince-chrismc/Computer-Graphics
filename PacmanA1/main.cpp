@@ -26,14 +26,17 @@ const glm::vec3 up(0.0f, 0.0f, 1.0f);
 const glm::vec3 eye(5.0f, 1.0f, 3.0f);
 
 // rotation, translation and scalar globals
-static GLfloat view_rotx = 0.0f, view_roty = 0.0f;
-static GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
-static GLfloat pacman_rotation_dec = 0.0f;
-static GLfloat objects_scalar = 0.0f;
+GLfloat view_rotx = 0.0f, view_roty = 0.0f;
+GLfloat pacman_transx = 0.0f, pacman_transy = 0.0f;
+GLfloat pacman_rotation_dec = 0.0f;
+const GLfloat pacman_viewing_offset_dec = 35.0f;
+GLfloat objects_scalar = 0.0f;
 
+// enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
-enum class PacmanDirection { W_KEY, D_KEY, S_KEY, A_KEY };
+enum class PacmanDirection { W_KEY = 0, D_KEY = 90, S_KEY = 180, A_KEY = 270 };
 
+// dynamic user set values
 GLuint grid_size = 20;
 
 // Is called whenever a key is pressed/released via GLFW
@@ -85,18 +88,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move pacman
    case GLFW_KEY_W:
+      pacman_rotation_dec = (float)PacmanDirection::W_KEY + pacman_viewing_offset_dec;
       if(pacman_transx > lower_move_limit)
          pacman_transx -= 0.25f;
       break;
    case GLFW_KEY_S:
+      pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
       if (pacman_transx < upper_move_limit)
          pacman_transx += 0.25f;
       break;
    case GLFW_KEY_D:
+      pacman_rotation_dec = (float)PacmanDirection::D_KEY + pacman_viewing_offset_dec;
       if (pacman_transy < upper_move_limit)
          pacman_transy += 0.25f;
       break;
    case GLFW_KEY_A:
+      pacman_rotation_dec = (float)PacmanDirection::A_KEY + pacman_viewing_offset_dec;
       if (pacman_transy > lower_move_limit)
          pacman_transy -= 0.25f;
       break;
@@ -476,7 +483,6 @@ int main()
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
       glm::vec3 pacman_scale(0.01f + objects_scalar); // cmc-edit : this scales the object
-      pacman_rotation_dec += 0.1f;
       pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0));
       pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);
