@@ -65,5 +65,5 @@ RIGHT_KEY | ++Translate-X
 **Trigger** | **Action** | **Effect**
 :---: | :---: | ---
 LEFT_BUTTON | Cursor X-axis mouvement | Zoom in (towards right), Zoom out (towards left)
-MIDDLE_BUTTON | Cursor Y-axis mouvement | Tilt along board along Y-axis (up/down relative to the left side ofthe board)
+MIDDLE_BUTTON | Cursor Y-axis mouvement | Tilt along board along Z-axis (up/down relative to the left side ofthe board)
 RIGHT_BUTTON | Cursor X-axis mouvement | Pan along board X-axis (drag && drop style; right-to-right, left-to-left)
