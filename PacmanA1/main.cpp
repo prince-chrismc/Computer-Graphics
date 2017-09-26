@@ -9,6 +9,7 @@
 #include <fstream>
 #include <random>          //std::mt19937
 #include <sstream>         //std::stringstream
+#include <cmath>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -31,13 +32,14 @@ const glm::vec3 eye(0.0f, -5.0f, 3.0f);
 float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
 float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
 float pacman_rotation_dec = 0.0f;                             // controll : wasd
-const float pacman_viewing_offset_dec = 35.0f;
+const float pacman_viewing_offset_dec = 0.0f;
 float pacman_scalar = 0.0f;                                   // controll : uj
 float food_scalar = 0.0f;                                     // controll : uj
+float alien_scalar = 0.0f;                                    // controll : uj
 
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
-enum class PacmanDirection { W_KEY = 180, D_KEY = 270, S_KEY = 0, A_KEY = 90 };
+enum class PacmanDirection { W_KEY = 270, D_KEY = 0, S_KEY = 90, A_KEY = 180 };
 enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // dynamic user set values
@@ -59,6 +61,16 @@ struct FoodPos
    FoodPos(float x, float y) { transx = x; transy = y; }
 };
 std::vector<FoodPos> Foods;
+
+// alien structure and variables
+struct AlienPos
+{
+   float transx = 0.0f;
+   float transy = 0.0f;
+
+   AlienPos(float x, float y) { transx = x; transy = y; }
+};
+std::vector<AlienPos> Aliens;
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -112,12 +124,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_U:
       pacman_scalar += 0.01f;
       food_scalar += 0.075f;
+      alien_scalar += 0.125f;
       break;
    case GLFW_KEY_J:
       if (pacman_scalar > -0.01f)
          pacman_scalar -= 0.01f;
       if(food_scalar > -0.075f)
          food_scalar -= 0.075f;
+      if (alien_scalar > -0.125f)
+         alien_scalar -= 0.125f;
       break;
 
    // render mode
@@ -298,6 +313,41 @@ void GenerateFood()
    }
 }
 
+void GenerateAlien()
+{
+   std::random_device rd;
+   std::mt19937 rand_gen(rd());
+
+   unsigned int num_alien = static_cast<unsigned int>(std::floor(4.0*(grid_size / 20.0)));
+   for (unsigned int new_alien = 0; new_alien < num_alien; new_alien += 1)
+   {
+      Aliens.emplace_back(AlienPos(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
+   }
+}
+
+void ResetGame()
+{
+   Foods.clear();
+   Aliens.clear();
+
+   GenerateFood();
+   GenerateAlien();
+
+   for (std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */)
+   {
+      for each(AlienPos alien in Aliens)
+      {
+         if (food->transx == alien.transx && food->transy == alien.transy)
+         {
+            food = Foods.erase(food);
+         }
+      }
+      food++;
+   }
+
+   pacman_transx = 0.0f;
+   pacman_transy = 0.0f;
+}
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -557,7 +607,36 @@ int main()
 
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs) 
+   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+
+   // alien ----------------------------------------------------------------------------------------------------------------------------------------
+   std::vector<glm::vec3> alien_vertices;
+   std::vector<glm::vec3> alien_normals;
+   loadOBJ("teapot.obj", alien_vertices, alien_normals, std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
+
+   GLuint VAO_alien;
+   glGenVertexArrays(1, &VAO_alien);
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   GLuint alien_vertices_VBO, alien_normals_VBO;
+   glGenBuffers(1, &alien_vertices_VBO);
+   glGenBuffers(1, &alien_normals_VBO);
+
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
+   glBindVertexArray(VAO_alien);
+
+   glBindBuffer(GL_ARRAY_BUFFER, alien_vertices_VBO);
+   glBufferData(GL_ARRAY_BUFFER, alien_vertices.size() * sizeof(glm::vec3), &alien_vertices.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+
+   glBindBuffer(GL_ARRAY_BUFFER, alien_normals_VBO);
+   glBufferData(GL_ARRAY_BUFFER, alien_normals.size() * sizeof(glm::vec3), &alien_normals.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(1);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0); // Unbind VAO_alien (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -567,7 +646,7 @@ int main()
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
    GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
 
-   GenerateFood();
+   ResetGame();
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -640,6 +719,21 @@ int main()
          glBindVertexArray(0);
       }
 
+      // aliens --------------------------------------------------------------------------------------------------------------------------------------
+      for each (AlienPos alien in Aliens)
+      {
+         glm::mat4 alien_model_matrix;
+         glm::vec3 alien_scale(0.125f + alien_scalar); // cmc-edit : this scales the object
+         alien_model_matrix = glm::translate(alien_model_matrix, glm::vec3(alien.transx, alien.transy, 0.0f));
+         alien_model_matrix = glm::scale(alien_model_matrix, alien_scale);
+         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(alien_model_matrix));
+
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
+         glBindVertexArray(VAO_alien);
+         glDrawArrays((unsigned int)render_mode, 0, (GLsizei)alien_vertices.size());
+         glBindVertexArray(0);
+      }
+
       // pacman -------------------------------------------------------------------------------------------------------------------------------------
       glm::mat4 pacman_model_matrix;
       glm::vec3 pacman_scale(0.01f + pacman_scalar); // cmc-edit : this scales the object
@@ -669,12 +763,23 @@ int main()
          }
       }
 
+      for each(AlienPos alien in Aliens) // lets not touch aliens =S
+      {
+         if (alien.transx == pacman_transx && alien.transy == pacman_transy)
+         {
+            ResetGame();
+            break;
+         }
+         else
+         {
+            // TODO : figure out why the aliens dont move =?
+            (std::abs(alien.transx - pacman_transx) >= std::abs(alien.transy - pacman_transy)) ? alien.transx - 0.25f : alien.transy - 0.25f;
+         }
+      }
+
       if (Foods.empty()) // game won =)
       {
-         GenerateFood();
-
-         pacman_transx = 0.0f;
-         pacman_transy = 0.0f;
+         ResetGame();
       }
 
       // Swap the screen buffers
