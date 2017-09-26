@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <random>          //std::mt19937
+#include <sstream>         //std::stringstream
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -267,10 +268,32 @@ void windows_callback(GLFWwindow* window, int width, int height)
    projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 }
 
+const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned int& upper)
+{
+   uint16_t selection = 0;
+   do
+   {
+      std::cout << "Selcetion: ";
+      std::string input;
+      std::getline(std::cin, input);
+      std::stringstream ss(input);
+      ss >> selection;
+
+      if (selection < lower || selection > upper)
+         std::cout << "Invalid option. Please Try again..." << std::endl;
+
+   } while (selection < lower || selection > upper || selection % 2 != 1);
+
+   return selection;
+}
+
 // The MAIN function, from here we start the application and run the game loop
 int main()
 {
-   // cmc-edit : get grid size
+   std::cout << "Welcome to Pseudo Pac-Man! Simply chase food till your hearts content." << std::endl;
+
+   std::cout << std::endl << "Please Select a grid size: (odd number) recommended: 21" << std::endl;
+   grid_size = GetUserInputOddNum(9, 35) - 1;
 
    // Init GLFW
    std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -626,7 +649,7 @@ int main()
      /*                    *
       *     GAME LOGIC     *
       *                    */
-      for(std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */)
+      for(std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */) // lets eat food =)
       {
          if (food->transx == pacman_transx && food->transy == pacman_transy)
          {
@@ -638,7 +661,7 @@ int main()
          }
       }
 
-      if (Foods.empty())
+      if (Foods.empty()) // game won =)
       {
          unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
          for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
