@@ -2,6 +2,17 @@
 This is an sort of pac-man logic mini game, where the main character moves around the board eating *food* and avoiding aliens. But dont get scared off by the aliens they dont move!
 >*To view this [document](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1/README.md) properly, click on the link provided.*
 
+### Table Of Contents
+* [Contributors](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#contributors)
+* [Game Options](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#game-options)
+* [Controls](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#controls)
+ + [General](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#general)
+ + [Pac-Man](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#pac-man)
+ + [Render Mode](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#render-mode)
+ + [Object Scaling](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#object-scaling)
+ + [Camera - Keyboard](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#keyboard)
+ + [Camera - Mouse](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#mouse)
+
 ## Contributors
 **Student** | **ID**
 :---:| ---
@@ -34,7 +45,7 @@ P_KEY | Render objects as points only
 L_KEY | Render objects with lines only
 T_KEY | Render objects normally
 
-### Object Controls
+### Object Scaling
 **Action** | **Effect** | **Limit**
 :---:| --- | ---
 U_KEY | Increase the size of the objects | Max: x10
