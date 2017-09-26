@@ -24,22 +24,24 @@ glm::mat4 projection_matrix;
 // Constant vectors
 const glm::vec3 center(0.0f, 0.0f, 0.0f);
 const glm::vec3 up(0.0f, 0.0f, 1.0f);
-const glm::vec3 eye(1.0f, -5.0f, 3.0f);
+const glm::vec3 eye(0.0f, -5.0f, 3.0f);
 
 // rotation, translation and scalar globals
 float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
 float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
 float pacman_rotation_dec = 0.0f;                             // controll : wasd
 const float pacman_viewing_offset_dec = 35.0f;
-float pacman_scalar = 0.0f;                                  // controll : uj
-float food_scalar = 0.0f;                                    // controll : uj
+float pacman_scalar = 0.0f;                                   // controll : uj
+float food_scalar = 0.0f;                                     // controll : uj
 
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
 enum class PacmanDirection { W_KEY = 180, D_KEY = 270, S_KEY = 0, A_KEY = 90 };
+enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // dynamic user set values
 GLuint grid_size = 20;
+RenderMode render_mode(RenderMode::TRIANGLES);
 
 // mouse and cursor callback variables
 bool zoom = false, tilt = false, pan = false;
@@ -85,16 +87,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // move camera
    case GLFW_KEY_UP:
-      view_rotx += 1.0;
+      view_rotx += 5.0;
       break;
    case GLFW_KEY_DOWN:
-      view_rotx -= 1.0;
+      view_rotx -= 5.0;
       break;
    case GLFW_KEY_LEFT:
-      view_roty += 1.0;
+      view_roty += 5.0;
       break;
    case GLFW_KEY_RIGHT:
-      view_roty -= 1.0;
+      view_roty -= 5.0;
       break;
 
    // reset everything
@@ -107,7 +109,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       view_zoomz = 1.0;
       break;
 
-   // zoom in out
+   // scaling
    case GLFW_KEY_U:
       pacman_scalar += 0.01f;
       food_scalar += 0.075f;
@@ -118,6 +120,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       if(food_scalar > -0.075f)
          food_scalar -= 0.075f;
       break;
+
+   // render mode
+    case GLFW_KEY_P:
+      render_mode = RenderMode::POINTS;
+      break;
+    case GLFW_KEY_L:
+       render_mode = RenderMode::LINES;
+       break;
+    case GLFW_KEY_T:
+       render_mode = RenderMode::TRIANGLES;
+       break;
 
    // move pacman
    case GLFW_KEY_D:
@@ -538,9 +551,13 @@ int main()
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
+      //mouse actions
       view_matrix = glm::translate(view_matrix, glm::vec3(view_panx, 0.0f, 0.0f));
       view_matrix = glm::rotate(view_matrix, glm::radians(view_tilty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply tilt on y axis
       view_matrix = glm::scale(view_matrix, glm::vec3(view_zoomz));
+      //arrow key actions
+      view_matrix = glm::rotate(view_matrix, glm::radians(view_rotx), glm::vec3(1.0f, 0.0f, 0.0f)); // apply rotation on x axis
+      view_matrix = glm::rotate(view_matrix, glm::radians(view_roty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply rotation on y axis
       glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
       glm::mat4 model_matrix;
@@ -586,9 +603,9 @@ int main()
          food_model_matrix = glm::scale(food_model_matrix, food_scale);
          glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(food_model_matrix));
 
-         glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
          glBindVertexArray(VAO_cube);
-         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
+         glDrawArrays((unsigned int)render_mode, 0, (GLsizei)cube_vertices.size());
          glBindVertexArray(0);
       }
 
@@ -602,7 +619,7 @@ int main()
 
       glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
-      glDrawArrays(GL_TRIANGLES, 0, (GLsizei)pacman_vertices.size());
+      glDrawArrays((unsigned int)render_mode, 0, (GLsizei)pacman_vertices.size());
       glBindVertexArray(0);
       // --------------------------------------------------------------------------------------------------------------------------------------------
 
