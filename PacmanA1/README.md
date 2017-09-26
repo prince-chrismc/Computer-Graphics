@@ -6,12 +6,12 @@ This is an sort of pac-man logic mini game, where the main character moves aroun
 * [Contributors](#contributors)
 * [Game Options](#game-options)
 * [Controls](#controls)
- + [General](#general)
- + [Pac-Man](#pac-man)
- + [Render Mode](#render-mode)
- + [Object Scaling](#object-scaling)
- + [Camera - Keyboard](#keyboard)
- + [Camera - Mouse](#mouse)
+  + [General](#general)
+  + [Pac-Man](#pac-man)
+  + [Render Mode](#render-mode)
+  + [Object Scaling](#object-scaling)
+  + [Camera - Keyboard](#keyboard)
+  + [Camera - Mouse](#mouse)
 
 ## Contributors
 **Student** | **ID**
