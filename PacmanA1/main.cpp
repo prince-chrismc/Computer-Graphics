@@ -553,7 +553,7 @@ int main()
       view_matrix = glm::lookAt(eye, center, up);
       //mouse actions
       view_matrix = glm::translate(view_matrix, glm::vec3(view_panx, 0.0f, 0.0f));
-      view_matrix = glm::rotate(view_matrix, glm::radians(view_tilty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply tilt on y axis
+      view_matrix = glm::rotate(view_matrix, glm::radians(view_tilty), glm::vec3(0.0f, 0.0f, 1.0f)); // apply tilt on y axis
       view_matrix = glm::scale(view_matrix, glm::vec3(view_zoomz));
       //arrow key actions
       view_matrix = glm::rotate(view_matrix, glm::radians(view_rotx), glm::vec3(1.0f, 0.0f, 0.0f)); // apply rotation on x axis
@@ -622,6 +622,32 @@ int main()
       glDrawArrays((unsigned int)render_mode, 0, (GLsizei)pacman_vertices.size());
       glBindVertexArray(0);
       // --------------------------------------------------------------------------------------------------------------------------------------------
+
+     /*                    *
+      *     GAME LOGIC     *
+      *                    */
+      for(std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */)
+      {
+         if (food->transx == pacman_transx && food->transy == pacman_transy)
+         {
+            food = Foods.erase(food);
+         }
+         else
+         {
+            food++;
+         }
+      }
+
+      if (Foods.empty())
+      {
+         unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
+         for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
+         {
+            Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
+            pacman_transx = 0.0f;
+            pacman_transy = 0.0f;
+         }
+      }
 
       // Swap the screen buffers
       glfwSwapBuffers(window);
