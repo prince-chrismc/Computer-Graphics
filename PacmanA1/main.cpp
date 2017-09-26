@@ -59,8 +59,6 @@ struct FoodPos
    FoodPos(float x, float y) { transx = x; transy = y; }
 };
 std::vector<FoodPos> Foods;
-std::random_device rd;
-std::mt19937 rand_gen(rd());
 
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -268,6 +266,7 @@ void windows_callback(GLFWwindow* window, int width, int height)
    projection_matrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 }
 
+// copied from another project https://github.com/prince-chrismc/Pandemic/blob/master/Pandemic/Sources/GameEngine.cpp small modifications
 const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned int& upper)
 {
    uint16_t selection = 0;
@@ -286,6 +285,19 @@ const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned 
 
    return selection;
 }
+
+void GenerateFood()
+{
+   std::random_device rd;
+   std::mt19937 rand_gen(rd());
+
+   unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
+   for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
+   {
+      Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
+   }
+}
+
 
 // The MAIN function, from here we start the application and run the game loop
 int main()
@@ -555,11 +567,7 @@ int main()
    GLuint transformLoc = glGetUniformLocation(shaderProgram, "model_matrix");
    GLuint objectColorLoc = glGetUniformLocation(shaderProgram, "object_color");
 
-   unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size/20);
-   for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
-   {
-      Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size)-float(grid_size/2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
-   }
+   GenerateFood();
 
    // Game loop
    while (!glfwWindowShouldClose(window))
@@ -663,13 +671,10 @@ int main()
 
       if (Foods.empty()) // game won =)
       {
-         unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
-         for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
-         {
-            Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
-            pacman_transx = 0.0f;
-            pacman_transy = 0.0f;
-         }
+         GenerateFood();
+
+         pacman_transx = 0.0f;
+         pacman_transy = 0.0f;
       }
 
       // Swap the screen buffers
