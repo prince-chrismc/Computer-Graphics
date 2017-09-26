@@ -122,9 +122,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    // scaling
    case GLFW_KEY_U:
-      pacman_scalar += 0.01f;
-      food_scalar += 0.075f;
-      alien_scalar += 0.125f;
+      if (pacman_scalar < 0.09f)
+         pacman_scalar += 0.01f;
+      if (food_scalar < 0.675f)
+         food_scalar += 0.075f;
+      if (alien_scalar < 1.250f)
+         alien_scalar += 0.125f;
       break;
    case GLFW_KEY_J:
       if (pacman_scalar > -0.01f)
