@@ -3,15 +3,15 @@ This is an sort of pac-man logic mini game, where the main character moves aroun
 >*To view this [document](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1/README.md) properly, click on the link provided.*
 
 ### Table Of Contents
-* [Contributors](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#contributors)
-* [Game Options](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#game-options)
-* [Controls](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#controls)
- + [General](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#general)
- + [Pac-Man](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#pac-man)
- + [Render Mode](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#render-mode)
- + [Object Scaling](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#object-scaling)
- + [Camera - Keyboard](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#keyboard)
- + [Camera - Mouse](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1#mouse)
+* [Contributors](#contributors)
+* [Game Options](#game-options)
+* [Controls](#controls)
+ + [General](#general)
+ + [Pac-Man](#pac-man)
+ + [Render Mode](#render-mode)
+ + [Object Scaling](#object-scaling)
+ + [Camera - Keyboard](#keyboard)
+ + [Camera - Mouse](#mouse)
 
 ## Contributors
 **Student** | **ID**
