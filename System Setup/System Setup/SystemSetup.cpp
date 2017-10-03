@@ -11,6 +11,12 @@ int main()
 {
    std::cout << "Hello World!" << std::endl;
 
+   if (!IsElevated())
+   {
+      std::cout << "Not running as admin, you need admin rights for this too work..." << std::endl;
+      return -1;
+   }
+
    STARTUPINFO si;
    PROCESS_INFORMATION pi;
 
@@ -58,4 +64,21 @@ const uint16_t GetUserInput(const uint16_t & lower, const uint16_t & upper)
    } while (selection < lower || selection > upper);
 
    return selection;
+}
+
+BOOL IsElevated() 
+{
+   BOOL fRet = FALSE;
+   HANDLE hToken = NULL;
+   if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+      TOKEN_ELEVATION Elevation;
+      DWORD cbSize = sizeof(TOKEN_ELEVATION);
+      if (GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof(Elevation), &cbSize)) {
+         fRet = Elevation.TokenIsElevated;
+      }
+   }
+   if (hToken) {
+      CloseHandle(hToken);
+   }
+   return fRet;
 }
