@@ -22,4 +22,9 @@
   <ItemGroup>
     <Text Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SystemSetup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
