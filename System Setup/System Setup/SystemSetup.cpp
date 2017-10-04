@@ -32,6 +32,9 @@ int main()
    std::cout << std::endl << "Now For GLEW 2.1.0 include directory..." << std::endl;
    std::string glew_inc_dir = GetPathToFile("\\GL\\glew.h");
 
+   std::cout << std::endl << "Now For GLEW 2.1.0 library directory..." << std::endl;
+   std::string glew_lib_dir = GetPathToFile("\\Debug\\glew32d.lib");
+
    std::cout << std::endl << "Continuing with GLFW 3.2.1 include directory..." << std::endl;
    std::string glfw_inc_dir = GetPathToFile("\\GLFW\\glfw3.h");
 
@@ -39,7 +42,7 @@ int main()
    std::string glfw_lib_dir = GetPathToFile("\\Debug\\glfw3.lib");
 
    std::cout << "Creating batch file...";
-   if (!CreateScript(glm_inc_dir, glew_inc_dir, glfw_inc_dir, glfw_lib_dir))
+   if (!CreateScript(glm_inc_dir, glew_inc_dir, glew_lib_dir, glfw_inc_dir, glfw_lib_dir))
    {
       std::cout << "   FAILED!" << std::endl;
       return -1;
@@ -51,7 +54,9 @@ int main()
       std::cout << "FAILED to execute script!" << std::endl;
       return -1;
    }
-   std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl;
+
+   std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl << "Press 'enter' to exit." << std::endl;
+   std::getline(std::cin, std::string());
 
    return 0;
 }
@@ -172,23 +177,23 @@ BOOL TryToOpenFile(const std::string& full_path)
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540534(v=vs.85).aspx
 // https://stackoverflow.com/a/21606502/8480874
-BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_dir, const std::string& glfw_inc_dir, const std::string& glfw_lib_dir)
+BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_dir, const std::string& glew_lib_dir, const std::string& glfw_inc_dir, const std::string& glfw_lib_dir)
 {
    HANDLE hFile;
 
-   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + " /m\n";
+   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + " /m\nsetx GLEW_LIB_DIR " + glew_lib_dir + " /m\n";
 
    DWORD dwBytesToWrite = (DWORD)strlen(script.c_str());
    DWORD dwBytesWritten = 0;
    BOOL bErrorFlag = FALSE;
 
-   hFile = CreateFile(L"setup.bat",                // name of the write
-      GENERIC_WRITE,          // open for writing
-      0,                      // do not share
-      NULL,                   // default security
-      CREATE_NEW,             // create new file only
-      FILE_ATTRIBUTE_NORMAL,  // normal file
-      NULL);                  // no attr. template
+   hFile = CreateFile(L"setup.bat",           // name of the write
+                      GENERIC_WRITE,          // open for writing
+                      0,                      // do not share
+                      NULL,                   // default security
+                      CREATE_ALWAYS,          // create new file only
+                      FILE_ATTRIBUTE_NORMAL,  // normal file
+                      NULL);                  // no attr. template
 
    if (hFile == INVALID_HANDLE_VALUE)
    {
@@ -198,12 +203,11 @@ BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_di
 
    printf("Writing %d bytes to %s.\n", dwBytesToWrite, "setup.bat");
 
-   bErrorFlag = WriteFile(
-      hFile,           // open file handle
-      script.c_str(),      // start of data to write
-      dwBytesToWrite,  // number of bytes to write
-      &dwBytesWritten, // number of bytes that were written
-      NULL);            // no overlapped structure
+   bErrorFlag = WriteFile(hFile,            // open file handle
+                          script.c_str(),   // start of data to write
+                          dwBytesToWrite,   // number of bytes to write
+                          &dwBytesWritten,  // number of bytes that were written
+                          NULL);            // no overlapped structure
 
    if (FALSE == bErrorFlag)
    {
