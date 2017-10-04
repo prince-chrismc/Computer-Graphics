@@ -7,6 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <shlobj.h>
+#include <tchar.h>
 
 #include "SystemSetup.h"
 
@@ -37,35 +38,22 @@ int main()
    std::cout << std::endl << "Continuing with GLFW 3.2.1 library directory..." << std::endl;
    std::string glfw_lib_dir = GetPathToFile("\\Debug\\glfw3.lib");
 
-   CreateScript(glm_inc_dir, glew_inc_dir, glfw_inc_dir, glfw_lib_dir);
+   std::cout << "Creating batch file...";
+   if (!CreateScript(glm_inc_dir, glew_inc_dir, glfw_inc_dir, glfw_lib_dir))
+   {
+      std::cout << "   FAILED!" << std::endl;
+      return -1;
+   }
+   std::cout << "   PASS!" << std::endl;
 
-   //if (ExecuteScript())
-   //{
-   //   std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl;
-   //}
+   if (!ExecuteScript())
+   {
+      std::cout << "FAILED to execute script!" << std::endl;
+      return -1;
+   }
+   std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl;
 
    return 0;
-}
-
-const uint16_t GetUserInput(const uint16_t & lower, const uint16_t & upper)
-{
-   // this is a gneral utility function to get a valid input between two values (inclusively)
-   // adding this removed aprox. 200 lines of code lol
-   uint16_t selection = 0;
-   do
-   {
-      std::cout << "Selcetion: ";
-      std::string input;
-      std::getline(std::cin, input);
-      std::stringstream ss(input);
-      ss >> selection;
-
-      if (selection < lower || selection > upper)
-         std::cout << "Invalid option. Please Try again..." << std::endl;
-
-   } while (selection < lower || selection > upper);
-
-   return selection;
 }
 
 // https://stackoverflow.com/a/8196291/8480874
@@ -204,7 +192,7 @@ BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_di
 
    if (hFile == INVALID_HANDLE_VALUE)
    {
-      printf("Terminal failure: Unable to open file \"setup.bat\" for write.\n");
+      printf("Terminal failure: Unable to create file \"setup.bat\" for write.\n");
       return FALSE;
    }
 
@@ -248,11 +236,12 @@ BOOL ExecuteScript()
 {
    STARTUPINFO si;
    PROCESS_INFORMATION pi;
+   LPTSTR szCmdline = _tcsdup(TEXT("cmd /C  setup.bat"));
 
    ZeroMemory(&si, sizeof(si));
    si.cb = sizeof(si);
    ZeroMemory(&pi, sizeof(pi));
-   if (!CreateProcess(NULL, L"cmd /C  setup.bat",
+   if (!CreateProcess(NULL, szCmdline,
       NULL, NULL, FALSE, 0, NULL, NULL,
       &si, &pi)
       )
