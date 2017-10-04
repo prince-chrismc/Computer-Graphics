@@ -164,6 +164,10 @@
     <ClCompile Include="src\GlfwWindow.cpp" />
     <ClCompile Include="src\Template.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.shader" />
+    <None Include="shaders\vertex.shader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
