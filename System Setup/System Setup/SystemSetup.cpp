@@ -16,21 +16,28 @@ int main()
 
    if (!IsElevated())
    {
-      std::cout << "Not running as admin, you need admin rights for this too work..." << std::endl;
+      std::cout << "Not running as admin, you need admin rights for this too work..." << std::endl << " Press 'enter' to exit" << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
-   std::cout << std::endl << "This setup application is to only configure your enviroment variables, you must manually install the libraries yourself." << std::endl;
+   std::cout << std::endl << "This setup application is to only configure your enviroment variables, you must manually install the libraries yourself." << std::endl << " If you have any question on what to do check out the repository this was developed in." << std::endl;
 
+   Sleep(1000);
 
-   std::cout << BrowseFolder("C:\\WINDOWS\\System32\\") << std::endl;
-
-
-
-   if (ExecuteScript())
+   std::cout << std::endl << "First of GLM 9.8.5 include directory..." << std::endl;
+   std::string glm_inc_dir = BrowseFolder("C:\\WINDOWS\\System32\\");
+   std::cout << "Testing: " << glm_inc_dir << "for glm\\glm.hpp...";
+   if (TryToOpenFile(std::string(glm_inc_dir + "\\glm\\glm.hpp")))
    {
-      std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl;
+      std::cout << "  ... PASS!" << std::endl;
    }
+
+
+   //if (ExecuteScript())
+   //{
+   //   std::cout << "Successfully setup enviroment variables!" << std::endl << "  To use them you must logout and back in." << std::endl;
+   //}
 
    return 0;
 }
@@ -56,6 +63,7 @@ const uint16_t GetUserInput(const uint16_t & lower, const uint16_t & upper)
    return selection;
 }
 
+// https://stackoverflow.com/a/8196291/8480874
 BOOL IsElevated()
 {
    BOOL fRet = FALSE;
@@ -116,13 +124,42 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
    if (uMsg == BFFM_INITIALIZED)
    {
       std::string tmp = (const char *)lpData;
-      std::cout << "path: " << tmp << std::endl;
+      //std::cout << "path: " << tmp << std::endl;
       SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
    }
 
    return 0;
 }
 
+BOOL TryToOpenFile(const std::string& full_path)
+{
+   const DWORD BUFFERSIZE = 5;
+   HANDLE hFile;
+   DWORD  dwBytesRead = 0;
+   char   ReadBuffer[BUFFERSIZE] = { 0 };
+   OVERLAPPED ol = { 0 };
+
+   std::wstring w_path(full_path.begin(), full_path.end());
+
+   hFile = CreateFile(w_path.c_str(),               // file to open
+      GENERIC_READ,          // open for reading
+      FILE_SHARE_READ,       // share for reading
+      NULL,                  // default security
+      OPEN_EXISTING,         // existing file only
+      FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
+      NULL);                 // no attr. template
+
+   if (hFile == INVALID_HANDLE_VALUE)
+   {
+      printf("Terminal failure: unable to open file \"%s\" for read.\n", full_path.c_str());
+      return FALSE;
+   }
+
+   CloseHandle(hFile);
+   return TRUE;
+}
+
+// http://www.cplusplus.com/forum/general/102587/#msg551994
 BOOL ExecuteScript()
 {
    STARTUPINFO si;
