@@ -21,7 +21,7 @@ This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) 
   - [GLM 9.8.5](https://github.com/g-truc/glm/releases/tag/0.9.8.5)
   - [GLEW 2.1.0](https://github.com/nigels-com/glew/releases/tag/glew-2.1.0)
   
-You are no longer required to download and compile the libraries above; for the System Setup there is a zip which contains all the binaries for x64 (Debug/Release) as well as the include file structures. The Setup application and the libraries are avaliable [here](https://github.com/prince-chrismc/Computer-Graphics/releases/tag/Setup-v1.0.0) for download. For details about [installing the libraries](#Libraries-Installation) or for setting up the [enviroment variables](#Setting-Enviroment-Variables).
+You are no longer required to download and compile the libraries above; for the System Setup there is a zip which contains all the binaries for x64 (Debug/Release) as well as the include file structures. The Setup application and the libraries are avaliable [here](https://github.com/prince-chrismc/Computer-Graphics/releases/tag/Setup-v1.1.0) for download. For details about [installing the libraries](#Libraries-Installation) or for setting up the [enviroment variables](#Setting-Enviroment-Variables).
   
 ### Libraries Installation
 1. Use the link above to download the `Libraries`

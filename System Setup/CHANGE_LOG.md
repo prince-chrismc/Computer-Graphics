@@ -8,6 +8,11 @@ To track modifications to the website's content.
 
 > x.x.0 - Fix:   Small tweaks which do not impact stability
 
+## Setup 1.1.0
+- Now works even if `setup.bat` exists
+- Sets Enviroment variables (include directory { GLM, GLEW, GLFW } library directory { GLEW, GLFW }
+- corrected type for GLFW lib env var
+
 ## Setup 1.0.0
 - Initial Release of `System Setup.exe`
 - Supported Platforms: Windows x64
