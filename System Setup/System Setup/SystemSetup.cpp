@@ -232,6 +232,7 @@ BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_di
 }
 
 // http://www.cplusplus.com/forum/general/102587/#msg551994
+// https://stackoverflow.com/a/10044348/8480874
 BOOL ExecuteScript()
 {
    STARTUPINFO si;

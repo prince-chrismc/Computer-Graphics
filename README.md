@@ -1,11 +1,19 @@
 # Computer-Graphics
-This a C++ OpenGL repository to contain my work for COMP371 from Concordia Universirty during the Fall 2017 semester
+This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) from Concordia Universirty during Fall 2017.
 
+### Table of Contents
+- [Modules](#Modules)
+- [System Setup](#System-Setup)
+  - [Libraries Installation](#Libraries-Installation)
+  - [Setting Enviroment Variables](#Setting-Enviroment-Variables)
+  
 ## Modules
+- [System Setup App](https://github.com/prince-chrismc/Computer-Graphics/blob/master/System-Setup)
 - [Pseudo Pac-Man](https://github.com/prince-chrismc/Computer-Graphics/blob/master/PacmanA1)
+- [Catmull Height Map]()
 
 ## System Setup
-> Currently the projects are hard coded to my workstations layout due to the CMake provided for the assignement. This needs to be correct with enviroment variables setup so i can migrate my work to my laptop as well
+> Due to how the first assignment was distributed, the Pam-Man project does not use the enviroment variables. It is hardcoded for my workstation's configuration.
 
 - Visual Studio
 - OpenGL Libraries
@@ -13,15 +21,15 @@ This a C++ OpenGL repository to contain my work for COMP371 from Concordia Unive
   - [GLM 9.8.5](https://github.com/g-truc/glm/releases/tag/0.9.8.5)
   - [GLEW 2.1.0](https://github.com/nigels-com/glew/releases/tag/glew-2.1.0)
   
-### GLFW Installation
-- Download source code, use CMake to build VS solution (one per platform). Compile Debug and Release in both Win32 and x64. Libs can be found in `...\glfw-3.2.1\src\$(Configuration)\`
-- point to the libraries
-- point to the include directory
+You are no longer required to download and compile the libraries above; for the System Setup there is a zip which contains all the binaries for x64 (Debug/Release) as well as the include file structures. The Setup application and the libraries are avaliable [here](https://github.com/prince-chrismc/Computer-Graphics/releases/tag/Setup-v1.0.0) for download. For details about [installing the libraries](#Libraries-Installation) or for setting up the [enviroment variables](#Setting-Enviroment-Variables).
+  
+### Libraries Installation
+1. Use the link above to download the `Libraries`
+2. Extract the files to the location you desire. Recommended `C:\Users\<your_username>\OpenGL\`
+3. Copy the runtime .dll's to the system folder. `C:\Windows\System32\`
 
-### GLM Installation
-- This is a header only library; no compilation is required though it is possible to compile a .lib and .dll it is not required for this repository
-- point to the include directory
+### Setting Enviroment Variables
+1. Use the link above to download the `System Setup.exe`
+2. Run the `System Setup.exe` and follow the directions (ie. select the directories)
 
-### GLEW Installation
-- Download the source code, in the `build\` there's a `vc15\glew.sln` which allows for compilation. Debug and Release in both Win32 and x64. The .dll will need to be added to the [correct system](https://stackoverflow.com/a/950011/8480874) directories for applications to run.
-- point to the include directory
+Note this app is not fancy; if you don't input a correct directory is will ask you again forever, close the console to exit. If for whatever the apps fails make sure to delete the `setup.bat` file if it was create (same directory which was the app is running from).
