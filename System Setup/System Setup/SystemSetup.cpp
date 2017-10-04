@@ -26,12 +26,16 @@ int main()
    Sleep(1000);
 
    std::cout << std::endl << "First of GLM 9.8.5 include directory..." << std::endl;
-   std::string glm_inc_dir = BrowseFolder("C:\\WINDOWS\\System32\\");
-   std::cout << "Testing: " << glm_inc_dir << "for glm\\glm.hpp...";
-   if (TryToOpenFile(std::string(glm_inc_dir + "\\glm\\glm.hpp")))
-   {
-      std::cout << "  ... PASS!" << std::endl;
-   }
+   std::string glm_inc_dir = GetPathToFile("\\glm\\glm.hpp");
+
+   std::cout << std::endl << "Now For GLEW 2.1.0 include directory..." << std::endl;
+   std::string glew_inc_dir = GetPathToFile("\\GL\\glew.h");
+
+   std::cout << std::endl << "Continuing with GLFW 3.2.1 include directory..." << std::endl;
+   std::string glfw_inc_dir = GetPathToFile("\\GLFW\\glfw3.h");
+
+   std::cout << std::endl << "Continuing with GLFW 3.2.1 library directory..." << std::endl;
+   std::string glfw_lib_dir = GetPathToFile("\\Debug\\glfw3.lib");
 
 
    //if (ExecuteScript())
@@ -131,6 +135,23 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
    return 0;
 }
 
+std::string GetPathToFile(const std::string& file_path)
+{
+
+   std::string dir = BrowseFolder("C:\\WINDOWS\\System32\\");
+   std::cout << "Testing: " << dir << " for " << file_path << "...";
+   if (TryToOpenFile(dir + file_path))
+   {
+      std::cout << "  PASS!" << std::endl;
+      return dir;
+   }
+   else
+   {
+      std::cout << " FAILED!" << std::endl << "   Please try again." << std::endl;
+      return GetPathToFile(file_path);
+   }
+}
+
 BOOL TryToOpenFile(const std::string& full_path)
 {
    const DWORD BUFFERSIZE = 5;
@@ -151,7 +172,7 @@ BOOL TryToOpenFile(const std::string& full_path)
 
    if (hFile == INVALID_HANDLE_VALUE)
    {
-      printf("Terminal failure: unable to open file \"%s\" for read.\n", full_path.c_str());
+      //printf("Terminal failure: unable to open file \"%s\" for read.\n", full_path.c_str());
       return FALSE;
    }
 
