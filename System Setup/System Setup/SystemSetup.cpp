@@ -37,6 +37,7 @@ int main()
    std::cout << std::endl << "Continuing with GLFW 3.2.1 library directory..." << std::endl;
    std::string glfw_lib_dir = GetPathToFile("\\Debug\\glfw3.lib");
 
+   CreateScript(glm_inc_dir, glew_inc_dir, glfw_inc_dir, glfw_lib_dir);
 
    //if (ExecuteScript())
    //{
@@ -152,6 +153,7 @@ std::string GetPathToFile(const std::string& file_path)
    }
 }
 
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb540534(v=vs.85).aspx
 BOOL TryToOpenFile(const std::string& full_path)
 {
    const DWORD BUFFERSIZE = 5;
@@ -174,6 +176,67 @@ BOOL TryToOpenFile(const std::string& full_path)
    {
       //printf("Terminal failure: unable to open file \"%s\" for read.\n", full_path.c_str());
       return FALSE;
+   }
+
+   CloseHandle(hFile);
+   return TRUE;
+}
+
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb540534(v=vs.85).aspx
+// https://stackoverflow.com/a/21606502/8480874
+BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_dir, const std::string& glfw_inc_dir, const std::string& glfw_lib_dir)
+{
+   HANDLE hFile;
+
+   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + "/m\n";
+
+   DWORD dwBytesToWrite = (DWORD)strlen(script.c_str());
+   DWORD dwBytesWritten = 0;
+   BOOL bErrorFlag = FALSE;
+
+   hFile = CreateFile(L"setup.bat",                // name of the write
+      GENERIC_WRITE,          // open for writing
+      0,                      // do not share
+      NULL,                   // default security
+      CREATE_NEW,             // create new file only
+      FILE_ATTRIBUTE_NORMAL,  // normal file
+      NULL);                  // no attr. template
+
+   if (hFile == INVALID_HANDLE_VALUE)
+   {
+      printf("Terminal failure: Unable to open file \"setup.bat\" for write.\n");
+      return FALSE;
+   }
+
+   printf("Writing %d bytes to %s.\n", dwBytesToWrite, "setup.bat");
+
+   bErrorFlag = WriteFile(
+      hFile,           // open file handle
+      script.c_str(),      // start of data to write
+      dwBytesToWrite,  // number of bytes to write
+      &dwBytesWritten, // number of bytes that were written
+      NULL);            // no overlapped structure
+
+   if (FALSE == bErrorFlag)
+   {
+      printf("Terminal failure: Unable to write to file.\n");
+      return FALSE;
+   }
+   else
+   {
+      if (dwBytesWritten != dwBytesToWrite)
+      {
+         // This is an error because a synchronous write that results in
+         // success (WriteFile returns TRUE) should write all data as
+         // requested. This would not necessarily be the case for
+         // asynchronous writes.
+         printf("Error: dwBytesWritten != dwBytesToWrite\n");
+         return FALSE;
+      }
+      else
+      {
+         printf("Wrote %d bytes to %s successfully.\n", dwBytesWritten, "setup.bat");
+      }
    }
 
    CloseHandle(hFile);
