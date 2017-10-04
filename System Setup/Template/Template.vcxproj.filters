@@ -18,8 +18,16 @@
     <ClCompile Include="Template.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GlfwWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GlfwWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
