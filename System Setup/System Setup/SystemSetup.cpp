@@ -176,7 +176,7 @@ BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_di
 {
    HANDLE hFile;
 
-   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + "/m\n";
+   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + " /m\n";
 
    DWORD dwBytesToWrite = (DWORD)strlen(script.c_str());
    DWORD dwBytesWritten = 0;
