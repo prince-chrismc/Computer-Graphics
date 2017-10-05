@@ -52,6 +52,6 @@ class GlfwWindow
       GLFWwindow* m_window;
       glm::mat4   m_Projection;
 
-      void GlfwWindow::windows_callback(GLFWwindow* window, int width, int height);
+      void window_callback(GLFWwindow* window, int width, int height);
 };
 

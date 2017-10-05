@@ -76,8 +76,6 @@ int main()
    const glm::vec3 up(0.0f, 0.0f, 1.0f);
    const glm::vec3 eye(0.0f, -5.0f, 3.0f);
 
-   glm::mat4 projection_matrix = glm::perspective(45.0f, (GLfloat)GlfwWindow::DEFAULT_WIDTH / (GLfloat)GlfwWindow::DEFAULT_HEIGHT, 0.0f, 100.0f);
-
    // Game loop
    while (! ~window)
    {
@@ -93,7 +91,7 @@ int main()
       view_matrix = glm::lookAt(eye, center, up);
       shaderProgram.SetShaderMat4("view_matrix", view_matrix);
 
-      shaderProgram.SetShaderMat4("projection_matrix", projection_matrix);
+      shaderProgram.SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
 
       ++window;
    }

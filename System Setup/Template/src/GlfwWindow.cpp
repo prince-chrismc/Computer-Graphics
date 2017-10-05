@@ -67,7 +67,7 @@ GlfwWindow::~GlfwWindow()
 }
 
 
-void GlfwWindow::windows_callback(GLFWwindow* window, int width, int height)
+void GlfwWindow::window_callback(GLFWwindow* window, int width, int height)
 {
    // notify GL and calc Projection Matrix using new size
    glViewport(0, 0, width, height);
