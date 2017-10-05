@@ -159,9 +159,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GlfwWindow.h" />
+    <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GlfwWindow.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Template.cpp" />
   </ItemGroup>
   <ItemGroup>
