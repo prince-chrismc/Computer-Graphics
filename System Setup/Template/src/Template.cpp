@@ -29,6 +29,7 @@ SOFTWARE.
 #include <iostream>
 
 #include "GL/glew.h"       // include GL Extension Wrangler
+#include "glm/gtc/matrix_transform.hpp" //glm::lookAt
 
 #include "GlfwWindow.h"
 #include "Shader.h"
@@ -62,17 +63,40 @@ int main()
       return -1;
    }
 
-   ShaderLinker shaderLinker;
-   shaderLinker.AddShader(&vertexShader);
-   shaderLinker.AddShader(&fragmentShader);
-   if (!shaderLinker.Link())
+   ShaderLinker shaderProgram;
+   shaderProgram.AddShader(&vertexShader);
+   shaderProgram.AddShader(&fragmentShader);
+   if (!shaderProgram.Link())
    {
       return -1;
    }
 
+   // Constant vectors
+   const glm::vec3 center(0.0f, 0.0f, 0.0f);
+   const glm::vec3 up(0.0f, 0.0f, 1.0f);
+   const glm::vec3 eye(0.0f, -5.0f, 3.0f);
 
+   glm::mat4 projection_matrix = glm::perspective(45.0f, (GLfloat)GlfwWindow::DEFAULT_WIDTH / (GLfloat)GlfwWindow::DEFAULT_HEIGHT, 0.0f, 100.0f);
 
+   // Game loop
+   while (! ~window)
+   {
+      // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+      glfwPollEvents();
+
+      // Render
+      // Clear the colorbuffer
+      glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      glm::mat4 view_matrix;
+      view_matrix = glm::lookAt(eye, center, up);
+      shaderProgram.SetShaderMat4("view_matrix", view_matrix);
+
+      shaderProgram.SetShaderMat4("projection_matrix", projection_matrix);
+
+      ++window;
+   }
 
    return 0;
 }
-

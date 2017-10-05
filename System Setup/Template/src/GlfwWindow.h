@@ -35,6 +35,7 @@ class GlfwWindow
 
       bool operator()() { return m_window != nullptr; } // Make sure windows exists
       void operator++() { glfwSwapBuffers(m_window); }  // Swap the screen buffers
+      bool operator~() { return glfwWindowShouldClose(m_window); } // window should close
 
       const glm::mat4& GetProjectionMatrix() { return m_Projection; }
 

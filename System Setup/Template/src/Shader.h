@@ -25,7 +25,8 @@ SOFTWARE.
 #pragma once
 
 #include <string>
-#include "GL/glew.h"       // include GL Extension Wrangler
+#include "GL/glew.h"             // include GL Extension Wrangler
+#include "glm/gtc/type_ptr.hpp"  // glm::value_ptr
 
 class Shader abstract
 {
@@ -71,6 +72,11 @@ class ShaderLinker
 
       void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
       bool Link();
+
+      GLuint GetUniformLocation(const char* shader_obj) { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
+
+      void SetShaderInt(const char* shader_obj, const GLint& i) { glUniform1i(GetUniformLocation(shader_obj), i); }
+      void SetShaderMat4(const char* shader_obj, const glm::mat4& mat) { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
 
    private:
       GLuint m_ShaderProgram;
