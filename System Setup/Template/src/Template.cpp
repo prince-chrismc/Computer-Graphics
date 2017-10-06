@@ -57,16 +57,16 @@ int main()
    // Build and compile our shader program
    VertexShader vertexShader("shaders/vertex.shader");
    FragmentShader fragmentShader("shaders/fragment.shader");
-   // Link shaders
+   // make sure they are ready to use
    if (!vertexShader() || !fragmentShader())
    {
       return -1;
    }
 
-   ShaderLinker shaderProgram;
-   shaderProgram.AddShader(&vertexShader);
-   shaderProgram.AddShader(&fragmentShader);
-   if (!shaderProgram.Link())
+   ShaderLinker* shaderProgram = &ShaderLinker::GetInstance();
+   shaderProgram->AddShader(&vertexShader);
+   shaderProgram->AddShader(&fragmentShader);
+   if (!shaderProgram->Link())
    {
       return -1;
    }
@@ -89,11 +89,11 @@ int main()
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
-      shaderProgram.SetShaderMat4("view_matrix", view_matrix);
+      shaderProgram->SetShaderMat4("view_matrix", view_matrix);
 
-      shaderProgram.SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
+      shaderProgram->SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
 
-      ++window;
+      ++window; // swap buffers
    }
 
    return 0;

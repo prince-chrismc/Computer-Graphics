@@ -67,8 +67,7 @@ class FragmentShader : public Shader
 class ShaderLinker
 {
    public:
-      ShaderLinker() { m_ShaderProgram = glCreateProgram(); }
-      ~ShaderLinker() {}
+      static ShaderLinker& GetInstance() { static ShaderLinker instance; return instance; }
 
       void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
       bool Link();
@@ -80,4 +79,9 @@ class ShaderLinker
 
    private:
       GLuint m_ShaderProgram;
+
+      ShaderLinker() { m_ShaderProgram = glCreateProgram(); }
+      ~ShaderLinker() = default;
+      ShaderLinker(const ShaderLinker&) = delete;
+      ShaderLinker& operator=(const ShaderLinker&) = delete;
 };
