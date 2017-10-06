@@ -35,7 +35,7 @@ friend class ShaderLinker;
       Shader(const std::string& rel_path);
       ~Shader();
 
-      bool operator()() { return m_Status; }
+      bool operator()() const { return m_Status; }
 
    protected:
       virtual bool Compile(const std::string& ShaderCode) = 0;
@@ -73,10 +73,10 @@ class ShaderLinker
       void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
       bool Link();
 
-      GLuint GetUniformLocation(const char* shader_obj) { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
+      GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
 
-      void SetShaderInt(const char* shader_obj, const GLint& i) { glUniform1i(GetUniformLocation(shader_obj), i); }
-      void SetShaderMat4(const char* shader_obj, const glm::mat4& mat) { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
+      void SetShaderInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
+      void SetShaderMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
 
    private:
       GLuint m_ShaderProgram;

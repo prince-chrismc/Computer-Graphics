@@ -33,11 +33,11 @@ class GlfwWindow
       GlfwWindow(const int& width, const int& height);
       ~GlfwWindow();
 
-      bool operator()() { return m_window != nullptr; } // Make sure windows exists
+      bool operator()() const { return m_window != nullptr; } // Make sure windows exists
       void operator++() { glfwSwapBuffers(m_window); }  // Swap the screen buffers
-      bool operator~() { return glfwWindowShouldClose(m_window); } // window should close
+      bool operator~() const { return glfwWindowShouldClose(m_window); } // window should close
 
-      const glm::mat4& GetProjectionMatrix() { return m_Projection; }
+      const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 
       // Allow the required callback functions
       GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { glfwSetKeyCallback(m_window, cbfun); }
