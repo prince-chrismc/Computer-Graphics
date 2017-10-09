@@ -329,12 +329,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\objloader.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="E:\Programming\OpenGL\Computer-Graphics\PacmanA1\ZERO_CHECK.vcxproj">
-      <Project>{F56CB390-7C8B-3573-8CD3-F909AA7F53BD}</Project>
-      <Name>ZERO_CHECK</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="fragment.shader" />
     <None Include="vertex.shader" />
   </ItemGroup>

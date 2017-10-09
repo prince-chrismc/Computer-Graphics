@@ -1,3 +1,0 @@
-E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/SkeletonCode.dir
-E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/ALL_BUILD.dir
-E:/Programming/OpenGL/Computer-Graphics/PacmanA1/CMakeFiles/ZERO_CHECK.dir
