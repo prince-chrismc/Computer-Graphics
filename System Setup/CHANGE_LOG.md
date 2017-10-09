@@ -1,5 +1,5 @@
 # Change Log 
-To track modifications to the website's content.
+To track modifications to the system setup application
 
 ### Versioning schema
 > 0.x.x - Major: Significant rework of functionality
