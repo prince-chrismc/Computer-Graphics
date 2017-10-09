@@ -434,7 +434,7 @@ int main()
          else
          {
             // TODO : figure out why the aliens dont move =?
-            (std::abs(alien.transx - pacman_transx) >= std::abs(alien.transy - pacman_transy)) ? alien.transx - 0.25f : alien.transy - 0.25f;
+            (std::abs(alien.transx - pacman_transx) >= std::abs(alien.transy - pacman_transy)) ? alien.transx - 0.25f : alien.transy + 0.25f;
          }
       }
 
