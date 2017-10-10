@@ -221,7 +221,7 @@ int main()
    // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> cube_vertices;
    std::vector<glm::vec3> cube_normals;
-   loadOBJ("cube.obj", cube_vertices, cube_normals, std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
+   loadOBJ("assets/cube.obj", cube_vertices, cube_normals, std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
 
    GLuint VAO_cube;
    glGenVertexArrays(1, &VAO_cube);
@@ -250,7 +250,7 @@ int main()
    // pacman ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> pacman_vertices;
    std::vector<glm::vec3> pacman_normals;
-   loadOBJ("pacman.obj", pacman_vertices, pacman_normals, std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
+   loadOBJ("assets/pacman.obj", pacman_vertices, pacman_normals, std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
 
    GLuint VAO_pacman;
    glGenVertexArrays(1, &VAO_pacman);
@@ -279,7 +279,7 @@ int main()
    // alien ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> alien_vertices;
    std::vector<glm::vec3> alien_normals;
-   loadOBJ("teapot.obj", alien_vertices, alien_normals, std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
+   loadOBJ("assets/teapot.obj", alien_vertices, alien_normals, std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
 
    GLuint VAO_alien;
    glGenVertexArrays(1, &VAO_alien);
