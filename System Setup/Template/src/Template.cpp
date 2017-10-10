@@ -39,7 +39,7 @@ int main()
    std::cout << "Welcome to Template!" << std::endl;
 
    // Create a GLFWwindow
-   GlfwWindow window(GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
+   GlfwWindow window("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
    if (!window()) // Make sure it exists
    {
       return -1;
@@ -64,9 +64,7 @@ int main()
    }
 
    ShaderLinker* shaderProgram = &ShaderLinker::GetInstance();
-   shaderProgram->AddShader(&vertexShader);
-   shaderProgram->AddShader(&fragmentShader);
-   if (!shaderProgram->Link())
+   if (!shaderProgram->Link(&vertexShader, &fragmentShader))
    {
       return -1;
    }

@@ -27,7 +27,7 @@ SOFTWARE.
 #include "GlfwWindow.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-GlfwWindow::GlfwWindow(const int& width, const int& height) : m_window(nullptr), m_Projection()
+GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) : m_window(nullptr), m_Projection()
 {
    // Init GLFW
    std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
@@ -38,7 +38,7 @@ GlfwWindow::GlfwWindow(const int& width, const int& height) : m_window(nullptr),
    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
    // try to create window
-   m_window = glfwCreateWindow(width, height, "Template by <Author>", nullptr, nullptr);
+   m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
    if (m_window == nullptr)
    {
       std::cout << "Failed to create GLFW window" << std::endl;
@@ -73,4 +73,3 @@ void GlfwWindow::window_callback(GLFWwindow* window, int width, int height)
    glViewport(0, 0, width, height);
    m_Projection = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 }
-

@@ -92,8 +92,11 @@ bool FragmentShader::Compile(const std::string & ShaderCode)
    return true;
 }
 
-bool ShaderLinker::Link()
+bool ShaderLinker::Link(VertexShader* vertex, FragmentShader* frag)
 {
+   AddShader(vertex);
+   AddShader(frag);
+
    glLinkProgram(m_ShaderProgram);
 
    // Check for linking errors

@@ -30,7 +30,7 @@ SOFTWARE.
 class GlfwWindow
 {
    public:
-      GlfwWindow(const int& width, const int& height);
+      GlfwWindow(const char* title, const int& width, const int& height);
       ~GlfwWindow();
 
       bool operator()() const { return m_window != nullptr; } // Make sure windows exists
@@ -40,10 +40,10 @@ class GlfwWindow
       const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 
       // Allow the required callback functions
-      GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { glfwSetKeyCallback(m_window, cbfun); }
-      GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun cbfun) { glfwSetMouseButtonCallback(m_window, cbfun); }
-      GLFWcursorposfun   SetCursorPosCallback(GLFWcursorposfun cbfun) { glfwSetCursorPosCallback(m_window, cbfun); }
-      GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { glfwSetWindowSizeCallback(m_window, cbfun); } // already handled
+      GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { return glfwSetKeyCallback(m_window, cbfun); }
+      GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun cbfun) { return glfwSetMouseButtonCallback(m_window, cbfun); }
+      GLFWcursorposfun   SetCursorPosCallback(GLFWcursorposfun cbfun) { return glfwSetCursorPosCallback(m_window, cbfun); }
+      GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { return glfwSetWindowSizeCallback(m_window, cbfun); } // already handled
 
       // Default window dimensions
       static const GLuint DEFAULT_WIDTH = 800, DEFAULT_HEIGHT = 600;

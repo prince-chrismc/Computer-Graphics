@@ -69,8 +69,7 @@ class ShaderLinker
    public:
       static ShaderLinker& GetInstance() { static ShaderLinker instance; return instance; }
 
-      void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
-      bool Link();
+      bool Link(VertexShader* vertex, FragmentShader* frag);
 
       GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
 
@@ -84,4 +83,6 @@ class ShaderLinker
       ~ShaderLinker() = default;
       ShaderLinker(const ShaderLinker&) = delete;
       ShaderLinker& operator=(const ShaderLinker&) = delete;
+
+      void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
 };
