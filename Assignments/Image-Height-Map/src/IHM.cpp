@@ -22,17 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// Template.cpp : Defines the entry point for the console application.
-//
-
 #include <string>
 #include <iostream>
 
 #include "GL/glew.h"       // include GL Extension Wrangler
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt
+#include "CImg.h"
 
 #include "GlfwWindow.h"
 #include "Shader.h"
+
+using cimg_library::CImg;
+using cimg_library::CImgDisplay;
 
 int main()
 {
@@ -73,6 +74,9 @@ int main()
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
    const glm::vec3 up(0.0f, 0.0f, 1.0f);
    const glm::vec3 eye(0.0f, -5.0f, 3.0f);
+
+   CImg<unsigned char> image("assets/depth.bmp"); // load the image
+   CImgDisplay display(image, "Image");           // create window displaying image
 
    // Game loop
    while (! ~window)
