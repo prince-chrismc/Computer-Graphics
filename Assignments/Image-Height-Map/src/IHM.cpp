@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include "GL/glew.h"       // include GL Extension Wrangler
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt
@@ -34,6 +35,9 @@ SOFTWARE.
 
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
+
+enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
+
 
 int main()
 {
@@ -58,8 +62,7 @@ int main()
    // Build and compile our shader program
    VertexShader vertexShader("shaders/vertex.shader");
    FragmentShader fragmentShader("shaders/fragment.shader");
-   // make sure they are ready to use
-   if (!vertexShader() || !fragmentShader())
+   if (!vertexShader() || !fragmentShader()) // make sure they are ready to use
    {
       return -1;
    }
@@ -72,11 +75,39 @@ int main()
 
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
-   const glm::vec3 up(0.0f, 0.0f, 1.0f);
-   const glm::vec3 eye(0.0f, -5.0f, 3.0f);
+   const glm::vec3 up(0.0f, 1.0f, 0.0f);
+   const glm::vec3 eye(0.0f, 50.0f, -50.0f);
 
-   CImg<unsigned char> image("assets/depth.bmp"); // load the image
+
+   // ---------------------------------------------------------------------------------------------
+   std::cout << "Processing image....";
+   CImg<float> image("assets/depth.bmp"); // load the image
    CImgDisplay display(image, "Image");           // create window displaying image
+
+   int x = (0 - image.width()/2), z = (0 - image.height() / 2);
+   std::vector<glm::vec3> verticies_all;
+
+   for (CImg<float>::iterator it = image.begin(); it < image.end(); ++it)
+   {
+      verticies_all.emplace_back(glm::vec3(x++, *it, z));
+      if(x == image.width()) {x = (0 - image.width() / 2); z += 1; }
+   }
+   std::cout << "  Completed!" <<std::endl;
+
+   GLuint VAO_all_pts, VBO_all_pts;
+   glGenVertexArrays(1, &VAO_all_pts);
+   glBindVertexArray(VAO_all_pts);
+
+   glGenBuffers(1, &VBO_all_pts);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_all_pts);
+   glBufferData(GL_ARRAY_BUFFER, verticies_all.size() * sizeof(glm::vec3), &verticies_all.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0);
+   // ---------------------------------------------------------------------------------------------
+
 
    // Game loop
    while (! ~window)
@@ -94,6 +125,14 @@ int main()
       shaderProgram->SetShaderMat4("view_matrix", view_matrix);
 
       shaderProgram->SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
+
+      glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
+      shaderProgram->SetShaderMat4("model_matrix", model_matrix);
+
+      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREY);
+      glBindVertexArray(VAO_all_pts);
+      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
+      glBindVertexArray(0);
 
       ++window; // swap buffers
    }
