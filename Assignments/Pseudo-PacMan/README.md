@@ -1,6 +1,6 @@
 # Pseudo Pac-Man
 This is an sort of pac-man logic mini game, where the main character moves around the board eating *food* and avoiding aliens. But dont get scared off by the aliens they dont move!
->*To view this [document](https://github.com/prince-chrismc/Computer-Graphics/tree/master/PacmanA1/README.md) properly, click on the link provided.*
+>*To view this [document](https://github.com/prince-chrismc/Computer-Graphics/blob/master/Assignments/Pseudo-PacMan/README.md) properly, click on the link provided.*
 
 ### Table Of Contents
 * [Contributors](#contributors)
