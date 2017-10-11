@@ -286,4 +286,6 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-/System Setup/System Setup/setup.bat
+
+#user added files
+System-Setup/System-Setup/setup\.bat
