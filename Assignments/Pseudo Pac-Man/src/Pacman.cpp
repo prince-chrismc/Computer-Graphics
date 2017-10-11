@@ -22,9 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// Template.cpp : Defines the entry point for the console application.
-//
-
 #include <string>
 #include <iostream>
 #include <sstream>
