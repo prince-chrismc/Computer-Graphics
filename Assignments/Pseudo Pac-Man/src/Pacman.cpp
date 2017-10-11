@@ -97,7 +97,7 @@ int main()
    std::cout << "Welcome to Pseudo Pac-Man! Simply chase food till your hearts content." << std::endl;
 
    std::cout << std::endl << "Please Select a grid size: (odd number) recommended: 21" << std::endl;
-   int grid_size = GetUserInputOddNum(9, 35) - 1;
+   unsigned int grid_size = GetUserInputOddNum(9, 35) - 1;
 
    // Create a GLFWwindow
    GlfwWindow window(GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
