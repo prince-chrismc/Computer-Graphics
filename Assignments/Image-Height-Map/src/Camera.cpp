@@ -25,7 +25,7 @@ SOFTWARE.
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt
 #include "Camera.h"
 
-Camera::Camera(const glm::vec3 center, const glm::vec3 up, const glm::vec3 eye) : m_center(center), m_up(up), m_eye(eye)
+Camera::Camera(const glm::vec3 center, const glm::vec3 up, const glm::vec3 eye) : m_center(center), m_up(up), m_eye(eye), m_Scalar(1.0f)
 {
    m_ViewMatrix = glm::lookAt(eye, center, up);
 }

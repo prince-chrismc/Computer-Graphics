@@ -25,6 +25,7 @@ SOFTWARE.
 #include <string>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include "GL/glew.h"                    // include GL Extension Wrangler
@@ -91,6 +92,9 @@ int main()
       return -1;
    }
 
+   GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
+   GLuint ColorIndex = shaderProgram->GetAttributeLocation("color");
+
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
    const glm::vec3 up(0.0f, 1.0f, 0.0f);
@@ -107,26 +111,38 @@ int main()
 
    int x = (0 - image.width()), z = (0 - image.height());
    std::vector<glm::vec3> verticies_all;
+   std::vector<glm::vec3> colors_all;
    //float max_height = 0.0f; // test code
 
    for (CImg<float>::iterator it = image.begin(); it < image.end(); ++it)
    {
       //(max_height < *it) ? max_height = *it : void(); // test code
       verticies_all.emplace_back(glm::vec3(x++, *it, z));
+
+      int colorValue = std::pow(std::floor(*it), 2);
+      colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
+
       if(x == image.width()) {x = (0 - image.width() ); z += 1; }
    }
    std::cout << "  Completed!" <<std::endl;
    //std::cout << "The Max height is: " << max_height << std::endl; // test code - was 252
 
-   GLuint VAO_all_pts, VBO_all_pts;
+   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
    glGenVertexArrays(1, &VAO_all_pts);
    glBindVertexArray(VAO_all_pts);
 
    glGenBuffers(1, &VBO_all_pts);
    glBindBuffer(GL_ARRAY_BUFFER, VBO_all_pts);
    glBufferData(GL_ARRAY_BUFFER, verticies_all.size() * sizeof(glm::vec3), &verticies_all.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
+   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(PositonIndex);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glGenBuffers(1, &VBO_all_color);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_all_color);
+   glBufferData(GL_ARRAY_BUFFER, colors_all.size() * sizeof(glm::vec3), &colors_all.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(ColorIndex);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
    glBindVertexArray(0);
