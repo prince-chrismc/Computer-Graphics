@@ -78,6 +78,9 @@ int main()
       return -1;
    }
 
+   //glEnable(GL_DEPTH_TEST);
+   //glDepthFunc(GL_GEQUAL);
+
    // Build and compile our shader program
    VertexShader vertexShader("shaders/vertex.shader");
    FragmentShader fragmentShader("shaders/fragment.shader");
@@ -121,8 +124,8 @@ int main()
       //(min_height > *it) ? min_height = *it : void(); // test code
       verticies_all.emplace_back(glm::vec3(x++, *it, z));
 
-      int colorValue = std::floor(1.25*std::pow(*it, 3.0)); // blue to pink
-      //int colorValue = std::floor(1.5*std::pow(*it, 2.0)); // blue to green
+      //int colorValue = std::floor(1.25*std::pow(*it, 3.0)); // blue to pink
+      int colorValue = std::floor(1.5*std::pow(*it, 2.0)); // blue to green
       colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0)); // https://stackoverflow.com/a/15693516/8480874
 
       if(x == image.width()) {x = (0 - image.width() ); z += 1; }
