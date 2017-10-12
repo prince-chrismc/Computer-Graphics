@@ -27,6 +27,8 @@ SOFTWARE.
 #include "GlfwWindow.h"
 #include "glm/gtc/matrix_transform.hpp"
 
+glm::mat4* g_ProjectionMatrix = nullptr;
+
 GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) : m_window(nullptr), m_Projection()
 {
    // Init GLFW
@@ -57,6 +59,14 @@ GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) :
       glViewport(0, 0, width, height);
       m_Projection = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
    }
+
+   if (g_ProjectionMatrix)
+   {
+      std::cout << "Losing resize ability of previous window" << std::endl;
+   }
+
+   g_ProjectionMatrix = &m_Projection;
+   SetWindowSizeCallback(&window_callback);
 }
 
 
@@ -71,5 +81,5 @@ void GlfwWindow::window_callback(GLFWwindow* window, int width, int height)
 {
    // notify GL and calc Projection Matrix using new size
    glViewport(0, 0, width, height);
-   m_Projection = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
+   *g_ProjectionMatrix = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
 }
