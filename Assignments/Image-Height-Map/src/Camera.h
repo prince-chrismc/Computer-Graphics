@@ -45,7 +45,7 @@ public:
 
    void AdjustScalar(const float& adj);
 
-   void ResetCameraPos() { m_Trans = glm::vec3(0.0f); m_Rotate = glm::vec3(0.0f); m_Scalar = 0.0f; RecalculateCameraPos(); }
+   void ResetCameraPos() { m_Trans = glm::vec3(0.0f); m_Rotate = glm::vec3(0.0f); m_Scalar = 1.0f; RecalculateCameraPos(); }
 
    glm::mat4 GetViewMatrix() { return m_ViewMatrix; }
 
