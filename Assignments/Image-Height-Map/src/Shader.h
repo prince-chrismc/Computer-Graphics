@@ -28,6 +28,8 @@ SOFTWARE.
 #include "GL/glew.h"             // include GL Extension Wrangler
 #include "glm/gtc/type_ptr.hpp"  // glm::value_ptr
 
+enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
+
 class Shader abstract
 {
 friend class ShaderLinker;

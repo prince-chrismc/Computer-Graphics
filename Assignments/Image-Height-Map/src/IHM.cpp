@@ -26,110 +26,31 @@ SOFTWARE.
 #include <iostream>
 #include <vector>
 
-#include "GL/glew.h"       // include GL Extension Wrangler
-#include "glm/gtc/matrix_transform.hpp" //glm::lookAt
+#include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
+#include "GL/glew.h"                    // include GL Extension Wrangler
 #include "CImg.h"
 
 #include "GlfwWindow.h"
 #include "Shader.h"
+#include "Camera.h"
+#include "Cursor.h"
 
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
 
-// enums
-enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
-enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES } g_RenderMode;
-
-// Cursor
-class Cursor final
-{
-   public:
-      Cursor() {}
-
-      static constexpr float Sensitivity = 0.05f;
-
-      void SetLastX(const float& last) { m_Last.x = last; }
-      void SetLastY(const float& last) { m_Last.y = last; }
-      const float& GetLastX() { return m_Last.x; }
-      const float& GetLastY() { return m_Last.y; }
-
-      void ToggleLeftButton() { m_LeftActive ? m_LeftActive = false : m_LeftActive = true; }
-      void ToggleMiddleButton() { m_MiddleActive ? m_MiddleActive = false : m_MiddleActive = true; }
-      void ToggleRightButton() { m_RightActive ? m_RightActive = false : m_RightActive = true; }
-      bool IsLeftActive() { return m_LeftActive; }
-      bool IsMiddleActive() { return m_MiddleActive; }
-      bool IsRightActive() { return m_RightActive; }
-
-   private:
-      glm::vec2 m_Last;
-      bool m_LeftActive;
-      bool m_MiddleActive;
-      bool m_RightActive;
-
-} g_Cursor;
-
-// Camera
-class Camera final
-{
-   public:
-      Camera(const glm::vec3 center, const glm::vec3 up, const glm::vec3 eye) : m_center(center), m_up(up), m_eye(eye) { m_ViewMatrix = glm::lookAt(eye, center, up); }
-      Camera() : Camera(glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0), glm::vec3(-1.0,-1.0,-1.0)) {}
-
-      void AdjustTranslateXAxis(const float& adj) { m_Trans.x += adj; RecalculateCameraPos(); }
-      void AdjustTranslateYAxis(const float& adj) { m_Trans.y += adj; RecalculateCameraPos(); }
-      void AdjustTranslateZAxis(const float& adj) { m_Trans.z += adj; RecalculateCameraPos(); }
-
-      void AdjustRotateXAxis(const float& adj) { m_Rotate.x += adj; RecalculateCameraPos(); }
-      void AdjustRotateYAxis(const float& adj) { m_Rotate.y += adj; RecalculateCameraPos(); }
-      void AdjustRotateZAxis(const float& adj) { m_Rotate.z += adj; RecalculateCameraPos(); }
-
-      void AdjustScalar(const float& adj)
-      {
-         m_Scalar += adj;
-
-         if (m_Scalar < 0.5f)
-            m_Scalar = 0.5f;
-
-         if (m_Scalar > 5.0f)
-            m_Scalar = 5.0f;
-
-         RecalculateCameraPos();
-      }
-
-      void ResetCameraPos() { m_Trans = glm::vec3(0.0f); m_Rotate = glm::vec3(0.0f); m_Scalar = 0.0f; RecalculateCameraPos(); }
-
-      glm::mat4 GetViewMatrix() { return m_ViewMatrix; }
-
-   protected:
-      void RecalculateCameraPos()
-      {
-         m_ViewMatrix = glm::lookAt(m_eye, m_center, m_up);
-         m_ViewMatrix = glm::translate(m_ViewMatrix, m_Trans);
-         m_ViewMatrix = glm::rotate(m_ViewMatrix, glm::radians(m_Rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
-         m_ViewMatrix = glm::rotate(m_ViewMatrix, glm::radians(m_Rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
-         m_ViewMatrix = glm::rotate(m_ViewMatrix, glm::radians(m_Rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
-         m_ViewMatrix = glm::scale(m_ViewMatrix, glm::vec3(m_Scalar));
-      }
-
-   private:
-      // home components
-      glm::vec3 m_center;
-      glm::vec3 m_up;
-      glm::vec3 m_eye;
-
-      // adjustment components
-      glm::vec3 m_Trans;
-      glm::vec3 m_Rotate;
-      float m_Scalar;
-
-      glm::mat4 m_ViewMatrix;
-} g_Camera;
+//enums
+enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // Function Declaration
 //const unsigned int GetUserInput(const unsigned int& lower, const unsigned int& upper);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
+
+// Globals
+Camera g_Camera;
+Cursor g_Cursor;
+RenderMode g_RenderMode;
 
 int main()
 {
@@ -282,12 +203,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
    switch (key)
    {
-   // windows close
+      // windows close
    case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, GLFW_TRUE);
       break;
 
-   // move camera
+      // move camera
    case GLFW_KEY_UP:
       g_Camera.AdjustRotateXAxis(5.0);
       break;
@@ -313,13 +234,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       g_Camera.AdjustTranslateZAxis(-5.0);
       break;
 
-   // reset everything
+      // reset everything
    case GLFW_KEY_HOME:
    case GLFW_KEY_BACKSPACE:
       g_Camera.ResetCameraPos();
       break;
 
-   // render mode
+      // render mode
    case GLFW_KEY_P:
       g_RenderMode = RenderMode::POINTS;
       break;
@@ -344,7 +265,7 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
       {
          std::cout << "allow zooming" << std::endl;
          glfwGetCursorPos(window, &lastX, &lastY);
-         g_Cursor.SetLastY(lastY);
+         g_Cursor.SetLastY((float)lastY);
          g_Cursor.ToggleLeftButton();
       }
       else
@@ -359,7 +280,7 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
       {
          std::cout << "allow rotate y" << std::endl;
          glfwGetCursorPos(window, &lastX, &lastY);
-         g_Cursor.SetLastY(lastY);
+         g_Cursor.SetLastY((float)lastY);
          g_Cursor.ToggleRightButton();
       }
       else
@@ -377,7 +298,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    if (g_Cursor.IsLeftActive())
    {
       float yoffset = static_cast<float>(g_Cursor.GetLastY() - ypos);
-      g_Cursor.SetLastY(ypos);
+      g_Cursor.SetLastY((float)ypos);
       yoffset *= Cursor::Sensitivity;
 
       g_Camera.AdjustScalar(yoffset);
@@ -385,7 +306,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    if (g_Cursor.IsRightActive())
    {
       float yoffset = static_cast<float>(g_Cursor.GetLastY() - ypos);
-      g_Cursor.SetLastY(ypos);
+      g_Cursor.SetLastY((float)ypos);
       yoffset *= Cursor::Sensitivity;
 
       g_Camera.AdjustRotateYAxis(yoffset);
