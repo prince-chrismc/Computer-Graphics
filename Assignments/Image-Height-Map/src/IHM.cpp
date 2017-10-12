@@ -107,13 +107,16 @@ int main()
 
    int x = (0 - image.width()/2), z = (0 - image.height() / 2);
    std::vector<glm::vec3> verticies_all;
+   float max_height = 0.0f; // test code
 
    for (CImg<float>::iterator it = image.begin(); it < image.end(); ++it)
    {
+      (max_height < *it) ? max_height = *it : void(); // test code
       verticies_all.emplace_back(glm::vec3(x++, *it, z));
       if(x == image.width()) {x = (0 - image.width() / 2); z += 1; }
    }
    std::cout << "  Completed!" <<std::endl;
+   std::cout << "The Max height is: " << max_height << std::endl; // test code
 
    GLuint VAO_all_pts, VBO_all_pts;
    glGenVertexArrays(1, &VAO_all_pts);
