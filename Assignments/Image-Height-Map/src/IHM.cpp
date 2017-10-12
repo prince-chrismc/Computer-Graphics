@@ -105,7 +105,7 @@ int main()
    CImg<float> image("assets/depth.bmp");         // load the image
    CImgDisplay display(image, "Image");           // create window displaying image
 
-   int x = (0 - image.width()/2), z = (0 - image.height() / 2);
+   int x = (0 - image.width()), z = (0 - image.height());
    std::vector<glm::vec3> verticies_all;
    //float max_height = 0.0f; // test code
 
@@ -113,7 +113,7 @@ int main()
    {
       //(max_height < *it) ? max_height = *it : void(); // test code
       verticies_all.emplace_back(glm::vec3(x++, *it, z));
-      if(x == image.width()) {x = (0 - image.width() / 2); z += 1; }
+      if(x == image.width()) {x = (0 - image.width() ); z += 1; }
    }
    std::cout << "  Completed!" <<std::endl;
    //std::cout << "The Max height is: " << max_height << std::endl; // test code - was 252
