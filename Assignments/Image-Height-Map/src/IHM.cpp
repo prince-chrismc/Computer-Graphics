@@ -173,21 +173,21 @@ int main()
    glBufferData(GL_ARRAY_BUFFER, verticies_skip.size() * sizeof(glm::vec3), &verticies_skip.front(), GL_STATIC_DRAW);
    glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
    glEnableVertexAttribArray(PositonIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
    glGenBuffers(1, &VBO_skip_color);
    glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_color);
    glBufferData(GL_ARRAY_BUFFER, colors_skip.size() * sizeof(glm::vec3), &colors_skip.front(), GL_STATIC_DRAW);
    glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
    glEnableVertexAttribArray(ColorIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
    glGenBuffers(1, &IBO_skip);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0);
+   //glBindVertexArray(0);
    // ---------------------------------------------------------------------------------------------
 
 
@@ -209,12 +209,12 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      glBindVertexArray(VAO_skip_pts);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
+      //glBindVertexArray(VAO_skip_pts);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
       //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
-      glDrawElements(GL_TRIANGLES, 300, GL_UNSIGNED_INT, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindVertexArray(0);
+      glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      //glBindVertexArray(0);
 
       ++window; // swap buffers
    }
