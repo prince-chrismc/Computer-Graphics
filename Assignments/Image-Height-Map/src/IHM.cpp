@@ -194,7 +194,7 @@ int main()
       // Render
       // Clear the colorbuffer
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f); // near black teal
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/);
 
       shaderProgram->SetShaderMat4("view_matrix", g_Camera.GetViewMatrix());
 
@@ -203,7 +203,6 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      //shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREY);
       glBindVertexArray(VAO_skip_pts);
       glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
       glBindVertexArray(0);
