@@ -135,7 +135,14 @@ int main()
       {
          double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
          verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
-         if(x % skip_size == 0) { verticies_skip.emplace_back(glm::vec3(x, pixel_value, z)); indinces_skip.emplace_back((GLuint)verticies_skip.size()-1); }
+         if(x % skip_size == 0)
+         {
+            verticies_skip.emplace_back(glm::vec3(x, pixel_value, z));
+
+            indinces_skip.emplace_back((GLuint)verticies_skip.size() - 1); // itself
+            indinces_skip.emplace_back((GLuint)verticies_skip.size());     // next one
+            indinces_skip.emplace_back((GLuint)verticies_skip.size() + image.height() - 1); // next row
+         }
 
          unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
          colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
