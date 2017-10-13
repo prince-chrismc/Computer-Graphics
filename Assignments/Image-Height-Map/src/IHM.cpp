@@ -205,7 +205,7 @@ int main()
 
       //shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREY);
       glBindVertexArray(VAO_skip_pts);
-      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_skip.size());
+      glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
       glBindVertexArray(0);
 
       ++window; // swap buffers
@@ -277,16 +277,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       g_Camera.AdjustRotateZAxis(-5.0);
       break;
    case GLFW_KEY_W:
-      g_Camera.AdjustTranslateXAxis(5.0);
-      break;
-   case GLFW_KEY_S:
-      g_Camera.AdjustTranslateXAxis(-5.0);
-      break;
-   case GLFW_KEY_D:
       g_Camera.AdjustTranslateZAxis(5.0);
       break;
-   case GLFW_KEY_A:
+   case GLFW_KEY_S:
       g_Camera.AdjustTranslateZAxis(-5.0);
+      break;
+   case GLFW_KEY_D:
+      g_Camera.AdjustTranslateXAxis(-5.0);
+      break;
+   case GLFW_KEY_A:
+      g_Camera.AdjustTranslateXAxis(5.0);
       break;
 
       // reset everything
@@ -298,9 +298,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       // render mode
    case GLFW_KEY_P:
       g_RenderMode = RenderMode::POINTS;
-      break;
-   case GLFW_KEY_L:
-      g_RenderMode = RenderMode::LINES;
       break;
    case GLFW_KEY_T:
       g_RenderMode = RenderMode::TRIANGLES;
