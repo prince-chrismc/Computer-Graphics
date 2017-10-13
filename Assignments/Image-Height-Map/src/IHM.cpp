@@ -58,8 +58,8 @@ int main()
 {
    std::cout << "Welcome to Image Height Map Generator!" << std::endl;
 
-   std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
-   unsigned int skip_size = GetUserInputMultiple(0, 65, 5);
+   //std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
+   //unsigned int skip_size = GetUserInputMultiple(0, 65, 5);
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -115,34 +115,34 @@ int main()
 
 
    // ---------------------------------------------------------------------------------------------
-   std::cout << "Processing image....";
-   CImg<float> image("assets/depth.bmp");         // load the image
-   CImgDisplay display(image, "Image");           // create window displaying image
+   //std::cout << "Processing image....";
+   //CImg<float> image("assets/depth.bmp");         // load the image
+   //CImgDisplay display(image, "Image");           // create window displaying image
 
-   std::vector<glm::vec3> verticies_all;
-   std::vector<glm::vec3> colors_all;
+   //std::vector<glm::vec3> verticies_all;
+   //std::vector<glm::vec3> colors_all;
 
-   std::vector<glm::vec3> verticies_skip;
-   std::vector<glm::vec3> colors_skip;
-   std::vector<GLuint> indinces_skip;
+   //std::vector<glm::vec3> verticies_skip;
+   //std::vector<glm::vec3> colors_skip;
+   //std::vector<GLuint> indinces_skip;
 
-   int img_half_width = image.width() / 2;
-   int img_half_heigth = image.height() / 2;
+   //int img_half_width = image.width() / 2;
+   //int img_half_heigth = image.height() / 2;
 
-   for (int x = (0 - img_half_width); x < img_half_width; x += 1)
-   {
-      for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
-      {
-         double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
-         verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
-         if(x % skip_size == 0) { verticies_skip.emplace_back(glm::vec3(x, pixel_value, z)); indinces_skip.emplace_back((GLuint)verticies_skip.size()-1); }
+   //for (int x = (0 - img_half_width); x < img_half_width; x += 1)
+   //{
+   //   for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
+   //   {
+   //      double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
+   //      verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
+   //      if(x % skip_size == 0) { verticies_skip.emplace_back(glm::vec3(x, pixel_value, z)); indinces_skip.emplace_back((GLuint)verticies_skip.size()-1); }
 
-         unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
-         colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
-         if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
-      }
-   }
-   std::cout << "  Completed!" << std::endl;
+   //      unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
+   //      colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
+   //      if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
+   //   }
+   //}
+   //std::cout << "  Completed!" << std::endl;
 
    /*GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
    glGenVertexArrays(1, &VAO_all_pts);
@@ -164,32 +164,75 @@ int main()
 
    glBindVertexArray(0);*/
 
-   GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
-   glGenVertexArrays(1, &VAO_skip_pts);
-   glBindVertexArray(VAO_skip_pts);
+   //GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
+   //glGenVertexArrays(1, &VAO_skip_pts);
+   //glBindVertexArray(VAO_skip_pts);
 
-   glGenBuffers(1, &VBO_skip_pts);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_pts);
-   glBufferData(GL_ARRAY_BUFFER, verticies_skip.size() * sizeof(glm::vec3), &verticies_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(PositonIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glGenBuffers(1, &VBO_skip_pts);
+   //glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_pts);
+   //glBufferData(GL_ARRAY_BUFFER, verticies_skip.size() * sizeof(glm::vec3), &verticies_skip.front(), GL_STATIC_DRAW);
+   //glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   //glEnableVertexAttribArray(PositonIndex);
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   glGenBuffers(1, &VBO_skip_color);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_color);
-   glBufferData(GL_ARRAY_BUFFER, colors_skip.size() * sizeof(glm::vec3), &colors_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(ColorIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glGenBuffers(1, &VBO_skip_color);
+   //glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_color);
+   //glBufferData(GL_ARRAY_BUFFER, colors_skip.size() * sizeof(glm::vec3), &colors_skip.front(), GL_STATIC_DRAW);
+   //glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   //glEnableVertexAttribArray(ColorIndex);
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   glGenBuffers(1, &IBO_skip);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   //glGenBuffers(1, &IBO_skip);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
+   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0);
+   //glBindVertexArray(0);
    // ---------------------------------------------------------------------------------------------
 
+   // ---------------------------------------------------------------------------------------------
+   /// https://gamedev.stackexchange.com/questions/69442/simple-curiosity-about-gldrawelements-function
+   // ---------------------------------------------------------------------------------------------
+
+   static GLfloat position[24] =
+   {
+      1.000000, -1.000000, -1.000000,
+      1.000000, -1.000000, 1.000000,
+      -1.000000, -1.000000, 1.000000,
+      -1.000000, -1.000000, -1.000000,
+      1.000000, 1.000000, -0.999999,
+      0.999999, 1.000000, 1.000001,
+      -1.000000, 1.000000, 1.000000,
+      -1.000000, 1.000000, -1.000000
+   };
+
+   static GLuint indices[36] = {
+      0, 1, 2,
+      4, 7, 6,
+      0, 4, 5,
+      1, 5, 2,
+      2, 6, 3,
+      4, 0, 3,
+      3, 0, 2,
+      5, 4, 6,
+      1, 0, 5,
+      5, 6, 2,
+      6, 7, 3,
+      7, 4, 3
+   };
+
+   GLuint vertex_vboId;
+   glGenBuffers(1, &vertex_vboId);
+   glBindBuffer(GL_ARRAY_BUFFER, vertex_vboId);
+   glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(GLfloat), position, GL_STATIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   GLuint indexId;
+   glGenBuffers(1, &indexId);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   // ---------------------------------------------------------------------------------------------
 
    // Game loop
    while (! ~window)
@@ -206,15 +249,26 @@ int main()
 
       shaderProgram->SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
 
-      glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
+      //glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
+      glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(1.0f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      glBindVertexArray(VAO_skip_pts);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
-      glDrawElements(GL_TRIANGLES, 300, GL_UNSIGNED_INT, 0);
+      //glBindVertexArray(VAO_skip_pts);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
+      ////glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
+      //glDrawElements(GL_TRIANGLES, 300, GL_UNSIGNED_INT, 0);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      //glBindVertexArray(0);
+
+      /// https://gamedev.stackexchange.com/questions/69442/simple-curiosity-about-gldrawelements-function
+      glEnableVertexAttribArray(0);
+      glBindBuffer(GL_ARRAY_BUFFER, vertex_vboId);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+      glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (GLvoid*)0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindVertexArray(0);
 
       ++window; // swap buffers
    }
