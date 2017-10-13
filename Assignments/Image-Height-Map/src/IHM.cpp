@@ -26,6 +26,7 @@ SOFTWARE.
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <sstream>
 
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include "GL/glew.h"                    // include GL Extension Wrangler
@@ -43,7 +44,7 @@ using cimg_library::CImgDisplay;
 enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // Function Declaration
-//const unsigned int GetUserInput(const unsigned int& lower, const unsigned int& upper);
+const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -56,6 +57,9 @@ RenderMode g_RenderMode;
 int main()
 {
    std::cout << "Welcome to Image Height Map Generator!" << std::endl;
+
+   std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
+   unsigned int skip_size = GetUserInputMultiple(0, 65, 5) - 1;
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -118,6 +122,9 @@ int main()
    std::vector<glm::vec3> verticies_all;
    std::vector<glm::vec3> colors_all;
 
+   std::vector<glm::vec3> verticies_skip;
+   std::vector<glm::vec3> colors_skip;
+
    int img_half_width = image.width() / 2;
    int img_half_heigth = image.height() / 2;
 
@@ -127,14 +134,16 @@ int main()
       {
          double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
          verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
+         if(x % skip_size == 0) verticies_skip.emplace_back(glm::vec3(x, pixel_value, z));
 
          unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
          colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
+         if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
       }
    }
    std::cout << "  Completed!" << std::endl;
 
-   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
+   /*GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
    glGenVertexArrays(1, &VAO_all_pts);
    glBindVertexArray(VAO_all_pts);
 
@@ -152,6 +161,26 @@ int main()
    glEnableVertexAttribArray(ColorIndex);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+   glBindVertexArray(0);*/
+
+   GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color;
+   glGenVertexArrays(1, &VAO_skip_pts);
+   glBindVertexArray(VAO_skip_pts);
+
+   glGenBuffers(1, &VBO_skip_pts);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_pts);
+   glBufferData(GL_ARRAY_BUFFER, verticies_skip.size() * sizeof(glm::vec3), &verticies_skip.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(PositonIndex);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glGenBuffers(1, &VBO_skip_color);
+   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_color);
+   glBufferData(GL_ARRAY_BUFFER, colors_skip.size() * sizeof(glm::vec3), &colors_skip.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(ColorIndex);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
    glBindVertexArray(0);
    // ---------------------------------------------------------------------------------------------
 
@@ -164,7 +193,7 @@ int main()
 
       // Render
       // Clear the colorbuffer
-      glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
+      glClearColor(0.05f, 0.075f, 0.075f, 1.0f); // near black teal
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       shaderProgram->SetShaderMat4("view_matrix", g_Camera.GetViewMatrix());
@@ -175,8 +204,8 @@ int main()
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
       //shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREY);
-      glBindVertexArray(VAO_all_pts);
-      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
+      glBindVertexArray(VAO_skip_pts);
+      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_skip.size());
       glBindVertexArray(0);
 
       ++window; // swap buffers
@@ -190,24 +219,24 @@ int main()
 // ------------------------------------------------------------------------------------------------ //
 
 /// copied from another project https://github.com/prince-chrismc/Pandemic/blob/master/Pandemic/Sources/GameEngine.cpp small modifications
-//const unsigned int GetUserInput(const unsigned int& lower, const unsigned int& upper)
-//{
-//   uint16_t selection = 0;
-//   do
-//   {
-//      std::cout << "Selcetion: ";
-//      std::string input;
-//      std::getline(std::cin, input);
-//      std::stringstream ss(input);
-//      ss >> selection;
-//
-//      if (selection < lower || selection > upper)
-//         std::cout << "Invalid option. Please Try again..." << std::endl;
-//
-//   } while (selection < lower || selection > upper || selection % 2 != 1);
-//
-//   return selection;
-//}
+const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple)
+{
+   uint16_t selection = 0;
+   do
+   {
+      std::cout << "Selcetion: ";
+      std::string input;
+      std::getline(std::cin, input);
+      std::stringstream ss(input);
+      ss >> selection;
+
+      if (selection < lower || selection > upper || selection % multiple != 0)
+         std::cout << "Invalid option. Please Try again..." << std::endl;
+
+   } while (selection < lower || selection > upper || selection % multiple != 0);
+
+   return selection;
+}
 
 // ------------------------------------------------------------------------------------------------ //
 //                                      CALLBACK FUNCTIONS                                        - //
