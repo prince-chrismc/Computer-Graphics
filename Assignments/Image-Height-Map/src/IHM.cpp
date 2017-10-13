@@ -69,6 +69,9 @@ int main()
    window.SetMouseButtonCallback(mouse_callback);
    window.SetCursorPosCallback(cursor_callback);
 
+   //glEnable(GL_DEPTH_TEST);
+   //glDepthFunc(GL_LESS);
+
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
    // Initialize GLEW to setup the OpenGL Function pointers
@@ -101,7 +104,7 @@ int main()
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
    const glm::vec3 up(0.0f, 1.0f, 0.0f);
-   const glm::vec3 eye(0.0f, 50.0f, -50.0f);
+   const glm::vec3 eye(0.0f, 35.0f, 35.0f);
 
    // Setup global camera
    g_Camera = Camera(center, up, eye);
@@ -112,27 +115,24 @@ int main()
    CImg<float> image("assets/depth.bmp");         // load the image
    CImgDisplay display(image, "Image");           // create window displaying image
 
-   int x = (0 - image.width()), z = (0 - image.height());
    std::vector<glm::vec3> verticies_all;
    std::vector<glm::vec3> colors_all;
-   //float max_height = 0.0f; // test code
-   //float min_height = 255.0f; // test code
 
-   for (CImg<float>::iterator it = image.begin(); it < image.end(); ++it)
+   int img_half_width = image.width() / 2;
+   int img_half_heigth = image.height() / 2;
+
+   for (int x = (0 - img_half_width); x < img_half_width; x += 1)
    {
-      //(max_height < *it) ? max_height = *it : void(); // test code
-      //(min_height > *it) ? min_height = *it : void(); // test code
-      verticies_all.emplace_back(glm::vec3(x++, *it, z));
+      for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
+      {
+         double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
+         verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
 
-      //int colorValue = std::floor(1.25*std::pow(*it, 3.0)); // blue to pink
-      int colorValue = std::floor(1.5*std::pow(*it, 2.0)); // blue to green
-      colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0)); // https://stackoverflow.com/a/15693516/8480874
-
-      if(x == image.width()) {x = (0 - image.width() ); z += 1; }
+         unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
+         colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
+      }
    }
-   std::cout << "  Completed!" <<std::endl;
-   //std::cout << "The Max height is: " << max_height << std::endl; // test code - was 252
-   //std::cout << "The Min height is: " << min_height << std::endl; // test code - was 67
+   std::cout << "  Completed!" << std::endl;
 
    GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
    glGenVertexArrays(1, &VAO_all_pts);
@@ -165,7 +165,7 @@ int main()
       // Render
       // Clear the colorbuffer
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       shaderProgram->SetShaderMat4("view_matrix", g_Camera.GetViewMatrix());
 
