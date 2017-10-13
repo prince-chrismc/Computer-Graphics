@@ -286,6 +286,8 @@ int main()
    glGenBuffers(1, &IndexBufferId);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferId);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+
+   int size = sizeof(Indices);
    // ---------------------------------------------------------------------------------------------
 
    // Game loop
@@ -316,6 +318,8 @@ int main()
 
       /// https://github.com/openglbook/openglbook-samples/blob/master/chapter-3/chapter.3.1.c
       glDrawElements(GL_TRIANGLES, 48, GL_UNSIGNED_BYTE, NULL);
+
+      // triangles... number of indinces, type, offset...
 
       ++window; // swap buffers
    }
