@@ -59,7 +59,7 @@ int main()
    std::cout << "Welcome to Image Height Map Generator!" << std::endl;
 
    std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
-   unsigned int skip_size = GetUserInputMultiple(0, 65, 5);
+   unsigned int skip_size = GetUserInputMultiple(5, 65, 5);
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -121,6 +121,7 @@ int main()
 
    std::vector<glm::vec3> verticies_all;
    std::vector<glm::vec3> colors_all;
+   std::vector<GLuint> indinces_all;
 
    std::vector<glm::vec3> verticies_skip;
    std::vector<glm::vec3> colors_skip;
@@ -133,20 +134,81 @@ int main()
    {
       for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
       {
+         // verticies
          double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
          verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
-         if(x % skip_size == 0)
-         {
-            verticies_skip.emplace_back(glm::vec3(x, pixel_value, z));
+         if(x % skip_size == 0) verticies_skip.emplace_back(glm::vec3(x, pixel_value, z));
 
-            indinces_skip.emplace_back((GLuint)verticies_skip.size() - 1); // itself
-            indinces_skip.emplace_back((GLuint)verticies_skip.size());     // next one
-            indinces_skip.emplace_back((GLuint)verticies_skip.size() + image.height() - 1); // next row
-         }
-
+         // Color
          unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
          colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
          if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
+
+         //indicies
+         if (x % skip_size == 0)
+         {
+            GLint next_index = verticies_skip.size();
+            GLint pts_per_row = image.height()/2;
+            GLint max_column = image.width()/2;
+            GLint min_row = 1 - pts_per_row;
+            GLint min_colum = 1 - max_column;
+
+            if ( z > min_row && x < max_column - 1 )                             // not first row && less last column
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index + pts_per_row - 1);   // next row
+               indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
+            }
+
+            if (z > min_row && x < max_column - 1)                               // not first row && less last column
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
+               indinces_skip.emplace_back(next_index - 2);                 // back one
+            }
+
+            if (z > min_row && x > min_colum)                                            // greater first row && column
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index - 2);                 // back one
+               indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
+            }
+
+            if (z > min_row && x > min_colum )                                            // greater first row && column
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
+               indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
+            }
+
+            if (z < img_half_heigth - 1 && x < max_column - 1)
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
+               indinces_skip.emplace_back(next_index - pts_per_row);       // prev row up one
+            }
+
+            if (z < img_half_heigth - 1 && x < max_column - 1)
+            {
+               indinces_skip.emplace_back(next_index - 1);                    // itself
+               indinces_skip.emplace_back(next_index - pts_per_row);          // prev row up one
+               indinces_skip.emplace_back(next_index);                        // up one
+            }
+
+            if (z < img_half_heigth - 1 && x > min_colum)                          // not last row && not first column
+            {
+               indinces_skip.emplace_back(next_index - 1);                 // itself
+               indinces_skip.emplace_back(next_index);                     // up one
+               indinces_skip.emplace_back(next_index + pts_per_row);       // next row up one
+            }
+
+            if (z < img_half_heigth - 1 && x > min_colum)
+            {
+               indinces_skip.emplace_back(next_index - 1);                  // itself
+               indinces_skip.emplace_back(next_index + pts_per_row);     // next row up one
+               indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
+            }
+         }
       }
    }
    std::cout << "  Completed!" << std::endl;
