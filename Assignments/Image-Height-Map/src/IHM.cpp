@@ -146,7 +146,7 @@ int main()
 
          GLint max_column = img_half_width-1;
          GLint max_row = img_half_heigth-1;
-         if (x < max_column && z < max_row)
+         if (x < max_column - 1 && z < max_row - 1)
          {
             GLint next_index = verticies_all.size();
             GLint pts_per_row = image.height();
@@ -154,6 +154,10 @@ int main()
             indinces_all.emplace_back(next_index - 1); // this one
             indinces_all.emplace_back(next_index); // next one
             indinces_all.emplace_back(next_index + pts_per_row - 1); // next row
+
+            indinces_all.emplace_back(next_index + pts_per_row - 1); // next row
+            indinces_all.emplace_back(next_index); // next one
+            indinces_all.emplace_back(next_index + pts_per_row); // across
          }
 
          //indicies
