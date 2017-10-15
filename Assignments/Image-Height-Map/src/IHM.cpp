@@ -144,6 +144,18 @@ int main()
          colors_all.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0));
          if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
 
+         GLint max_column = img_half_width-1;
+         GLint max_row = img_half_heigth-1;
+         if (x < max_column && z < max_row)
+         {
+            GLint next_index = verticies_all.size();
+            GLint pts_per_row = image.height();
+
+            indinces_all.emplace_back(next_index - 1); // this one
+            indinces_all.emplace_back(next_index); // next one
+            indinces_all.emplace_back(next_index + pts_per_row - 1); // next row
+         }
+
          //indicies
          //if (x % skip_size == 0)
          //{
@@ -213,7 +225,7 @@ int main()
    }
    std::cout << "  Completed!" << std::endl;
 
-   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
+   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
    glGenVertexArrays(1, &VAO_all_pts);
    glBindVertexArray(VAO_all_pts);
 
@@ -230,6 +242,11 @@ int main()
    glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
    glEnableVertexAttribArray(ColorIndex);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glGenBuffers(1, &IBO_all);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_all.size() * sizeof(GLuint), &indinces_all.front(), GL_STATIC_DRAW);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glBindVertexArray(0);
 
@@ -278,8 +295,14 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
+      //glBindVertexArray(VAO_all_pts);
+      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_all.size());
+      //glBindVertexArray(0);
+
       glBindVertexArray(VAO_all_pts);
-      glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_all.size());
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
+      glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       glBindVertexArray(0);
 
       //glBindVertexArray(VAO_skip_pts);
