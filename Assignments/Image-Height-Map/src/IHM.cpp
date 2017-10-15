@@ -145,75 +145,75 @@ int main()
          if (x % skip_size == 0) colors_skip.emplace_back(glm::vec3(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0));
 
          //indicies
-         if (x % skip_size == 0)
-         {
-            GLint next_index = verticies_skip.size();
-            GLint pts_per_row = image.height()/2;
-            GLint max_column = image.width()/2;
-            GLint min_row = 1 - pts_per_row;
-            GLint min_colum = 1 - max_column;
+         //if (x % skip_size == 0)
+         //{
+         //   GLint next_index = verticies_skip.size();
+         //   GLint pts_per_row = image.height()/2;
+         //   GLint max_column = image.width()/2;
+         //   GLint min_row = 1 - pts_per_row;
+         //   GLint min_colum = 1 - max_column;
 
-            if ( z > min_row && x < max_column - 1 )                             // not first row && less last column
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index + pts_per_row - 1);   // next row
-               indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
-            }
+         //   if ( z > min_row && x < max_column - 1 )                             // not first row && less last column
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index + pts_per_row - 1);   // next row
+         //      indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
+         //   }
 
-            if (z > min_row && x < max_column - 1)                               // not first row && less last column
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
-               indinces_skip.emplace_back(next_index - 2);                 // back one
-            }
+         //   if (z > min_row && x < max_column - 1)                               // not first row && less last column
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
+         //      indinces_skip.emplace_back(next_index - 2);                 // back one
+         //   }
 
-            if (z > min_row && x > min_colum)                                            // greater first row && column
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index - 2);                 // back one
-               indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
-            }
+         //   if (z > min_row && x > min_colum)                                            // greater first row && column
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index - 2);                 // back one
+         //      indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
+         //   }
 
-            if (z > min_row && x > min_colum )                                            // greater first row && column
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
-               indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
-            }
+         //   if (z > min_row && x > min_colum )                                            // greater first row && column
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
+         //      indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
+         //   }
 
-            if (z < img_half_heigth - 1 && x < max_column - 1)
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
-               indinces_skip.emplace_back(next_index - pts_per_row);       // prev row up one
-            }
+         //   if (z < img_half_heigth - 1 && x < max_column - 1)
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
+         //      indinces_skip.emplace_back(next_index - pts_per_row);       // prev row up one
+         //   }
 
-            if (z < img_half_heigth - 1 && x < max_column - 1)
-            {
-               indinces_skip.emplace_back(next_index - 1);                    // itself
-               indinces_skip.emplace_back(next_index - pts_per_row);          // prev row up one
-               indinces_skip.emplace_back(next_index);                        // up one
-            }
+         //   if (z < img_half_heigth - 1 && x < max_column - 1)
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                    // itself
+         //      indinces_skip.emplace_back(next_index - pts_per_row);          // prev row up one
+         //      indinces_skip.emplace_back(next_index);                        // up one
+         //   }
 
-            if (z < img_half_heigth - 1 && x > min_colum)                          // not last row && not first column
-            {
-               indinces_skip.emplace_back(next_index - 1);                 // itself
-               indinces_skip.emplace_back(next_index);                     // up one
-               indinces_skip.emplace_back(next_index + pts_per_row);       // next row up one
-            }
+         //   if (z < img_half_heigth - 1 && x > min_colum)                          // not last row && not first column
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                 // itself
+         //      indinces_skip.emplace_back(next_index);                     // up one
+         //      indinces_skip.emplace_back(next_index + pts_per_row);       // next row up one
+         //   }
 
-            if (z < img_half_heigth - 1 && x > min_colum)
-            {
-               indinces_skip.emplace_back(next_index - 1);                  // itself
-               indinces_skip.emplace_back(next_index + pts_per_row);     // next row up one
-               indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
-            }
-         }
+         //   if (z < img_half_heigth - 1 && x > min_colum)
+         //   {
+         //      indinces_skip.emplace_back(next_index - 1);                  // itself
+         //      indinces_skip.emplace_back(next_index + pts_per_row);     // next row up one
+         //      indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
+         //   }
+         //}
       }
    }
    std::cout << "  Completed!" << std::endl;
 
-   /*GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
+   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color;
    glGenVertexArrays(1, &VAO_all_pts);
    glBindVertexArray(VAO_all_pts);
 
@@ -231,9 +231,9 @@ int main()
    glEnableVertexAttribArray(ColorIndex);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0);*/
+   glBindVertexArray(0);
 
-   GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
+   /*GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
    glGenVertexArrays(1, &VAO_skip_pts);
    glBindVertexArray(VAO_skip_pts);
 
@@ -256,7 +256,7 @@ int main()
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0);
+   glBindVertexArray(0);*/
    // ---------------------------------------------------------------------------------------------
 
 
@@ -278,12 +278,16 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      glBindVertexArray(VAO_skip_pts);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
-      glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      glBindVertexArray(VAO_all_pts);
+      glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_all.size());
       glBindVertexArray(0);
+
+      //glBindVertexArray(VAO_skip_pts);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
+      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
+      //glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      //glBindVertexArray(0);
 
       ++window; // swap buffers
    }
