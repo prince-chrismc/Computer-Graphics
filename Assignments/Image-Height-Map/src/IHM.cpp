@@ -135,7 +135,7 @@ int main()
       for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
       {
          // verticies
-         double pixel_value = static_cast<double>(*image.data(x + img_half_width, z + img_half_heigth));
+         double pixel_value = static_cast<float>(*image.data(x + img_half_width, z + img_half_heigth));
          verticies_all.emplace_back(glm::vec3(x, pixel_value, z));
          if(x % skip_size == 0) verticies_skip.emplace_back(glm::vec3(x, pixel_value, z));
 
