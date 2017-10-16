@@ -160,75 +160,25 @@ int main()
             indinces_all.emplace_back(next_index + pts_per_row); // across
          }
 
-         //indicies
-         //if (x % skip_size == 0)
-         //{
-         //   GLint next_index = verticies_skip.size();
-         //   GLint pts_per_row = image.height()/2;
-         //   GLint max_column = image.width()/2;
-         //   GLint min_row = 1 - pts_per_row;
-         //   GLint min_colum = 1 - max_column;
+         // Theoretical Code below
+         if (x % skip_size == 0)
+         {
+            GLint next_index = verticies_all.size();
+            GLint pts_per_row = image.height()/skip_size; // to be validated
+            
+            indinces_skip.emplace_back(next_index - 1); // this one
+            indinces_skip.emplace_back(next_index); // next one
+            indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
 
-         //   if ( z > min_row && x < max_column - 1 )                             // not first row && less last column
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index + pts_per_row - 1);   // next row
-         //      indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
-         //   }
-
-         //   if (z > min_row && x < max_column - 1)                               // not first row && less last column
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index + pts_per_row - 2);   // next row back one
-         //      indinces_skip.emplace_back(next_index - 2);                 // back one
-         //   }
-
-         //   if (z > min_row && x > min_colum)                                            // greater first row && column
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index - 2);                 // back one
-         //      indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
-         //   }
-
-         //   if (z > min_row && x > min_colum )                                            // greater first row && column
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index - pts_per_row - 2);   // prev row back one
-         //      indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
-         //   }
-
-         //   if (z < img_half_heigth - 1 && x < max_column - 1)
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index - pts_per_row - 1);   // prev row
-         //      indinces_skip.emplace_back(next_index - pts_per_row);       // prev row up one
-         //   }
-
-         //   if (z < img_half_heigth - 1 && x < max_column - 1)
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                    // itself
-         //      indinces_skip.emplace_back(next_index - pts_per_row);          // prev row up one
-         //      indinces_skip.emplace_back(next_index);                        // up one
-         //   }
-
-         //   if (z < img_half_heigth - 1 && x > min_colum)                          // not last row && not first column
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                 // itself
-         //      indinces_skip.emplace_back(next_index);                     // up one
-         //      indinces_skip.emplace_back(next_index + pts_per_row);       // next row up one
-         //   }
-
-         //   if (z < img_half_heigth - 1 && x > min_colum)
-         //   {
-         //      indinces_skip.emplace_back(next_index - 1);                  // itself
-         //      indinces_skip.emplace_back(next_index + pts_per_row);     // next row up one
-         //      indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
-         //   }
-         //}
+            indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
+            indinces_skip.emplace_back(next_index); // next one
+            indinces_skip.emplace_back(next_index + pts_per_row); // across
+         }
       }
    }
    std::cout << "  Completed!" << std::endl;
-
+   
+   // All points --------------------------------------------------------------------------------------------------
    GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
    glGenVertexArrays(1, &VAO_all_pts);
    glBindVertexArray(VAO_all_pts);
@@ -254,7 +204,8 @@ int main()
 
    glBindVertexArray(0);
 
-   /*GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
+   // Skip Points ----------------------------------------------------------------------------------------------------
+   GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
    glGenVertexArrays(1, &VAO_skip_pts);
    glBindVertexArray(VAO_skip_pts);
 
@@ -277,7 +228,7 @@ int main()
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-   glBindVertexArray(0);*/
+   glBindVertexArray(0);
    // ---------------------------------------------------------------------------------------------
 
 
@@ -298,23 +249,42 @@ int main()
 
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
-
-      //glBindVertexArray(VAO_all_pts);
-      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_all.size());
-      //glBindVertexArray(0);
-
-      glBindVertexArray(VAO_all_pts);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
-      glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindVertexArray(0);
-
-      //glBindVertexArray(VAO_skip_pts);
-      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-      //glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
-      //glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
-      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      //glBindVertexArray(0);
+      
+      // All Points
+      //switch(g_RenderMode)
+      //{
+      //   case GL_POINTS:
+      //      glBindVertexArray(VAO_all_pts);
+      //      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
+      //      glBindVertexArray(0);
+      //      break;
+      //      
+      //   case GL_TRIANGLES:
+      //      glBindVertexArray(VAO_all_pts);
+      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
+      //      glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
+      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      //      glBindVertexArray(0);
+      //      break;
+      //}
+      
+      // Skip Points
+      switch(g_RenderMode)
+      {
+         case GL_POINTS:
+            glBindVertexArray(VAO_skip_pts);
+            glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
+            glBindVertexArray(0);
+            break;
+            
+         case GL_TRIANGLES:
+            glBindVertexArray(VAO_skip_pts);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
+            glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+            break;
+      }
 
       ++window; // swap buffers
    }
