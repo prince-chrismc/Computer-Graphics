@@ -59,7 +59,7 @@ int main()
    std::cout << "Welcome to Image Height Map Generator!" << std::endl;
 
    std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
-   unsigned int skip_size = GetUserInputMultiple(5, 65, 5);
+   int skip_size = GetUserInputMultiple(5, 65, 5);
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -130,7 +130,7 @@ int main()
    int img_half_width = image.width() / 2;
    int img_half_heigth = image.height() / 2;
 
-   int max_z_val = 0 - img_half_heigth;
+   int max_x_val = 0 - img_half_width;
 
    for (int x = (0 - img_half_width); x < img_half_width; x += 1)
    {
@@ -163,10 +163,11 @@ int main()
          }
 
          // Theoretical Code below
-         if (x % skip_size == 0 && x < (max_column - skip_size) && z < (max_row - skip_size))
+         if (std::abs(x) % skip_size == 0 )
+         if ( x < (max_column - skip_size) && z < (max_row - 1))
          {
 
-            max_z_val = std::max(z, max_z_val);
+            max_x_val = std::max(x, max_x_val);
 
             GLint next_index = verticies_all.size();
             GLint pts_per_row = image.height()/skip_size; // to be validated
@@ -182,7 +183,7 @@ int main()
       }
    }
    std::cout << "  Completed!" << std::endl;
-   std::cout << "Max Z recorded: " << max_z_val << std::endl;
+   std::cout << "Max x recorded: " << max_x_val << std::endl;
 
    // All points --------------------------------------------------------------------------------------------------
    GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
@@ -277,13 +278,13 @@ int main()
       // Skip Points
       switch(g_RenderMode)
       {
-         case GL_POINTS:
+         case RenderMode::POINTS:
             glBindVertexArray(VAO_skip_pts);
             glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
             glBindVertexArray(0);
             break;
             
-         case GL_TRIANGLES:
+         case RenderMode::TRIANGLES:
             glBindVertexArray(VAO_skip_pts);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
             glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
