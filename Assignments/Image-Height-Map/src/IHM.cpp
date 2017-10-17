@@ -130,8 +130,6 @@ int main()
    int img_half_width = image.width() / 2;
    int img_half_heigth = image.height() / 2;
 
-   int max_x_val = 0 - img_half_width;
-
    for (int x = (0 - img_half_width); x < img_half_width; x += 1)
    {
       for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
@@ -162,13 +160,8 @@ int main()
             indinces_all.emplace_back(next_index + pts_per_row); // across
          }
 
-         // Theoretical Code below
-         if (std::abs(x) % skip_size == 0 )
-         if ( x < (max_column - skip_size) && z < (max_row - 1))
+         if (x % skip_size == 0  && x < (max_column - skip_size) && z < (max_row - 1))
          {
-
-            max_x_val = std::max(x, max_x_val);
-
             GLint next_index = verticies_all.size();
             GLint pts_per_row = image.height()/skip_size; // to be validated
 
@@ -183,7 +176,6 @@ int main()
       }
    }
    std::cout << "  Completed!" << std::endl;
-   std::cout << "Max x recorded: " << max_x_val << std::endl;
 
    // All points --------------------------------------------------------------------------------------------------
    GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
