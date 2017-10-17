@@ -53,6 +53,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos);
 Camera g_Camera;
 Cursor g_Cursor;
 RenderMode g_RenderMode;
+unsigned long g_MapIndex;
 
 int main()
 {
@@ -308,27 +309,31 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      // All Points
-      //switch(g_RenderMode)
-      //{
-      //   case RenderMode::POINTS:
-      //      glBindVertexArray(VAO_all_pts);
-      //      glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
-      //      glBindVertexArray(0);
-      //      break;
-
-      //   case RenderMode::POINTS:
-      //      glBindVertexArray(VAO_all_pts);
-      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
-      //      glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
-      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      //      glBindVertexArray(0);
-      //      break;
-      //}
-
-      // Skip Points
-      switch(g_RenderMode)
+      switch (g_MapIndex % 3)
       {
+      case 0:
+         // All Points
+         switch (g_RenderMode)
+         {
+         case RenderMode::POINTS:
+            glBindVertexArray(VAO_all_pts);
+            glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
+            glBindVertexArray(0);
+            break;
+
+         case RenderMode::TRIANGLES:
+            glBindVertexArray(VAO_all_pts);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
+            glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+            break;
+         }
+         break;
+         case 1:
+         // Skip Points
+         switch (g_RenderMode)
+         {
          case RenderMode::POINTS:
             glBindVertexArray(VAO_skip_pts);
             glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
@@ -342,25 +347,30 @@ int main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
             break;
+         }
+         break;
+         case 2:
+         // Skip X Skip Points
+         switch (g_RenderMode)
+         {
+         case RenderMode::POINTS:
+            glBindVertexArray(VAO_skip_skip_pts);
+            glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip_skip.size());
+            glBindVertexArray(0);
+            break;
+
+         case RenderMode::TRIANGLES:
+            glBindVertexArray(VAO_skip_skip_pts);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip_skip);
+            glDrawElements(GL_TRIANGLES, indinces_skip_skip.size(), GL_UNSIGNED_INT, NULL);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+            break;
+         }
+         break;
+         default:
+         break;
       }
-
-      // Skip X Skip Points
-      //switch(g_RenderMode)
-      //{
-      //   case RenderMode::POINTS:
-      //      glBindVertexArray(VAO_skip_skip_pts);
-      //      glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip_skip.size());
-      //      glBindVertexArray(0);
-      //      break;
-
-      //   case RenderMode::TRIANGLES:
-      //      glBindVertexArray(VAO_skip_skip_pts);
-      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip_skip);
-      //      glDrawElements(GL_TRIANGLES, indinces_skip_skip.size(), GL_UNSIGNED_INT, NULL);
-      //      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      //      glBindVertexArray(0);
-      //      break;
-      //}
 
       ++window; // swap buffers
    }
@@ -456,6 +466,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_T:
       g_RenderMode = RenderMode::TRIANGLES;
       break;
+
+   case GLFW_KEY_ENTER:
+   case GLFW_KEY_SPACE:
+      g_MapIndex += 1;
 
    default:
       return;
