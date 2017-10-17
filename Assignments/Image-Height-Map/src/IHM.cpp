@@ -130,6 +130,8 @@ int main()
    int img_half_width = image.width() / 2;
    int img_half_heigth = image.height() / 2;
 
+   int max_z_val = 0 - img_half_heigth;
+
    for (int x = (0 - img_half_width); x < img_half_width; x += 1)
    {
       for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
@@ -161,11 +163,14 @@ int main()
          }
 
          // Theoretical Code below
-         if (x % skip_size == 0)
+         if (x % skip_size == 0 && x < (max_column - skip_size) && z < (max_row - skip_size))
          {
+
+            max_z_val = std::max(z, max_z_val);
+
             GLint next_index = verticies_all.size();
             GLint pts_per_row = image.height()/skip_size; // to be validated
-            
+
             indinces_skip.emplace_back(next_index - 1); // this one
             indinces_skip.emplace_back(next_index); // next one
             indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
@@ -177,7 +182,8 @@ int main()
       }
    }
    std::cout << "  Completed!" << std::endl;
-   
+   std::cout << "Max Z recorded: " << max_z_val << std::endl;
+
    // All points --------------------------------------------------------------------------------------------------
    GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
    glGenVertexArrays(1, &VAO_all_pts);
