@@ -130,19 +130,19 @@ int main()
    const int img_half_width = image.width() / 2;
    const int img_half_heigth = image.height() / 2;
 
-   for (int x = (0 - img_half_width); x < img_half_width; x += 1)
+   for (int x = 0; x < image.width(); x += 1)
    {
-      for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
+      for (int z = 0; z < image.height(); z += 1)
       {
          // verticies
-         const float pixel_value = static_cast<float>(*image.data(x + img_half_width, z + img_half_heigth));
-         verticies_all.emplace_back(x, pixel_value, z);
+         const float pixel_value = static_cast<float>(*image.data(x, z));
+         verticies_all.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
          if(x % skip_size == 0)
          {
-            verticies_skip.emplace_back(x, pixel_value, z);
+            verticies_skip.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
             if (z % skip_size == 0)
             {
-               verticies_skip_skip.emplace_back(x, pixel_value, z);
+               verticies_skip_skip.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
             }
          }
 
@@ -163,8 +163,8 @@ int main()
          }
 
          // Indicies
-         GLint max_column = img_half_width-1;
-         GLint max_row = img_half_heigth-1;
+         GLint max_column = image.width() - 1;
+         GLint max_row = image.height() - 1;
          if (x < max_column - 1 && z < max_row - 1)
          {
             GLint next_index = (int)verticies_all.size();
@@ -202,9 +202,9 @@ int main()
             indinces_skip_skip.emplace_back(next_index); // next one
             indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
 
-            indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
-            indinces_skip_skip.emplace_back(next_index); // next one
-            indinces_skip_skip.emplace_back(next_index + pts_per_row); // across
+            //indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
+            //indinces_skip_skip.emplace_back(next_index); // next one
+            //indinces_skip_skip.emplace_back(next_index + pts_per_row); // across
          }
       }
    }
