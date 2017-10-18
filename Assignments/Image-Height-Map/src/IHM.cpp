@@ -45,6 +45,7 @@ enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRI
 
 // Function Declaration
 const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
+const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -74,9 +75,6 @@ int main()
    window.SetMouseButtonCallback(mouse_callback);
    window.SetCursorPosCallback(cursor_callback);
 
-   //glEnable(GL_DEPTH_TEST);
-   //glDepthFunc(GL_LESS);
-
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
    // Initialize GLEW to setup the OpenGL Function pointers
@@ -85,9 +83,6 @@ int main()
       std::cout << "Failed to initialize GLEW" << std::endl;
       return -1;
    }
-
-   //glEnable(GL_DEPTH_TEST);
-   //glDepthFunc(GL_GEQUAL);
 
    // Build and compile our shader program
    VertexShader vertexShader("shaders/vertex.shader");
@@ -132,15 +127,15 @@ int main()
    std::vector<glm::vec3> colors_skip_skip;
    std::vector<GLuint> indinces_skip_skip;
 
-   int img_half_width = image.width() / 2;
-   int img_half_heigth = image.height() / 2;
+   const int img_half_width = image.width() / 2;
+   const int img_half_heigth = image.height() / 2;
 
    for (int x = (0 - img_half_width); x < img_half_width; x += 1)
    {
       for (int z = (0 - img_half_heigth); z < img_half_heigth; z += 1)
       {
          // verticies
-         double pixel_value = static_cast<float>(*image.data(x + img_half_width, z + img_half_heigth));
+         const float pixel_value = static_cast<float>(*image.data(x + img_half_width, z + img_half_heigth));
          verticies_all.emplace_back(x, pixel_value, z);
          if(x % skip_size == 0)
          {
@@ -152,14 +147,18 @@ int main()
          }
 
          // Color
-         unsigned long colorValue = static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
-         colors_all.emplace_back(((colorValue & 0xff0000) >> 16)/255.0, ((colorValue & 0x00ff00) >> 8)/255.0, (colorValue & 0x0000ff)/255.0);
+         const unsigned long colorValue = CalcHexColorFromPixelVal(pixel_value);
+         const double red = ((colorValue & 0xff0000) >> 16) / 255.0;
+         const double green = ((colorValue & 0x00ff00) >> 8) / 255.0;
+         const double blue = (colorValue & 0x0000ff) / 255.0;
+
+         colors_all.emplace_back(red, green, blue);
          if (x % skip_size == 0)
          {
-            colors_skip.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
+            colors_skip.emplace_back(red, green, blue);
             if (z % skip_size == 0)
             {
-               colors_skip_skip.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
+               colors_skip_skip.emplace_back(red, green, blue);
             }
          }
 
@@ -168,7 +167,7 @@ int main()
          GLint max_row = img_half_heigth-1;
          if (x < max_column - 1 && z < max_row - 1)
          {
-            GLint next_index = verticies_all.size();
+            GLint next_index = (int)verticies_all.size();
             GLint pts_per_row = image.height();
 
             indinces_all.emplace_back(next_index - 1); // this one
@@ -182,7 +181,7 @@ int main()
 
          if (x % skip_size == 0  && x < (max_column - skip_size) && z < (max_row - 1))
          {
-            GLint next_index = verticies_skip.size();
+            GLint next_index = (int)verticies_skip.size();
             GLint pts_per_row = image.height();
 
             indinces_skip.emplace_back(next_index - 1); // this one
@@ -196,7 +195,7 @@ int main()
 
          if (z % skip_size == 0 && x % skip_size == 0 && x < (max_column - skip_size) && z < (max_row - skip_size))
          {
-            GLint next_index = verticies_skip_skip.size();
+            GLint next_index = (int)verticies_skip_skip.size();
             GLint pts_per_row = image.height() / skip_size + 1;
 
             indinces_skip_skip.emplace_back(next_index - 1); // this one
@@ -324,7 +323,7 @@ int main()
          case RenderMode::TRIANGLES:
             glBindVertexArray(VAO_all_pts);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
-            glDrawElements(GL_TRIANGLES, indinces_all.size(), GL_UNSIGNED_INT, NULL);
+            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_all.size(), GL_UNSIGNED_INT, NULL);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
             break;
@@ -343,7 +342,7 @@ int main()
          case RenderMode::TRIANGLES:
             glBindVertexArray(VAO_skip_pts);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-            glDrawElements(GL_TRIANGLES, indinces_skip.size(), GL_UNSIGNED_INT, NULL);
+            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_skip.size(), GL_UNSIGNED_INT, NULL);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
             break;
@@ -362,7 +361,7 @@ int main()
          case RenderMode::TRIANGLES:
             glBindVertexArray(VAO_skip_skip_pts);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip_skip);
-            glDrawElements(GL_TRIANGLES, indinces_skip_skip.size(), GL_UNSIGNED_INT, NULL);
+            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_skip_skip.size(), GL_UNSIGNED_INT, NULL);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
             break;
@@ -400,6 +399,11 @@ const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigne
    } while (selection < lower || selection > upper || selection % multiple != 0);
 
    return selection;
+}
+
+const unsigned long CalcHexColorFromPixelVal(const float & pixel_value)
+{
+   return static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
 }
 
 // ------------------------------------------------------------------------------------------------ //
