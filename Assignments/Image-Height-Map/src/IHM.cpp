@@ -36,12 +36,11 @@ SOFTWARE.
 #include "Shader.h"
 #include "Camera.h"
 #include "Cursor.h"
+#include "RenderMode.h"
+#include "DrawableObject.h"
 
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
-
-//enums
-enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // Function Declaration
 const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
@@ -55,6 +54,7 @@ Camera g_Camera;
 Cursor g_Cursor;
 RenderMode g_RenderMode;
 unsigned long g_MapIndex;
+std::vector<DrawableObject> g_DrawObjs;
 
 int main()
 {
@@ -98,8 +98,8 @@ int main()
       return -1;
    }
 
-   GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
-   GLuint ColorIndex = shaderProgram->GetAttributeLocation("color");
+   //GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
+   //GLuint ColorIndex = shaderProgram->GetAttributeLocation("color");
 
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
@@ -209,83 +209,9 @@ int main()
    }
    std::cout << "  Completed!" << std::endl;
 
-   // All points --------------------------------------------------------------------------------------------------
-   GLuint VAO_all_pts, VBO_all_pts, VBO_all_color, IBO_all;
-   glGenVertexArrays(1, &VAO_all_pts);
-   glBindVertexArray(VAO_all_pts);
-
-   glGenBuffers(1, &VBO_all_pts);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_all_pts);
-   glBufferData(GL_ARRAY_BUFFER, verticies_all.size() * sizeof(glm::vec3), &verticies_all.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(PositonIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &VBO_all_color);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_all_color);
-   glBufferData(GL_ARRAY_BUFFER, colors_all.size() * sizeof(glm::vec3), &colors_all.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(ColorIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &IBO_all);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_all.size() * sizeof(GLuint), &indinces_all.front(), GL_STATIC_DRAW);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
-
-   // Skip Points ----------------------------------------------------------------------------------------------------
-   GLuint VAO_skip_pts, VBO_skip_pts, VBO_skip_color, IBO_skip;
-   glGenVertexArrays(1, &VAO_skip_pts);
-   glBindVertexArray(VAO_skip_pts);
-
-   glGenBuffers(1, &VBO_skip_pts);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_pts);
-   glBufferData(GL_ARRAY_BUFFER, verticies_skip.size() * sizeof(glm::vec3), &verticies_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(PositonIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &VBO_skip_color);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_color);
-   glBufferData(GL_ARRAY_BUFFER, colors_skip.size() * sizeof(glm::vec3), &colors_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(ColorIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &IBO_skip);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip.size() * sizeof(GLuint), &indinces_skip.front(), GL_STATIC_DRAW);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
-
-   // Skip X Skip Points ----------------------------------------------------------------------------------------------------
-   GLuint VAO_skip_skip_pts, VBO_skip_skip_pts, VBO_skip_skip_color, IBO_skip_skip;
-   glGenVertexArrays(1, &VAO_skip_skip_pts);
-   glBindVertexArray(VAO_skip_skip_pts);
-
-   glGenBuffers(1, &VBO_skip_skip_pts);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_skip_pts);
-   glBufferData(GL_ARRAY_BUFFER, verticies_skip_skip.size() * sizeof(glm::vec3), &verticies_skip_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(PositonIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &VBO_skip_skip_color);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_skip_skip_color);
-   glBufferData(GL_ARRAY_BUFFER, colors_skip_skip.size() * sizeof(glm::vec3), &colors_skip_skip.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(ColorIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(ColorIndex);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glGenBuffers(1, &IBO_skip_skip);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip_skip);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indinces_skip_skip.size() * sizeof(GLuint), &indinces_skip_skip.front(), GL_STATIC_DRAW);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
+   g_DrawObjs.emplace_back(verticies_all, colors_all, indinces_all);
+   g_DrawObjs.emplace_back(verticies_skip, colors_skip, indinces_skip);
+   g_DrawObjs.emplace_back(verticies_skip_skip, colors_skip_skip, indinces_skip_skip);
    // ---------------------------------------------------------------------------------------------
 
 
@@ -307,68 +233,7 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
-      switch (g_MapIndex % 3)
-      {
-      case 0:
-         // All Points
-         switch (g_RenderMode)
-         {
-         case RenderMode::POINTS:
-            glBindVertexArray(VAO_all_pts);
-            glDrawArrays(GL_POINTS, 0, (GLsizei)verticies_all.size());
-            glBindVertexArray(0);
-            break;
-
-         case RenderMode::TRIANGLES:
-            glBindVertexArray(VAO_all_pts);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_all);
-            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_all.size(), GL_UNSIGNED_INT, NULL);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-            break;
-         }
-         break;
-         case 1:
-         // Skip Points
-         switch (g_RenderMode)
-         {
-         case RenderMode::POINTS:
-            glBindVertexArray(VAO_skip_pts);
-            glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip.size());
-            glBindVertexArray(0);
-            break;
-
-         case RenderMode::TRIANGLES:
-            glBindVertexArray(VAO_skip_pts);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip);
-            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_skip.size(), GL_UNSIGNED_INT, NULL);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-            break;
-         }
-         break;
-         case 2:
-         // Skip X Skip Points
-         switch (g_RenderMode)
-         {
-         case RenderMode::POINTS:
-            glBindVertexArray(VAO_skip_skip_pts);
-            glDrawArrays((GLuint)g_RenderMode, 0, (GLsizei)verticies_skip_skip.size());
-            glBindVertexArray(0);
-            break;
-
-         case RenderMode::TRIANGLES:
-            glBindVertexArray(VAO_skip_skip_pts);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_skip_skip);
-            glDrawElements(GL_TRIANGLES, (GLsizei)indinces_skip_skip.size(), GL_UNSIGNED_INT, NULL);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-            break;
-         }
-         break;
-         default:
-         break;
-      }
+      g_DrawObjs.at(g_MapIndex % g_DrawObjs.size()).Draw(g_RenderMode);
 
       ++window; // swap buffers
    }
