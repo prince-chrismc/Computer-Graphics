@@ -263,17 +263,18 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
    for (size_t index = 1; index < verticies_stripped.size() - 2; index += 1)
    {
-      for (float step = 0.0; step < 0.1; step += step_size)
+      for (float step = 0.0; step < 1.0; step += step_size)
       {
-         glm::vec3 prev = (verticies_stripped.at(index - 1).x == verticies_stripped.at(index).x) ? verticies_stripped.at(index - 1) : verticies_stripped.at(index).x - verticies_stripped.at(index + 1);
+         if(verticies_stripped.at(index - 1).x != verticies_stripped.at(index).x) continue;
          if(verticies_stripped.at(index).x != verticies_stripped.at(index + 1).x) continue;
-         glm::vec3 next = (verticies_stripped.at(index + 2).x == verticies_stripped.at(index).x) ? verticies_stripped.at(index + 2) : verticies_stripped.at(index).x + verticies_stripped.at(index + 1);
+         if(verticies_stripped.at(index + 2).x != verticies_stripped.at(index).x) continue;
 
          glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
-         glm::mat4x3 control_mat(prev,
+         glm::mat4x3 control_mat(verticies_stripped.at(index - 1),
                                  verticies_stripped.at(index),
                                  verticies_stripped.at(index + 1),
-                                 next);
+                                 verticies_stripped.at(index + 2));
+
          // verticies
          verticies_x_catmul.emplace_back(control_mat * basis_mat * u_vec);
 
