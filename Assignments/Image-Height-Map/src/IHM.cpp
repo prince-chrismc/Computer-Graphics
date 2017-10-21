@@ -46,7 +46,7 @@ using cimg_library::CImgDisplay;
 // Function Declaration
 const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
 const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
-double GetUserInputFraction(const double& precision = 0.1);
+float GetUserInputFraction(const float& precision = 0.1);
 void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecticies);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
@@ -220,9 +220,9 @@ const unsigned long CalcHexColorFromPixelVal(const float & pixel_value)
    return static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
 }
 
-double GetUserInputFraction(const double& precision)
+float GetUserInputFraction(const float& precision)
 {
-   double selection = 0.0;
+   float selection = 0.0;
    do
    {
       std::cout << "Selcetion: ";
@@ -236,7 +236,7 @@ double GetUserInputFraction(const double& precision)
 
    } while (selection < 0.0 || selection > 1.0);
 
-   return floor(selection / precision + 0.5) * precision; // https://stackoverflow.com/a/798070/8480874
+   return floor(selection / precision + 0.5f) * precision; // https://stackoverflow.com/a/798070/8480874
 }
 
 void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecticies)
@@ -292,13 +292,13 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    {                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
       if (verticies_x_catmul.at(0).x + skip_size == verticies_x_catmul.at(index).x)                // this is the long (lazy way) to find length ... i couldnt figure out equation
       {                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
-         points_per_row = index + 1;                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+         points_per_row = (unsigned int)index + 1;                                                 // this is the long (lazy way) to find length ... i couldnt figure out equation
          break;                                                                                    // this is the long (lazy way) to find length ... i couldnt figure out equation
       }                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
    }                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
 
    // Indicies
-   for (size_t index = 0; index < verticies_x_catmul.size() - 1; index += 1)                       // for each point
+   for (GLuint index = 0; index < verticies_x_catmul.size() - 1; index += 1)                       // for each point
    {
       if( index + points_per_row + 1 >= verticies_x_catmul.size()) continue;
       if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;          // ignoring edges
@@ -360,17 +360,17 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    }
 
    points_per_row = 0;                                                                             // this is the long (lazy way) to find length ... i couldnt figure out equation
-   for (size_t index = 0; index < verticies_xz_catmul.size(); index += 1)                          // this is the long (lazy way) to find length ... i couldnt figure out equation
+   for (GLuint index = 0; index < verticies_xz_catmul.size(); index += 1)                          // this is the long (lazy way) to find length ... i couldnt figure out equation
    {                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
       if (verticies_xz_catmul.at(0).x + skip_size == verticies_xz_catmul.at(index).x)              // this is the long (lazy way) to find length ... i couldnt figure out equation
       {                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
-         points_per_row = index + 1;                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+         points_per_row = (unsigned int)index + 1;                                                 // this is the long (lazy way) to find length ... i couldnt figure out equation
          break;                                                                                    // this is the long (lazy way) to find length ... i couldnt figure out equation
       }                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
    }                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
 
    // Indicies
-   for (size_t index = 0; index < verticies_xz_catmul.size() - 1; index += 1)                      // for every single damn point.............................................
+   for (GLuint index = 0; index < verticies_xz_catmul.size() - 1; index += 1)                      // for every single damn point.............................................
    {
       if (index + points_per_row + 1 >= verticies_xz_catmul.size()) continue;
       if (verticies_xz_catmul.at(index).x != verticies_xz_catmul.at(index + 1).x) continue;        // ignore edges
