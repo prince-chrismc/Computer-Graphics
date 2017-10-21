@@ -27,6 +27,7 @@ SOFTWARE.
 #include <vector>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include "GL/glew.h"                    // include GL Extension Wrangler
@@ -246,7 +247,7 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    float step_size = GetUserInputFraction();
 
    std::cout << "Processing splines....";
-   verticies_stripped.erase(std::remove_if(verticies_stripped.begin(), verticies_stripped.end(), [=](glm::vec3 vec){ return (static_cast<int>(vec.x + img_half_width) % skip_size != 0) && (static_cast<int>(vec.z + img_half_heigth) % skip_size == 0); }));
+   verticies_stripped.erase(std::remove_if(verticies_stripped.begin(), verticies_stripped.end(), [=](glm::vec3 vec){ return (static_cast<int>(vec.x + img_half_width) % skip_size != 0) || (static_cast<int>(vec.z + img_half_heigth) % skip_size == 0); }), verticies_stripped.end());
 
    const glm::mat4 basis_mat(-0.5,  1.5, -1.5,  0.5,
                         1.0, -2.5,  2.0, -0.5,
@@ -282,7 +283,7 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
          colors_x_catmul.emplace_back(red, green, blue);
 
          // Indicies
-         if (true/*index + image->height() < verticies_x_catmul.size()*/)
+         if (verticies_stripped.at(index).x < image->height() - skip_size && verticies_stripped.at(index).z < image->width() - 2)
          {
             GLint pts_per_row = image->height();
 
