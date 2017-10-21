@@ -263,12 +263,12 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
    for (size_t index = 1; index < verticies_stripped.size() - 2; index += 1)
    {
+      if(verticies_stripped.at(index - 1).x != verticies_stripped.at(index).x) continue;
+      if(verticies_stripped.at(index).x != verticies_stripped.at(index + 1).x) continue;
+      if(verticies_stripped.at(index + 2).x != verticies_stripped.at(index).x) continue;
+
       for (float step = 0.0; step < 1.0; step += step_size)
       {
-         if(verticies_stripped.at(index - 1).x != verticies_stripped.at(index).x) continue;
-         if(verticies_stripped.at(index).x != verticies_stripped.at(index + 1).x) continue;
-         if(verticies_stripped.at(index + 2).x != verticies_stripped.at(index).x) continue;
-
          glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
          glm::mat4x3 control_mat(verticies_stripped.at(index - 1),
                                  verticies_stripped.at(index),
@@ -280,11 +280,7 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
          // Color
          const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_x_catmul.back().y);
-         const double red = ((colorValue & 0xff0000) >> 16) / 255.0;
-         const double green = ((colorValue & 0x00ff00) >> 8) / 255.0;
-         const double blue = (colorValue & 0x0000ff) / 255.0;
-
-         colors_x_catmul.emplace_back(red, green, blue);
+         colors_x_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
       }
    }
 
@@ -315,6 +311,69 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    }
 
    g_DrawObjs.emplace_back(verticies_x_catmul, colors_x_catmul, indicies_x_catmul);
+
+   // ---------------------------------------------------------------------------------------------
+
+   std::vector<glm::vec3> verticies_passed(verticies_x_catmul);
+
+   std::vector<glm::vec3> verticies_xz_catmul;
+   std::vector<glm::vec3> colors_xz_catmul;
+   std::vector<GLuint> indicies_xz_catmul;
+
+   points_per_row -= 1;
+
+   for (size_t index = 0; index < verticies_passed.size() - 1; index += 1)
+   {
+      if ((long)index - (long)points_per_row < 0) continue;
+      if (index + points_per_row > verticies_passed.size() - 1) continue;
+      if (index + 2*points_per_row > verticies_passed.size() - 1) continue;
+
+      if (verticies_passed.at(index).z != verticies_passed.at(index - points_per_row).z) continue;
+      if (verticies_passed.at(index).z != verticies_passed.at(index + points_per_row).z) continue;
+      if (verticies_passed.at(index).z != verticies_passed.at(index + 2*points_per_row).z) continue;
+
+      //std::cout << "-1: " << verticies_passed.at(index - points_per_row).x << "," << verticies_passed.at(index - points_per_row).z << std::endl;
+      //std::cout << " 0: " << verticies_passed.at(index).x << "," << verticies_passed.at(index).z << std::endl;
+      //std::cout << "+1: " << verticies_passed.at(index + points_per_row).x << "," << verticies_passed.at(index + points_per_row).z << std::endl;
+      //std::cout << "+2: " << verticies_passed.at(index + 2*points_per_row).x << "," << verticies_passed.at(index + 2*points_per_row).z << std::endl;
+
+      for (float step = 0.0; step < 1.0; step += step_size)
+      {
+         glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
+         glm::mat4x3 control_mat(verticies_passed.at(index - points_per_row),
+                                 verticies_passed.at(index),
+                                 verticies_passed.at(index + points_per_row),
+                                 verticies_passed.at(index + 2*points_per_row));
+
+         // verticies
+         verticies_xz_catmul.emplace_back(control_mat * basis_mat * u_vec);
+
+         // Color
+         const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_xz_catmul.back().y);
+         colors_xz_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
+      }
+   }
+
+   // Indicies
+   for (size_t index = 0; index < verticies_xz_catmul.size() - 1; index += 1)
+   {
+      if (index + points_per_row + 1 >= verticies_xz_catmul.size()) continue;
+      if (verticies_xz_catmul.at(index).z != verticies_xz_catmul.at(index + 1).z) continue;
+      if (verticies_xz_catmul.at(index + points_per_row).z != verticies_xz_catmul.at(index + points_per_row + 1).z) continue;
+
+      //std::cout << "-1: " << verticies_xz_catmul.at(index + 1).x << "," << verticies_xz_catmul.at(index + 1).z << std::endl;
+      //std::cout << " 0: " << verticies_xz_catmul.at(index).x << "," << verticies_xz_catmul.at(index).z << std::endl;
+
+      indicies_xz_catmul.emplace_back(index);
+      indicies_xz_catmul.emplace_back(index + 1);
+      indicies_xz_catmul.emplace_back(index + points_per_row);
+
+      indicies_xz_catmul.emplace_back(index + 1);
+      indicies_xz_catmul.emplace_back(index + points_per_row);
+      indicies_xz_catmul.emplace_back(index + points_per_row + 1);
+   }
+
+   g_DrawObjs.emplace_back(verticies_xz_catmul, colors_xz_catmul, indicies_xz_catmul);
    std::cout << "  Completed!" << std::endl;
 }
 
