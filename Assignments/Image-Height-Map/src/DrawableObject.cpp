@@ -60,6 +60,14 @@ DrawableObject::DrawableObject(const std::vector<glm::vec3> verticies, const std
    m_NumIndicies = (GLsizei)indicies.size();
 }
 
+DrawableObject::~DrawableObject()
+{
+   glDeleteBuffers(1, &m_Verticies);
+   glDeleteBuffers(1, &m_Colors);
+   glDeleteBuffers(1, &m_Indicies);
+   glDeleteVertexArrays(1 ,&m_VAO);
+}
+
 void DrawableObject::Draw(const RenderMode& render_mode)
 {
    switch (render_mode)
