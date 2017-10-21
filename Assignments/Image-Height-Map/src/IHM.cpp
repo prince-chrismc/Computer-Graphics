@@ -284,21 +284,32 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
          const double blue = (colorValue & 0x0000ff) / 255.0;
 
          colors_x_catmul.emplace_back(red, green, blue);
-
-         // Indicies
-         if (verticies_stripped.at(index).x < image->height() - skip_size && verticies_stripped.at(index).z < image->width() - 2)
-         {
-            GLint pts_per_row = image->height();
-
-            indicies_x_catmul.emplace_back(index); // this one
-            indicies_x_catmul.emplace_back(index + 1); // next one
-            indicies_x_catmul.emplace_back(index + pts_per_row); // next row
-
-            indicies_x_catmul.emplace_back(index + pts_per_row); // next row
-            indicies_x_catmul.emplace_back(index + 1); // next one
-            indicies_x_catmul.emplace_back(index + pts_per_row + 1); // across
-         }
       }
+   }
+
+   GLuint points_per_row = 0;
+   for (size_t index = 0; index < verticies_x_catmul.size(); index += 1)
+   {
+      if (verticies_x_catmul.at(0).x + skip_size == verticies_x_catmul.at(index).x)
+      {
+         points_per_row = index + 1;
+         break;
+      }
+   }
+
+   // Indicies
+   for (size_t index = 0; index < verticies_x_catmul.size() - 1; index += 1)
+   {
+      if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;
+      if( index + points_per_row + 1 >= verticies_x_catmul.size()) continue;
+
+      indicies_x_catmul.emplace_back(index);
+      indicies_x_catmul.emplace_back(index + 1);
+      indicies_x_catmul.emplace_back(index + points_per_row);
+
+      indicies_x_catmul.emplace_back(index + 1);
+      indicies_x_catmul.emplace_back(index + points_per_row);
+      indicies_x_catmul.emplace_back(index + points_per_row + 1);
    }
 
    g_DrawObjs.emplace_back(verticies_x_catmul, colors_x_catmul, indicies_x_catmul);
