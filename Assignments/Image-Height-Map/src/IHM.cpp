@@ -58,6 +58,7 @@ Cursor g_Cursor;
 RenderMode g_RenderMode;
 unsigned long g_MapIndex;
 std::vector<DrawableObject> g_DrawObjs;
+bool g_NewCatmul = false;
 
 int main()
 {
@@ -165,7 +166,8 @@ int main()
       // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
       glfwPollEvents();
 
-      // Render
+      if(g_NewCatmul) { GenerateCatmuls(&image, verticies_all); g_NewCatmul = false; } // generate new catmuls on user trigger
+
       // Clear the colorbuffer
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f); // near black teal
       glClear(GL_COLOR_BUFFER_BIT);
@@ -177,12 +179,13 @@ int main()
       glm::mat4 model_matrix = glm::scale(glm::mat4(), glm::vec3(0.05f));
       shaderProgram->SetShaderMat4("model_matrix", model_matrix);
 
+      // Render
       g_DrawObjs.at(g_MapIndex % g_DrawObjs.size()).Draw(g_RenderMode);
 
       ++window; // swap buffers
    }
 
-   for (DrawableObject obj: g_DrawObjs)
+   for (DrawableObject obj: g_DrawObjs) // clean up memory
       obj.Delete();
 
    return 0;
@@ -250,7 +253,7 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    float step_size = GetUserInputFraction();
 
    std::cout << "Processing splines....";
-   verticies_stripped.erase(std::remove_if(verticies_stripped.begin(), verticies_stripped.end(), [=](glm::vec3 vec){ return (static_cast<int>(vec.x + img_half_width) % skip_size != 0) || (static_cast<int>(vec.z + img_half_heigth) % skip_size == 0); }), verticies_stripped.end());
+   verticies_stripped.erase(std::remove_if(verticies_stripped.begin(), verticies_stripped.end(), [=](glm::vec3 vec){ return (static_cast<int>(vec.x + img_half_width) % skip_size != 0) || (static_cast<int>(vec.z + img_half_heigth) % skip_size == 0); }), verticies_stripped.end()); // removes all points which dont match skip_size
 
    const glm::mat4 basis_mat(-0.5,  1.5, -1.5,  0.5,
                         1.0, -2.5,  2.0, -0.5,
@@ -261,44 +264,44 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    std::vector<glm::vec3> colors_x_catmul;
    std::vector<GLuint> indicies_x_catmul;
 
-   for (size_t index = 1; index < verticies_stripped.size() - 2; index += 1)
+   for (size_t index = 1; index < verticies_stripped.size() - 2; index += 1)                       // for all reamining points
    {
       if(verticies_stripped.at(index - 1).x != verticies_stripped.at(index).x) continue;
       if(verticies_stripped.at(index).x != verticies_stripped.at(index + 1).x) continue;
-      if(verticies_stripped.at(index + 2).x != verticies_stripped.at(index).x) continue;
+      if(verticies_stripped.at(index + 2).x != verticies_stripped.at(index).x) continue;           // ignoring edges
 
-      for (float step = 0.0; step < 1.0; step += step_size)
+      for (float step = 0.0; step < 1.0; step += step_size)                                        // calc each step
       {
          glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
          glm::mat4x3 control_mat(verticies_stripped.at(index - 1),
                                  verticies_stripped.at(index),
                                  verticies_stripped.at(index + 1),
-                                 verticies_stripped.at(index + 2));
+                                 verticies_stripped.at(index + 2));                                // along X axis
 
          // verticies
-         verticies_x_catmul.emplace_back(control_mat * basis_mat * u_vec);
+         verticies_x_catmul.emplace_back(control_mat * basis_mat * u_vec);                         // save new point
 
          // Color
-         const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_x_catmul.back().y);
+         const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_x_catmul.back().y);   // calc and save color
          colors_x_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
       }
    }
 
-   GLuint points_per_row = 0;
-   for (size_t index = 0; index < verticies_x_catmul.size(); index += 1)
-   {
-      if (verticies_x_catmul.at(0).x + skip_size == verticies_x_catmul.at(index).x)
-      {
-         points_per_row = index + 1;
-         break;
-      }
-   }
+   GLuint points_per_row = 0;                                                                      // this is the long (lazy way) to find length ... i couldnt figure out equation
+   for (size_t index = 0; index < verticies_x_catmul.size(); index += 1)                           // this is the long (lazy way) to find length ... i couldnt figure out equation
+   {                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+      if (verticies_x_catmul.at(0).x + skip_size == verticies_x_catmul.at(index).x)                // this is the long (lazy way) to find length ... i couldnt figure out equation
+      {                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
+         points_per_row = index + 1;                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+         break;                                                                                    // this is the long (lazy way) to find length ... i couldnt figure out equation
+      }                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
+   }                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
 
    // Indicies
-   for (size_t index = 0; index < verticies_x_catmul.size() - 1; index += 1)
+   for (size_t index = 0; index < verticies_x_catmul.size() - 1; index += 1)                       // for each point
    {
       if( index + points_per_row + 1 >= verticies_x_catmul.size()) continue;
-      if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;
+      if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;          // ignoring edges
       if (verticies_x_catmul.at(index + points_per_row).x != verticies_x_catmul.at(index + points_per_row + 1).x) continue;
 
       indicies_x_catmul.emplace_back(index);
@@ -307,29 +310,29 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
       indicies_x_catmul.emplace_back(index + 1);
       indicies_x_catmul.emplace_back(index + points_per_row);
-      indicies_x_catmul.emplace_back(index + points_per_row + 1);
+      indicies_x_catmul.emplace_back(index + points_per_row + 1);                                  // calc and save triangles (adj + across)
    }
 
-   g_DrawObjs.emplace_back(verticies_x_catmul, colors_x_catmul, indicies_x_catmul);
+   g_DrawObjs.emplace_back(verticies_x_catmul, colors_x_catmul, indicies_x_catmul);                // save to draw later
 
-   // ---------------------------------------------------------------------------------------------
+   // -----------------------------------------------------------------------------------------------------------------------------------------------
 
-   std::vector<glm::vec3> verticies_passed(verticies_x_catmul);
+   std::vector<glm::vec3> verticies_passed(verticies_x_catmul);                                    // copy prev points
 
    std::vector<glm::vec3> verticies_xz_catmul;
    std::vector<glm::vec3> colors_xz_catmul;
    std::vector<GLuint> indicies_xz_catmul;
 
-   points_per_row -= 1;
+   points_per_row -= 1;                                                                            // adjust for element access
 
-   for (size_t index = 0; index < verticies_passed.size() - 1; index += 1)
+   for (size_t index = 0; index < verticies_passed.size() - 1; index += 1)                         // for each point
    {
       if ((long)index - (long)points_per_row < 0) continue;
       if (index + points_per_row > verticies_passed.size() - 1) continue;
       if (index + 2*points_per_row > verticies_passed.size() - 1) continue;
 
       if (verticies_passed.at(index).z != verticies_passed.at(index - points_per_row).z) continue;
-      if (verticies_passed.at(index).z != verticies_passed.at(index + points_per_row).z) continue;
+      if (verticies_passed.at(index).z != verticies_passed.at(index + points_per_row).z) continue; // ignoring edge cases
       if (verticies_passed.at(index).z != verticies_passed.at(index + 2*points_per_row).z) continue;
 
       for (float step = 0.0; step < 1.0; step += step_size)
@@ -338,38 +341,39 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
          glm::mat4x3 control_mat(verticies_passed.at(index - points_per_row),
                                  verticies_passed.at(index),
                                  verticies_passed.at(index + points_per_row),
-                                 verticies_passed.at(index + 2*points_per_row));
+                                 verticies_passed.at(index + 2*points_per_row));                   // along Z axis
 
          // verticies
-         verticies_xz_catmul.emplace_back(control_mat * basis_mat * u_vec);
+         verticies_xz_catmul.emplace_back(control_mat * basis_mat * u_vec);                        // calc and store new point
       }
    }
 
-   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x); });
-   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x) && (a.z < b.z); });
+   // sort back to cartisian plan order -- Ex: { {0,0}, {0,1}, {1,0}, {1,1} }
+   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x); });                // why stable_sort and not sort...
+   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x) && (a.z < b.z); }); // https://stackoverflow.com/a/7215833/8480874
 
    // Color
-   for (glm::vec3 coord : verticies_xz_catmul)
+   for (glm::vec3 coord : verticies_xz_catmul)                                                     // for each point
    {
-      const unsigned long colorValue = CalcHexColorFromPixelVal(coord.y);
+      const unsigned long colorValue = CalcHexColorFromPixelVal(coord.y);                          // calc color and store
       colors_xz_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
    }
 
-   points_per_row = 0;
-   for (size_t index = 0; index < verticies_xz_catmul.size(); index += 1)
-   {
-      if (verticies_xz_catmul.at(0).x + skip_size == verticies_xz_catmul.at(index).x)
-      {
-         points_per_row = index + 1;
-         break;
-      }
-   }
+   points_per_row = 0;                                                                             // this is the long (lazy way) to find length ... i couldnt figure out equation
+   for (size_t index = 0; index < verticies_xz_catmul.size(); index += 1)                          // this is the long (lazy way) to find length ... i couldnt figure out equation
+   {                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+      if (verticies_xz_catmul.at(0).x + skip_size == verticies_xz_catmul.at(index).x)              // this is the long (lazy way) to find length ... i couldnt figure out equation
+      {                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
+         points_per_row = index + 1;                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
+         break;                                                                                    // this is the long (lazy way) to find length ... i couldnt figure out equation
+      }                                                                                            // this is the long (lazy way) to find length ... i couldnt figure out equation
+   }                                                                                               // this is the long (lazy way) to find length ... i couldnt figure out equation
 
    // Indicies
-   for (size_t index = 0; index < verticies_xz_catmul.size() - 1; index += 1)
+   for (size_t index = 0; index < verticies_xz_catmul.size() - 1; index += 1)                      // for every single damn point.............................................
    {
       if (index + points_per_row + 1 >= verticies_xz_catmul.size()) continue;
-      if (verticies_xz_catmul.at(index).x != verticies_xz_catmul.at(index + 1).x) continue;
+      if (verticies_xz_catmul.at(index).x != verticies_xz_catmul.at(index + 1).x) continue;        // ignore edges
       if (verticies_xz_catmul.at(index + points_per_row).x != verticies_xz_catmul.at(index + points_per_row + 1).x) continue;
 
       indicies_xz_catmul.emplace_back(index);
@@ -378,10 +382,10 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
       indicies_xz_catmul.emplace_back(index + 1);
       indicies_xz_catmul.emplace_back(index + points_per_row);
-      indicies_xz_catmul.emplace_back(index + points_per_row + 1);
+      indicies_xz_catmul.emplace_back(index + points_per_row + 1);                                 // calc and save triangles (adj + across)
    }
 
-   g_DrawObjs.emplace_back(verticies_xz_catmul, colors_xz_catmul, indicies_xz_catmul);
+   g_DrawObjs.emplace_back(verticies_xz_catmul, colors_xz_catmul, indicies_xz_catmul);             // store obj to be drawn
    std::cout << "  Completed!" << std::endl;
 }
 
@@ -397,7 +401,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       return;
 
    // lets print the key in human readable if possible
-   const char* keyname = glfwGetKeyName(key, scancode); // function found at https://github.com/glfw/glfw/pull/117
+   const char* keyname = glfwGetKeyName(key, scancode);
    if (keyname)
       std::cout << keyname << std::endl;
    else
@@ -437,8 +441,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       break;
 
       // reset everything
-   case GLFW_KEY_HOME:
    case GLFW_KEY_BACKSPACE:
+      g_NewCatmul = true;
+   case GLFW_KEY_HOME:
       g_Camera.ResetCameraPos();
       break;
 
@@ -459,7 +464,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    };
 }
 
-// inspiration https://stackoverflow.com/questions/37194845/using-glfw-to-capture-mouse-dragging-c for below
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
    double lastX, lastY;
@@ -495,7 +499,6 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
    }
 }
 
-// inspiration https://learnopengl.com/#!Getting-started/Camera
 void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
    if (g_Cursor.IsLeftActive())
