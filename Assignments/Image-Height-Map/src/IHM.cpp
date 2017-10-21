@@ -45,6 +45,7 @@ using cimg_library::CImgDisplay;
 // Function Declaration
 const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
 const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
+double GetUserInputFraction(const double& precision = 0.1);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -62,6 +63,9 @@ int main()
 
    std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
    int skip_size = GetUserInputMultiple(5, 65, 5);
+
+   std::cout << std::endl << "Please input a step size: (multiple of 0.1) recommended: 0.2" << std::endl;
+   double step_size = GetUserInputFraction();
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -97,9 +101,6 @@ int main()
    {
       return -1;
    }
-
-   //GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
-   //GLuint ColorIndex = shaderProgram->GetAttributeLocation("color");
 
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
@@ -268,6 +269,25 @@ const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigne
 const unsigned long CalcHexColorFromPixelVal(const float & pixel_value)
 {
    return static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
+}
+
+double GetUserInputFraction(const double& precision)
+{
+   double selection = 0.0;
+   do
+   {
+      std::cout << "Selcetion: ";
+      std::string input;
+      std::getline(std::cin, input);
+      std::stringstream ss(input);
+      ss >> selection;
+
+      if (selection < 0.0 || selection > 1.0 )
+         std::cout << "Invalid option. Please Try again..." << std::endl;
+
+   } while (selection < 0.0 || selection > 1.0);
+
+   return floor(selection / precision + 0.5) * precision; // https://stackoverflow.com/a/798070/8480874
 }
 
 // ------------------------------------------------------------------------------------------------ //
