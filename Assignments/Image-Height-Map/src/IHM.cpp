@@ -332,11 +332,6 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
       if (verticies_passed.at(index).z != verticies_passed.at(index + points_per_row).z) continue;
       if (verticies_passed.at(index).z != verticies_passed.at(index + 2*points_per_row).z) continue;
 
-      //std::cout << "-1: " << verticies_passed.at(index - points_per_row).x << "," << verticies_passed.at(index - points_per_row).z << std::endl;
-      //std::cout << " 0: " << verticies_passed.at(index).x << "," << verticies_passed.at(index).z << std::endl;
-      //std::cout << "+1: " << verticies_passed.at(index + points_per_row).x << "," << verticies_passed.at(index + points_per_row).z << std::endl;
-      //std::cout << "+2: " << verticies_passed.at(index + 2*points_per_row).x << "," << verticies_passed.at(index + 2*points_per_row).z << std::endl;
-
       for (float step = 0.0; step < 1.0; step += step_size)
       {
          glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
@@ -347,10 +342,26 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
 
          // verticies
          verticies_xz_catmul.emplace_back(control_mat * basis_mat * u_vec);
+      }
+   }
 
-         // Color
-         const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_xz_catmul.back().y);
-         colors_xz_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
+   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x); });
+   std::stable_sort(verticies_xz_catmul.begin(), verticies_xz_catmul.end(), [](glm::vec3 a, glm::vec3 b) { return (a.x < b.x) && (a.z < b.z); });
+
+   // Color
+   for (glm::vec3 coord : verticies_xz_catmul)
+   {
+      const unsigned long colorValue = CalcHexColorFromPixelVal(coord.y);
+      colors_xz_catmul.emplace_back(((colorValue & 0xff0000) >> 16) / 255.0, ((colorValue & 0x00ff00) >> 8) / 255.0, (colorValue & 0x0000ff) / 255.0);
+   }
+
+   points_per_row = 0;
+   for (size_t index = 0; index < verticies_xz_catmul.size(); index += 1)
+   {
+      if (verticies_xz_catmul.at(0).x + skip_size == verticies_xz_catmul.at(index).x)
+      {
+         points_per_row = index + 1;
+         break;
       }
    }
 
@@ -358,11 +369,8 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    for (size_t index = 0; index < verticies_xz_catmul.size() - 1; index += 1)
    {
       if (index + points_per_row + 1 >= verticies_xz_catmul.size()) continue;
-      if (verticies_xz_catmul.at(index).z != verticies_xz_catmul.at(index + 1).z) continue;
-      if (verticies_xz_catmul.at(index + points_per_row).z != verticies_xz_catmul.at(index + points_per_row + 1).z) continue;
-
-      //std::cout << "-1: " << verticies_xz_catmul.at(index + 1).x << "," << verticies_xz_catmul.at(index + 1).z << std::endl;
-      //std::cout << " 0: " << verticies_xz_catmul.at(index).x << "," << verticies_xz_catmul.at(index).z << std::endl;
+      if (verticies_xz_catmul.at(index).x != verticies_xz_catmul.at(index + 1).x) continue;
+      if (verticies_xz_catmul.at(index + points_per_row).x != verticies_xz_catmul.at(index + points_per_row + 1).x) continue;
 
       indicies_xz_catmul.emplace_back(index);
       indicies_xz_catmul.emplace_back(index + 1);
