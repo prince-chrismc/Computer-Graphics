@@ -46,6 +46,7 @@ using cimg_library::CImgDisplay;
 const unsigned int GetUserInputMultiple(const unsigned int& lower, const unsigned int& upper, const unsigned int& multiple);
 const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
 double GetUserInputFraction(const double& precision = 0.1);
+void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecticies);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -60,12 +61,6 @@ std::vector<DrawableObject> g_DrawObjs;
 int main()
 {
    std::cout << "Welcome to Image Height Map Generator!" << std::endl;
-
-   std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
-   int skip_size = GetUserInputMultiple(5, 65, 5);
-
-   std::cout << std::endl << "Please input a step size: (multiple of 0.1) recommended: 0.2" << std::endl;
-   double step_size = GetUserInputFraction();
 
    // Create a GLFWwindow
    GlfwWindow window("Image Height Map by Christopher McArthur", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
@@ -113,19 +108,11 @@ int main()
    // ---------------------------------------------------------------------------------------------
    std::cout << "Processing image....";
    CImg<float> image("assets/depth.bmp");         // load the image
-   CImgDisplay display(image, "Image");           // create window displaying image
+   //CImgDisplay display(image, "Image");           // create window displaying image
 
    std::vector<glm::vec3> verticies_all;
    std::vector<glm::vec3> colors_all;
    std::vector<GLuint> indinces_all;
-
-   std::vector<glm::vec3> verticies_skip;
-   std::vector<glm::vec3> colors_skip;
-   std::vector<GLuint> indinces_skip;
-
-   std::vector<glm::vec3> verticies_skip_skip;
-   std::vector<glm::vec3> colors_skip_skip;
-   std::vector<GLuint> indinces_skip_skip;
 
    const int img_half_width = image.width() / 2;
    const int img_half_heigth = image.height() / 2;
@@ -137,14 +124,6 @@ int main()
          // verticies
          const float pixel_value = static_cast<float>(*image.data(x, z));
          verticies_all.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
-         if(x % skip_size == 0)
-         {
-            verticies_skip.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
-            if (z % skip_size == 0)
-            {
-               verticies_skip_skip.emplace_back(x - img_half_width, pixel_value, z - img_half_heigth);
-            }
-         }
 
          // Color
          const unsigned long colorValue = CalcHexColorFromPixelVal(pixel_value);
@@ -153,14 +132,6 @@ int main()
          const double blue = (colorValue & 0x0000ff) / 255.0;
 
          colors_all.emplace_back(red, green, blue);
-         if (x % skip_size == 0)
-         {
-            colors_skip.emplace_back(red, green, blue);
-            if (z % skip_size == 0)
-            {
-               colors_skip_skip.emplace_back(red, green, blue);
-            }
-         }
 
          // Indicies
          GLint max_column = image.width() - 1;
@@ -179,42 +150,13 @@ int main()
             indinces_all.emplace_back(next_index + pts_per_row); // across
          }
 
-         if (x % skip_size == 0  && x < (max_column - skip_size) && z < (max_row - 1))
-         {
-            GLint next_index = (int)verticies_skip.size();
-            GLint pts_per_row = image.height();
-
-            indinces_skip.emplace_back(next_index - 1); // this one
-            indinces_skip.emplace_back(next_index); // next one
-            indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
-
-            indinces_skip.emplace_back(next_index + pts_per_row - 1); // next row
-            indinces_skip.emplace_back(next_index); // next one
-            indinces_skip.emplace_back(next_index + pts_per_row); // across
-         }
-
-         if (z % skip_size == 0 && x % skip_size == 0 && x < (max_column - skip_size) && z < (max_row - skip_size))
-         {
-            GLint next_index = (int)verticies_skip_skip.size();
-            GLint pts_per_row = image.height() / skip_size + 1;
-
-            indinces_skip_skip.emplace_back(next_index - 1); // this one
-            indinces_skip_skip.emplace_back(next_index); // next one
-            indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
-
-            indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
-            indinces_skip_skip.emplace_back(next_index); // next one
-            indinces_skip_skip.emplace_back(next_index + pts_per_row); // across
-         }
       }
    }
    std::cout << "  Completed!" << std::endl;
-
    g_DrawObjs.emplace_back(verticies_all, colors_all, indinces_all);
-   g_DrawObjs.emplace_back(verticies_skip, colors_skip, indinces_skip);
-   g_DrawObjs.emplace_back(verticies_skip_skip, colors_skip_skip, indinces_skip_skip);
    // ---------------------------------------------------------------------------------------------
 
+   GenerateCatmuls(&image, verticies_all);
 
    // Game loop
    while (! ~window)
@@ -225,7 +167,7 @@ int main()
       // Render
       // Clear the colorbuffer
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f); // near black teal
-      glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/);
+      glClear(GL_COLOR_BUFFER_BIT);
 
       shaderProgram->SetShaderMat4("view_matrix", g_Camera.GetViewMatrix());
 
@@ -288,6 +230,75 @@ double GetUserInputFraction(const double& precision)
    } while (selection < 0.0 || selection > 1.0);
 
    return floor(selection / precision + 0.5) * precision; // https://stackoverflow.com/a/798070/8480874
+}
+
+void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecticies)
+{
+   const int img_half_width = image->width() / 2;
+   const int img_half_heigth = image->height() / 2;
+
+   std::vector<glm::vec3> verticies_stripped(all_vecticies);
+
+   std::cout << std::endl << "Please Select a skip size: (multiple of 5) recommended: 20" << std::endl;
+   int skip_size = GetUserInputMultiple(5, 65, 5);
+
+   std::cout << std::endl << "Please input a step size: (multiple of 0.1) recommended: 0.2" << std::endl;
+   float step_size = GetUserInputFraction();
+
+   std::cout << "Processing splines....";
+   verticies_stripped.erase(std::remove_if(verticies_stripped.begin(), verticies_stripped.end(), [=](glm::vec3 vec){ return (static_cast<int>(vec.x + img_half_width) % skip_size != 0) && (static_cast<int>(vec.z + img_half_heigth) % skip_size == 0); }));
+
+   const glm::mat4 basis_mat(-0.5,  1.5, -1.5,  0.5,
+                        1.0, -2.5,  2.0, -0.5,
+                       -0.5,  0.0,  0.5,  0.0,
+                        0.0,  1.0,  0.0,  0.0);
+
+   std::vector<glm::vec3> verticies_x_catmul;
+   std::vector<glm::vec3> colors_x_catmul;
+   std::vector<GLuint> indicies_x_catmul;
+
+   for (size_t index = 1; index < verticies_stripped.size() - 2; index += 1)
+   {
+      for (float step = 0.0; step < 0.1; step += step_size)
+      {
+         glm::vec3 prev = (verticies_stripped.at(index - 1).x == verticies_stripped.at(index).x) ? verticies_stripped.at(index - 1) : verticies_stripped.at(index).x - verticies_stripped.at(index + 1);
+         if(verticies_stripped.at(index).x != verticies_stripped.at(index + 1).x) continue;
+         glm::vec3 next = (verticies_stripped.at(index + 2).x == verticies_stripped.at(index).x) ? verticies_stripped.at(index + 2) : verticies_stripped.at(index).x + verticies_stripped.at(index + 1);
+
+         glm::vec4 u_vec(std::pow(step, 3), std::pow(step, 2), step, 1.0f);
+         glm::mat4x3 control_mat(prev,
+                                 verticies_stripped.at(index),
+                                 verticies_stripped.at(index + 1),
+                                 next);
+         // verticies
+         verticies_x_catmul.emplace_back(control_mat * basis_mat * u_vec);
+
+         // Color
+         const unsigned long colorValue = CalcHexColorFromPixelVal(verticies_x_catmul.back().y);
+         const double red = ((colorValue & 0xff0000) >> 16) / 255.0;
+         const double green = ((colorValue & 0x00ff00) >> 8) / 255.0;
+         const double blue = (colorValue & 0x0000ff) / 255.0;
+
+         colors_x_catmul.emplace_back(red, green, blue);
+
+         // Indicies
+         if (true/*index + image->height() < verticies_x_catmul.size()*/)
+         {
+            GLint pts_per_row = image->height();
+
+            indicies_x_catmul.emplace_back(index); // this one
+            indicies_x_catmul.emplace_back(index + 1); // next one
+            indicies_x_catmul.emplace_back(index + pts_per_row); // next row
+
+            indicies_x_catmul.emplace_back(index + pts_per_row); // next row
+            indicies_x_catmul.emplace_back(index + 1); // next one
+            indicies_x_catmul.emplace_back(index + pts_per_row + 1); // across
+         }
+      }
+   }
+
+   g_DrawObjs.emplace_back(verticies_x_catmul, colors_x_catmul, indicies_x_catmul);
+   std::cout << "  Completed!" << std::endl;
 }
 
 // ------------------------------------------------------------------------------------------------ //
