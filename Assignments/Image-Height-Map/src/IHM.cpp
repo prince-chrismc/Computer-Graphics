@@ -109,7 +109,6 @@ int main()
    // Setup global camera
    g_Camera = Camera(center, up, eye);
 
-
    // ---------------------------------------------------------------------------------------------
    std::cout << "Processing image....";
    CImg<float> image("assets/depth.bmp");         // load the image
@@ -202,9 +201,9 @@ int main()
             indinces_skip_skip.emplace_back(next_index); // next one
             indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
 
-            //indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
-            //indinces_skip_skip.emplace_back(next_index); // next one
-            //indinces_skip_skip.emplace_back(next_index + pts_per_row); // across
+            indinces_skip_skip.emplace_back(next_index + pts_per_row - 1); // next row
+            indinces_skip_skip.emplace_back(next_index); // next one
+            indinces_skip_skip.emplace_back(next_index + pts_per_row); // across
          }
       }
    }
