@@ -182,6 +182,9 @@ int main()
       ++window; // swap buffers
    }
 
+   for (DrawableObject obj: g_DrawObjs)
+      obj.Delete();
+
    return 0;
 }
 

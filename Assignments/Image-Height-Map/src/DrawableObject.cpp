@@ -60,7 +60,7 @@ DrawableObject::DrawableObject(const std::vector<glm::vec3> verticies, const std
    m_NumIndicies = (GLsizei)indicies.size();
 }
 
-DrawableObject::~DrawableObject()
+void DrawableObject::Delete()
 {
    glDeleteBuffers(1, &m_Verticies);
    glDeleteBuffers(1, &m_Colors);
