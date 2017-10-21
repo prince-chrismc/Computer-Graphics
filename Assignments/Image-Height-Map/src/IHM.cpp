@@ -301,8 +301,9 @@ void GenerateCatmuls(CImg<float>* image, const std::vector<glm::vec3>& all_vecti
    // Indicies
    for (size_t index = 0; index < verticies_x_catmul.size() - 1; index += 1)
    {
-      if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;
       if( index + points_per_row + 1 >= verticies_x_catmul.size()) continue;
+      if (verticies_x_catmul.at(index).x != verticies_x_catmul.at(index + 1).x) continue;
+      if (verticies_x_catmul.at(index + points_per_row).x != verticies_x_catmul.at(index + points_per_row + 1).x) continue;
 
       indicies_x_catmul.emplace_back(index);
       indicies_x_catmul.emplace_back(index + 1);
