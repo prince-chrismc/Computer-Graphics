@@ -8,6 +8,9 @@ To track modifications to the system setup application
 
 > x.x.0 - Fix:   Small tweaks which do not impact stability
 
+## Setup 1.1.1
+- There was an issue whereby a users system required trailing backslash for windows security reasons, this has been added as the defacto standard for the setup app
+
 ## Setup 1.1.0
 - Now works even if `setup.bat` exists
 - Sets Enviroment variables (include directory { GLM, GLEW, GLFW } library directory { GLEW, GLFW }

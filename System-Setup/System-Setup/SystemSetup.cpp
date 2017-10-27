@@ -137,7 +137,7 @@ std::string GetPathToFile(const std::string& file_path)
    if (TryToOpenFile(dir + file_path))
    {
       std::cout << "  PASS!" << std::endl;
-      return dir;
+      return dir += "\\"; // why extra backslash https://stackoverflow.com/questions/29190444/invalid-syntax-with-setx-for-having-more-than-two-arguments-when-there-are-onl
    }
    else
    {
