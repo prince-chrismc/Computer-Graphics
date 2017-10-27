@@ -30,6 +30,4 @@ You are no longer required to download and compile the libraries above; for the 
 
 ### Setting Enviroment Variables
 1. Use the link above to download the `System Setup.exe`
-2. Run the `System Setup.exe` and follow the directions (ie. select the directories)
-
-Note this app is not fancy; if you don't input a correct directory is will ask you again forever, close the console to exit. If for whatever the apps fails make sure to delete the `setup.bat` file if it was create (same directory which was the app is running from).
+2. Run the `System Setup.exe` and follow the directions displayed. For more [information](https://github.com/prince-chrismc/Computer-Graphics/blob/master/System-Setup/README.md), use the link provided.
