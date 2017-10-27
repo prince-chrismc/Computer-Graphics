@@ -53,7 +53,7 @@ artifacts/
 *_i.h
 *.ilk
 *.meta
-*.obj
+# *.obj # These are required for 3D scene objects
 *.pch
 *.pdb
 *.pgc
