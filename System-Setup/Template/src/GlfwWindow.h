@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include <vector>
+#include <mutex>
 
 #include "GLFW/glfw3.h"                   // include GLFW helper library
 #include "glm/detail/type_mat4x4.hpp"     // include glm::mat4 library
@@ -64,16 +65,21 @@ private:
 class GlfwWindowFactory
 {
 public:
-   ~GlfwWindowFactory() { glfwTerminate(); for (GlfwWindow* win : m_Windows) { delete win; } m_Windows.clear(); }
+   ~GlfwWindowFactory() { glfwTerminate(); m_Windows.clear(); }
 
-   static GlfwWindowFactory& GetInstance() { static GlfwWindowFactory instance; return instance; }
+   static std::shared_ptr<GlfwWindowFactory> GetInstance() { std::call_once(s_Flag, [](){ s_Instance.reset(std::make_shared<GlfwWindowFactory>().get()); return s_Instance.get(); } ); }
 
-   GlfwWindow* CreateNewWindow(const char* title, const int& width, const int& height) { m_Windows.push_back(new GlfwWindow(title, width, height)); return m_Windows.back(); }
-   GlfwWindow* CreateNewWindow(const char* title) { m_Windows.push_back(new GlfwWindow(title)); return m_Windows.back(); }
-   GlfwWindow* FindWindow(GLFWwindow* window) { for (GlfwWindow* win : m_Windows) { if (win->m_window == window) return win; } return nullptr; }
+   std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title, const int& width, const int& height) { m_Windows.push_back(std::make_shared<GlfwWindow>(title, width, height)); return m_Windows.back(); }
+   std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title) { m_Windows.push_back(std::make_shared<GlfwWindow>(title)); return m_Windows.back(); }
+   std::shared_ptr<GlfwWindow> FindWindow(GLFWwindow* window) { for (std::shared_ptr<GlfwWindow> win : m_Windows) { if (win->m_window == window) return win; } return nullptr; }
 
 private:
-   GlfwWindowFactory() {};
+   GlfwWindowFactory() = default;
+   GlfwWindowFactory(const GlfwWindowFactory&) = delete;
+   GlfwWindowFactory& operator=(const GlfwWindowFactory&) = delete;
 
-   std::vector<GlfwWindow*> m_Windows;
+   static std::once_flag s_Flag;                                           // http://cppisland.com/?p=501
+   static std::shared_ptr<GlfwWindowFactory> s_Instance;                   // https://stackoverflow.com/questions/6876751/differences-between-unique-ptr-and-shared-ptr
+
+   std::vector<std::shared_ptr<GlfwWindow>> m_Windows;
 };

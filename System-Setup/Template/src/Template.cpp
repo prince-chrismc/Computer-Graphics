@@ -39,7 +39,7 @@ int main()
    std::cout << "Welcome to Template!" << std::endl;
 
    // Create a GLFWwindow
-   GlfwWindow* window = GlfwWindowFactory::GetInstance().CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
+   GlfwWindow* window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
    if (!window->IsValid())                      // Make sure it exists
    {
       return -1;
