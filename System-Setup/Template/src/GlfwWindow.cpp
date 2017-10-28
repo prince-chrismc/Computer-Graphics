@@ -27,6 +27,10 @@ SOFTWARE.
 #include "GlfwWindow.h"
 #include "glm/gtc/matrix_transform.hpp"
 
+std::once_flag GlfwWindow::s_InitFlag;
+std::once_flag GlfwWindowFactory::s_Flag;
+std::shared_ptr<GlfwWindowFactory> GlfwWindowFactory::s_Instance;
+
 GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) : m_window(nullptr), m_Projection()
 {
    std::call_once(s_InitFlag, [](){
