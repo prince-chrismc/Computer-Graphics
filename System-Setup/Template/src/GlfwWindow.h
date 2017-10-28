@@ -58,6 +58,8 @@ private:
    GLFWwindow* m_window;
    glm::mat4   m_Projection;
 
+   static std::once_flag s_InitFlag;
+
    void UpdateFromResize(const int& width, const int& height);
    GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { return glfwSetWindowSizeCallback(m_window, cbfun); }
 };

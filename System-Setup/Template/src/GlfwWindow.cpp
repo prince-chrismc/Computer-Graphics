@@ -29,13 +29,15 @@ SOFTWARE.
 
 GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) : m_window(nullptr), m_Projection()
 {
-   // Init GLFW
-   std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
-   glfwInit();
-   // Set all the required options for GLFW
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+   std::call_once(s_InitFlag, [](){
+      // Init GLFW
+      std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
+      glfwInit();
+      // Set all the required options for GLFW
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+   });
 
    // try to create window
    m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
