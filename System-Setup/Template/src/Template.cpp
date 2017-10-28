@@ -39,7 +39,7 @@ int main()
    std::cout << "Welcome to Template!" << std::endl;
 
    // Create a GLFWwindow
-   GlfwWindow* window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
+   std::shared_ptr<GlfwWindow> window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
    if (!window->IsValid())                      // Make sure it exists
    {
       return -1;
@@ -87,7 +87,7 @@ int main()
    while (!window->ShouldClose())
    {
       // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
-      glfwPollEvents();
+      GlfwWindow::TriggerCallbacks();
 
       // Render
       // Clear the colorbuffer
