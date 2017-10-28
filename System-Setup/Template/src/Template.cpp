@@ -28,8 +28,8 @@ SOFTWARE.
 #include <string>
 #include <iostream>
 
-#include "GL/glew.h"       // include GL Extension Wrangler
-#include "glm/gtc/matrix_transform.hpp" //glm::lookAt
+#include "GL/glew.h"                            // include GL Extension Wrangler
+#include "glm/gtc/matrix_transform.hpp"         //glm::lookAt
 
 #include "GlfwWindow.h"
 #include "Shader.h"
@@ -39,33 +39,42 @@ int main()
    std::cout << "Welcome to Template!" << std::endl;
 
    // Create a GLFWwindow
-   GlfwWindow window("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
-   if (!window()) // Make sure it exists
+   GlfwWindow* window = GlfwWindowFactory::GetInstance().CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
+   if (!window->IsValid())                      // Make sure it exists
    {
       return -1;
    }
 
-   // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
-   glewExperimental = GL_TRUE;
-   // Initialize GLEW to setup the OpenGL Function pointers
-   if (glewInit() != GLEW_OK)
+   // Set the required callback functions
+   /*
+   * window.SetKeyCallback(key_callback);
+   * window.SetMouseButtonCallback(mouse_callback);
+   * window.SetCursorPosCallback(cursor_callback);
+   */
+
+   if (glewInit() != GLEW_OK)                   // Initialize GLEW to setup the OpenGL Function pointers
    {
       std::cout << "Failed to initialize GLEW" << std::endl;
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
    // Build and compile our shader program
    VertexShader vertexShader("shaders/vertex.shader");
    FragmentShader fragmentShader("shaders/fragment.shader");
-   // make sure they are ready to use
-   if (!vertexShader() || !fragmentShader())
+   if (!vertexShader() || !fragmentShader())    // make sure they are ready to use
    {
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
    ShaderLinker* shaderProgram = &ShaderLinker::GetInstance();
    if (!shaderProgram->Link(&vertexShader, &fragmentShader))
    {
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
@@ -75,7 +84,7 @@ int main()
    const glm::vec3 eye(0.0f, -5.0f, 3.0f);
 
    // Game loop
-   while (! ~window)
+   while (!window->ShouldClose())
    {
       // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
       glfwPollEvents();
@@ -89,9 +98,9 @@ int main()
       view_matrix = glm::lookAt(eye, center, up);
       shaderProgram->SetShaderMat4("view_matrix", view_matrix);
 
-      shaderProgram->SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
+      shaderProgram->SetShaderMat4("projection_matrix", window->GetProjectionMatrix());
 
-      ++window; // swap buffers
+      window->NextBuffer(); // swap buffers
    }
 
    return 0;

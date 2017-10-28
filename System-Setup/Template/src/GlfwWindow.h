@@ -24,34 +24,56 @@ SOFTWARE.
 
 #pragma once
 
-#include "GLFW/glfw3.h"    // include GLFW helper library
-#include "glm/glm.hpp"     // include GLM library
+#include <vector>
+
+#include "GLFW/glfw3.h"                   // include GLFW helper library
+#include "glm/detail/type_mat4x4.hpp"     // include glm::mat4 library
 
 class GlfwWindow
 {
-   public:
-      GlfwWindow(const char* title, const int& width, const int& height);
-      ~GlfwWindow();
+   friend class GlfwWindowFactory;
 
-      bool operator()() const { return m_window != nullptr; } // Make sure windows exists
-      void operator++() { glfwSwapBuffers(m_window); }  // Swap the screen buffers
-      bool operator~() const { return glfwWindowShouldClose(m_window); } // window should close
+public:
+   GlfwWindow(const char* title, const int& width, const int& height);
+   GlfwWindow(const char* title) : GlfwWindow(title, DEFAULT_WIDTH, DEFAULT_HEIGHT) {}
 
-      const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
+   constexpr bool IsValid() const { return m_window != nullptr; }          // Make sure windows exists
+   void NextBuffer() { glfwSwapBuffers(m_window); }                        // Swap the screen buffers
+   bool ShouldClose() const { return glfwWindowShouldClose(m_window); }    // window should close
 
-      // Allow the required callback functions
-      GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { return glfwSetKeyCallback(m_window, cbfun); }
-      GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun cbfun) { return glfwSetMouseButtonCallback(m_window, cbfun); }
-      GLFWcursorposfun   SetCursorPosCallback(GLFWcursorposfun cbfun) { return glfwSetCursorPosCallback(m_window, cbfun); }
-      GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { return glfwSetWindowSizeCallback(m_window, cbfun); } // already handled
+   const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 
-      // Default window dimensions
-      static const GLuint DEFAULT_WIDTH = 800, DEFAULT_HEIGHT = 600;
+   // Allow the required callback functions
+   GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { return glfwSetKeyCallback(m_window, cbfun); }
+   GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun cbfun) { return glfwSetMouseButtonCallback(m_window, cbfun); }
+   GLFWcursorposfun   SetCursorPosCallback(GLFWcursorposfun cbfun) { return glfwSetCursorPosCallback(m_window, cbfun); }
 
-   private:
-      GLFWwindow* m_window;
-      glm::mat4   m_Projection;
+   static void TriggerCallbacks() { glfwPollEvents(); }                    // For all windows, trigger callback for any pending event
 
-      void window_callback(GLFWwindow* window, int width, int height);
+                                                                           // Default window dimensions
+   static const GLuint DEFAULT_WIDTH = 800, DEFAULT_HEIGHT = 600;
+
+private:
+   GLFWwindow* m_window;
+   glm::mat4   m_Projection;
+
+   void UpdateFromResize(const int& width, const int& height);
+   GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { return glfwSetWindowSizeCallback(m_window, cbfun); }
 };
 
+class GlfwWindowFactory
+{
+public:
+   ~GlfwWindowFactory() { glfwTerminate(); for (GlfwWindow* win : m_Windows) { delete win; } m_Windows.clear(); }
+
+   static GlfwWindowFactory& GetInstance() { static GlfwWindowFactory instance; return instance; }
+
+   GlfwWindow* CreateNewWindow(const char* title, const int& width, const int& height) { m_Windows.push_back(new GlfwWindow(title, width, height)); return m_Windows.back(); }
+   GlfwWindow* CreateNewWindow(const char* title) { m_Windows.push_back(new GlfwWindow(title)); return m_Windows.back(); }
+   GlfwWindow* FindWindow(GLFWwindow* window) { for (GlfwWindow* win : m_Windows) { if (win->m_window == window) return win; } return nullptr; }
+
+private:
+   GlfwWindowFactory() {};
+
+   std::vector<GlfwWindow*> m_Windows;
+};
