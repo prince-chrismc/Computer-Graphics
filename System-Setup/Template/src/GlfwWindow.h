@@ -67,18 +67,18 @@ private:
 class GlfwWindowFactory
 {
 public:
-   GlfwWindowFactory() = default;
    ~GlfwWindowFactory() { glfwTerminate(); m_Windows.clear(); }
    GlfwWindowFactory(const GlfwWindowFactory&) = delete;
    GlfwWindowFactory& operator=(const GlfwWindowFactory&) = delete;
 
-   static std::shared_ptr<GlfwWindowFactory> GetInstance() { std::call_once(s_Flag, [](){ s_Instance.reset(std::make_shared<GlfwWindowFactory>().get()); }); return s_Instance;  }
+   static std::shared_ptr<GlfwWindowFactory> GetInstance() { std::call_once(s_Flag, [](){ s_Instance.reset(new GlfwWindowFactory()); }); return s_Instance;  }
 
    std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title, const int& width, const int& height) { m_Windows.push_back(std::make_shared<GlfwWindow>(title, width, height)); return m_Windows.back(); }
    std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title) { m_Windows.push_back(std::make_shared<GlfwWindow>(title)); return m_Windows.back(); }
    std::shared_ptr<GlfwWindow> FindWindow(GLFWwindow* window) const { for (std::shared_ptr<GlfwWindow> win : m_Windows) { if (win->m_window == window) return win; } return nullptr; }
 
 private:
+   GlfwWindowFactory() = default;
 
    static std::once_flag s_Flag;                                           // http://cppisland.com/?p=501
    static std::shared_ptr<GlfwWindowFactory> s_Instance;                   // https://stackoverflow.com/questions/6876751/differences-between-unique-ptr-and-shared-ptr
