@@ -25,8 +25,10 @@ SOFTWARE.
 #pragma once
 
 #include <string>
-#include "GL/glew.h"             // include GL Extension Wrangler
-#include "glm/gtc/type_ptr.hpp"  // glm::value_ptr
+#include <mutex>
+
+#include "GL/glew.h"                            // include GL Extension Wrangler
+#include "glm/gtc/type_ptr.hpp"                 // glm::value_ptr
 
 class Shader abstract
 {
@@ -67,7 +69,11 @@ class FragmentShader : public Shader
 class ShaderLinker
 {
    public:
-      static ShaderLinker& GetInstance() { static ShaderLinker instance; return instance; }
+      ~ShaderLinker() = default;
+      ShaderLinker(const ShaderLinker&) = delete;
+      ShaderLinker& operator=(const ShaderLinker&) = delete;
+
+      static std::shared_ptr<ShaderLinker> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new ShaderLinker()); }); return s_Instance; }
 
       bool Link(VertexShader* vertex, FragmentShader* frag);
 
@@ -78,12 +84,12 @@ class ShaderLinker
       void SetShaderMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
 
    private:
-      GLuint m_ShaderProgram;
-
       ShaderLinker() { m_ShaderProgram = glCreateProgram(); }
-      ~ShaderLinker() = default;
-      ShaderLinker(const ShaderLinker&) = delete;
-      ShaderLinker& operator=(const ShaderLinker&) = delete;
 
       void AddShader(Shader* NewShader) { glAttachShader(m_ShaderProgram, NewShader->m_Shader); }
+
+      static std::once_flag s_Flag;
+      static std::shared_ptr<ShaderLinker> s_Instance;
+
+      GLuint m_ShaderProgram;
 };

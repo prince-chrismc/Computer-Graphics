@@ -39,7 +39,7 @@ int main()
    std::cout << "Welcome to Template!" << std::endl;
 
    // Create a GLFWwindow
-   GlfwWindow* window = GlfwWindowFactory::GetInstance().CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
+   std::shared_ptr<GlfwWindow> window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Template by <Author>", GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
    if (!window->IsValid())                      // Make sure it exists
    {
       return -1;
@@ -47,9 +47,9 @@ int main()
 
    // Set the required callback functions
    /*
-   * window.SetKeyCallback(key_callback);
-   * window.SetMouseButtonCallback(mouse_callback);
-   * window.SetCursorPosCallback(cursor_callback);
+   * window->SetKeyCallback(key_callback);
+   * window->SetMouseButtonCallback(mouse_callback);
+   * window->SetCursorPosCallback(cursor_callback);
    */
 
    if (glewInit() != GLEW_OK)                   // Initialize GLEW to setup the OpenGL Function pointers
@@ -70,7 +70,7 @@ int main()
       return -1;
    }
 
-   ShaderLinker* shaderProgram = &ShaderLinker::GetInstance();
+   auto shaderProgram = ShaderLinker::GetInstance();
    if (!shaderProgram->Link(&vertexShader, &fragmentShader))
    {
       std::cout << "Press 'enter' to exit." << std::endl;
@@ -87,7 +87,7 @@ int main()
    while (!window->ShouldClose())
    {
       // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
-      glfwPollEvents();
+      GlfwWindow::TriggerCallbacks();
 
       // Render
       // Clear the colorbuffer
