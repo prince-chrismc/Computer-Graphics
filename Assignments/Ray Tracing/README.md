@@ -1,9 +1,8 @@
 # Ray Tracing
 
-
 ### Table Of Contents
 * [Contributors](#contributors)
-  
+
 ## Contributors
 **Student** | **ID**
 :---:| ---
