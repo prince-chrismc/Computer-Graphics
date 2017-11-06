@@ -28,12 +28,10 @@ SOFTWARE.
 
 class SceneFile
 {
-friend class Scene;
    public:
       SceneFile(const char* path);
-      ~SceneFile();
 
-   private:
+   protected:
       class ObjDescriptor
       {
          public:
@@ -44,7 +42,15 @@ friend class Scene;
             std::string m_Attributes;
       };
 
-      static std::string GetNextLine(std::ifstream* file);
-
       std::vector<ObjDescriptor> m_Elements;
+
+   private:
+      void ExtractCamera(std::ifstream* file);
+      void ExtractSphere(std::ifstream* file);
+      void ExtractModel(std::ifstream* file);
+      void ExtractLight(std::ifstream* file);
+      void ExtractTriangle(std::ifstream* file);
+      void ExtractPlane(std::ifstream* file);
+
+      static std::string GetNextLine(std::ifstream* file);
 };
