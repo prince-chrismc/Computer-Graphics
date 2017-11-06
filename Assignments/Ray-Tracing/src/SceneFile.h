@@ -29,6 +29,21 @@ SOFTWARE.
 class SceneFile
 {
    public:
-      SceneFile();
+      SceneFile(const char* path);
       ~SceneFile();
+
+   private:
+      class ObjDescriptor
+      {
+         public:
+            ObjDescriptor(const char* name, std::string attributes) : m_Name(name), m_Attributes(attributes) {}
+
+         private:
+            const char* m_Name;
+            std::string m_Attributes;
+      };
+
+      static std::string GetNextLine(std::ifstream* file);
+
+      std::vector<ObjDescriptor> m_Elements;
 };

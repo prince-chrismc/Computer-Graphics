@@ -22,12 +22,82 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <fstream>
+#include <sstream>
 #include "SceneFile.h"
 
-SceneFile::SceneFile()
+// Element types
+static const char* CAMERA = "camera";
+static const char* SPHERE = "sphere";
+static const char* MODEL  = "model";
+static const char* LIGHT  = "light";
+
+SceneFile::SceneFile(const char* path)
 {
+   std::ifstream file(path);
+
+   unsigned int num_elem = 0;
+   {
+      char buffer[512];
+      file.getline(buffer, 512, '\n');
+
+      std::stringstream line(buffer);
+      line >> std::dec >> num_elem;
+   }
+
+   while (!file.eof())
+   {
+      std::string line = GetNextLine(&file);
+
+      if (line.compare(CAMERA))
+      {
+         std::string pos = GetNextLine(&file);
+         std::string fov = GetNextLine(&file);
+         std::string f = GetNextLine(&file);
+         std::string a = GetNextLine(&file);
+
+         m_Elements.emplace_back(CAMERA, "{ " + pos + "," + fov + "," + f + "," + a + " }");
+      }
+      else if (line.compare(SPHERE))
+      {
+         std::string path = GetNextLine(&file);
+         std::string rad = GetNextLine(&file);
+         std::string amb = GetNextLine(&file);
+         std::string dif = GetNextLine(&file);
+         std::string spe = GetNextLine(&file);
+         std::string shi = GetNextLine(&file);
+
+         m_Elements.emplace_back(SPHERE, "{ " + path + "," + rad + "," + amb + "," + dif + "," + spe + shi +" }");
+      }
+      else if (line.compare(MODEL))
+      {
+         std::string path = GetNextLine(&file);
+         std::string amb = GetNextLine(&file);
+         std::string dif = GetNextLine(&file);
+         std::string spe = GetNextLine(&file);
+         std::string shi = GetNextLine(&file);
+
+         m_Elements.emplace_back(MODEL, "{ " + path + "," + amb + "," + dif + "," + spe + shi + " }");
+      }
+      else if (line.compare(LIGHT))
+      {
+         std::string pos = GetNextLine(&file);
+         std::string col = GetNextLine(&file);
+
+         m_Elements.emplace_back(CAMERA, "{ " + pos + "," + col + " }");
+      }
+   }
+
 }
 
 SceneFile::~SceneFile()
 {
+}
+
+std::string SceneFile::GetNextLine(std::ifstream* file)
+{
+   char buffer[512];
+   file->getline(buffer, 512, '\n');
+
+   return std::string(buffer);
 }
