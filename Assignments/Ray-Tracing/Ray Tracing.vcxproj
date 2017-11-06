@@ -168,10 +168,6 @@
     <ClCompile Include="src\SceneFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment.shader" />
-    <None Include="shaders\vertex.shader" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="src\SceneFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
