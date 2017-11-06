@@ -12,9 +12,10 @@ This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) 
 - [Project Template](https://github.com/prince-chrismc/Computer-Graphics/tree/master/System-Setup/Template)
 - [Pseudo Pac-Man](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments/Pseudo-PacMan)
 - [Image Height Map](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments/Image-Height-Map)
+- [Ray Tracing](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments/Ray-Tracing)
 
 ## System Setup
-- Visual Studio
+- Visual Studio 15.2+ (though any c++14 compliant should work)
 - OpenGL Libraries
   - [GLFW 3.2.1](https://github.com/glfw/glfw/releases/tag/3.2.1)
   - [GLM 9.8.5](https://github.com/g-truc/glm/releases/tag/0.9.8.5)
