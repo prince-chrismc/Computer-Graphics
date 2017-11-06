@@ -29,6 +29,8 @@ SOFTWARE.
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include "CImg.h"
 
+#include "SceneFile.h"
+
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
 
@@ -45,6 +47,12 @@ int main()
    const glm::vec3 eye(0.0f, 35.0f, 35.0f);
 
    // ---------------------------------------------------------------------------------------------
+   std::cout << "Loading Scene....";
+   SceneFile file("assets/scene1.txt");
+
+
+
+
    std::cout << "Generating Scene....";
    CImg<float> image;
 

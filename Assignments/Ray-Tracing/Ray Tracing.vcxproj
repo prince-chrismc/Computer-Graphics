@@ -161,6 +161,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="assets\scene1.txt" />
+    <Text Include="assets\scene2.txt" />
     <Text Include="README.md" />
   </ItemGroup>
   <ItemGroup>

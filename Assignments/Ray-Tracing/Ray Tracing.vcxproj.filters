@@ -16,6 +16,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.md" />
+    <Text Include="assets\scene1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="assets\scene2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RayTracing.cpp">

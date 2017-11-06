@@ -30,7 +30,9 @@ SOFTWARE.
 static const char* CAMERA = "camera";
 static const char* SPHERE = "sphere";
 static const char* MODEL  = "model";
-static const char* LIGHT  = "light";
+static const char* LIGHT = "light";
+static const char* PLANE = "plane";
+static const char* TRIANGLE  = "triangle";
 
 SceneFile::SceneFile(const char* path)
 {
@@ -49,7 +51,7 @@ SceneFile::SceneFile(const char* path)
    {
       std::string line = GetNextLine(&file);
 
-      if (line.compare(CAMERA))
+      if (!line.compare(CAMERA))
       {
          std::string pos = GetNextLine(&file);
          std::string fov = GetNextLine(&file);
@@ -58,7 +60,7 @@ SceneFile::SceneFile(const char* path)
 
          m_Elements.emplace_back(CAMERA, "{ " + pos + "," + fov + "," + f + "," + a + " }");
       }
-      else if (line.compare(SPHERE))
+      else if (!line.compare(SPHERE))
       {
          std::string path = GetNextLine(&file);
          std::string rad = GetNextLine(&file);
@@ -69,7 +71,7 @@ SceneFile::SceneFile(const char* path)
 
          m_Elements.emplace_back(SPHERE, "{ " + path + "," + rad + "," + amb + "," + dif + "," + spe + shi +" }");
       }
-      else if (line.compare(MODEL))
+      else if (!line.compare(MODEL))
       {
          std::string path = GetNextLine(&file);
          std::string amb = GetNextLine(&file);
@@ -79,12 +81,35 @@ SceneFile::SceneFile(const char* path)
 
          m_Elements.emplace_back(MODEL, "{ " + path + "," + amb + "," + dif + "," + spe + shi + " }");
       }
-      else if (line.compare(LIGHT))
+      else if (!line.compare(LIGHT))
       {
          std::string pos = GetNextLine(&file);
          std::string col = GetNextLine(&file);
 
-         m_Elements.emplace_back(CAMERA, "{ " + pos + "," + col + " }");
+         m_Elements.emplace_back(LIGHT, "{ " + pos + "," + col + " }");
+      }
+      else if (!line.compare(TRIANGLE))
+      {
+         std::string v1 = GetNextLine(&file);
+         std::string v2 = GetNextLine(&file);
+         std::string v3 = GetNextLine(&file);
+         std::string amb = GetNextLine(&file);
+         std::string dif = GetNextLine(&file);
+         std::string spe = GetNextLine(&file);
+         std::string shi = GetNextLine(&file);
+
+         m_Elements.emplace_back(TRIANGLE, "{ " + v1 + "," + v2 + "," + v3 + "," + amb + "," + dif + "," + spe + shi + " }");
+      }
+      else if (!line.compare(PLANE))
+      {
+         std::string nor = GetNextLine(&file);
+         std::string pos = GetNextLine(&file);
+         std::string amb = GetNextLine(&file);
+         std::string dif = GetNextLine(&file);
+         std::string spe = GetNextLine(&file);
+         std::string shi = GetNextLine(&file);
+
+         m_Elements.emplace_back(PLANE, "{ " + nor + "," + pos + "," + amb + "," + dif + "," + spe + shi + " }");
       }
    }
 

@@ -28,6 +28,7 @@ SOFTWARE.
 
 class SceneFile
 {
+friend class Scene;
    public:
       SceneFile(const char* path);
       ~SceneFile();
