@@ -166,10 +166,18 @@
     <Text Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\DrawableObject.cpp" />
+    <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\RayTracing.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneFile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\DrawableObject.h" />
+    <ClInclude Include="src\Light.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
