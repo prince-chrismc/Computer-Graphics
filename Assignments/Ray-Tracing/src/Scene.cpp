@@ -30,5 +30,6 @@ Scene::Scene(const char* path) : SceneFile(path)
    {
       // Do Work
       m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
+      m_Lights.push_back(Light::Builder().ParseLight(GetAttributes("light")).GetLight());
    }
 }

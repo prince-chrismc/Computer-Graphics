@@ -24,9 +24,31 @@ SOFTWARE.
 
 #pragma once
 
+#include <string>
+#include "glm\vec3.hpp"
+
 class Light
 {
 public:
-   Light();
-   ~Light();
+   Light(glm::vec3 pos, glm::vec3 col) : m_Pos(pos), m_Col(col) {}
+   Light() : Light(glm::vec3(), glm::vec3()) {}
+
+   class Builder
+   {
+      public:
+         Builder() = default;
+         Builder(const Builder&) = delete;
+         void operator=(const Builder&) = delete;
+
+         Builder& ParseLight(const std::string& data);
+         Light GetLight() { return Light(m_Pos, m_Col); }
+
+      private:
+         glm::vec3 m_Pos;
+         glm::vec3 m_Col;
+   };
+
+private:
+   glm::vec3 m_Pos;
+   glm::vec3 m_Col;
 };
