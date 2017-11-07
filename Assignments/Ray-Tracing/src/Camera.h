@@ -24,10 +24,36 @@ SOFTWARE.
 
 #pragma once
 
+#include <string>
+#include "glm\vec3.hpp"
+
 class Camera
 {
-public:
-   Camera();
-   ~Camera();
+   public:
+      Camera(glm::vec3 pos, unsigned int FOV, unsigned int focal, double angle) :
+             m_Pos(pos), m_FOV(FOV), m_Focal(focal), m_Angle(angle) {}
+
+      class Builder
+      {
+         public:
+            Builder() = default;
+            Builder(const Builder&) = delete;
+            void operator=(const Builder&) = delete;
+
+            Builder& ParseCamera(const std::string& data);
+            Camera GetCamera() { return Camera(m_Pos, m_FOV, m_Focal, m_Angle); }
+
+         private:
+            glm::vec3 m_Pos;
+            unsigned int m_FOV;
+            unsigned int m_Focal;
+            double m_Angle;
+      };
+
+   private:
+      glm::vec3 m_Pos;
+      unsigned int m_FOV;
+      unsigned int m_Focal;
+      double m_Angle;
 };
 

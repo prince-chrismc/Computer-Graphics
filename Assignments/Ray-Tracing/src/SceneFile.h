@@ -31,11 +31,16 @@ class SceneFile
    public:
       SceneFile(const char* path);
 
+      std::string GetAttributes(const char* name);
+
    protected:
       class ObjDescriptor
       {
          public:
-            ObjDescriptor(const char* name, std::string attributes) : m_Name(name), m_Attributes(attributes) {}
+            ObjDescriptor(const char* name, const std::string& attributes) : m_Name(name), m_Attributes(attributes) {}
+
+            bool DoesNameMatch(const char* name) { return !std::string(name).compare(m_Name); }
+            std::string GetAttributes() { return m_Attributes; }
 
          private:
             const char* m_Name;

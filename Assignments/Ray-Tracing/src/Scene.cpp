@@ -24,10 +24,11 @@ SOFTWARE.
 
 #include "Scene.h"
 
-Scene::Scene() : SceneFile("")
+Scene::Scene(const char* path) : SceneFile(path), m_Camera(glm::vec3(), 0, 0 , 0.0)
 {
    if(m_Elements.size() > 0)
    {
       // Do Work
+      m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
    }
 }

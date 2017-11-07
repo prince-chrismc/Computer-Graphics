@@ -29,7 +29,7 @@ SOFTWARE.
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include "CImg.h"
 
-#include "SceneFile.h"
+#include "Scene.h"
 
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
@@ -48,7 +48,7 @@ int main()
 
    // ---------------------------------------------------------------------------------------------
    std::cout << "Loading Scene....";
-   SceneFile file("assets/scene1.txt");
+   Scene scene("assets/scene1.txt");
 
 
 

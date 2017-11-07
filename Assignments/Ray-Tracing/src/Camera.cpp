@@ -22,14 +22,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <vector>
+#include <sstream>
 #include "Camera.h"
 
-Camera::Camera()
+Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 {
+   std::string cut = data.substr(2, data.length() - 4);
 
-}
+   std::vector<std::string> params;
+   while (cut.find(',') != std::string::npos)
+   {
+      size_t index = cut.find(',');
+      params.push_back(cut.substr(0, index));
+      cut = cut.substr(index + 1);
+   }
+   params.push_back(cut);
 
-Camera::~Camera()
-{
+   for (std::string attribute : params)
+   {
+      if (attribute.find("pos:") == 0)
+      {
+         m_Pos = glm::vec3(attribute.at(5) - '0', attribute.at(7) - '0', attribute.back() - '0');
+      }
+      else if (attribute.find("fov:") == 0)
+      {
+         std::stringstream fov_val(attribute.substr(5));
 
+         fov_val >> std::dec >> m_FOV;
+      }
+      else if (attribute.find("f:") == 0)
+      {
+         std::stringstream f_val(attribute.substr(3));
+
+         f_val >> std::dec >> m_Focal;
+      }
+      else if (attribute.find("a:") == 0)
+      {
+         std::stringstream a_val(attribute.substr(3));
+
+         a_val >> std::dec >> m_Angle;
+      }
+   }
+
+   return *this;
 }

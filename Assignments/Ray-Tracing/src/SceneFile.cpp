@@ -62,6 +62,14 @@ SceneFile::SceneFile(const char* path)
    if(m_Elements.size() != num_elem) m_Elements.clear();
 }
 
+std::string SceneFile::GetAttributes(const char * name) {
+   for (ObjDescriptor obj : m_Elements)
+   {
+      if (obj.DoesNameMatch(name)) return obj.GetAttributes();
+   }
+   return std::string();
+}
+
 void SceneFile::ExtractCamera(std::ifstream* file)
 {
    std::string pos = GetNextLine(file);

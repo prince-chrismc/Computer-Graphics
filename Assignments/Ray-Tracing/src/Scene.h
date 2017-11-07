@@ -32,10 +32,10 @@ SOFTWARE.
 class Scene : private SceneFile
 {
    public:
-      Scene();
+      Scene(const char* path);
 
    private:
       Camera m_Camera;
       std::vector<Light> m_Lights;
-      std::vector<DrawableObject*> m_Objects
+      std::vector<DrawableObject*> m_Objects;
 };
