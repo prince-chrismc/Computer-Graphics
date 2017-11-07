@@ -61,9 +61,15 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
       {
          std::stringstream a_val(attribute.substr(3));
 
-         a_val >> std::dec >> m_Angle;
+         a_val >> std::dec >> m_AspectRatio;
       }
    }
 
    return *this;
+}
+
+void Camera::GetImageDimensions(int* out_width, int* out_height)
+{
+   *out_height = m_Focal * std::atan(m_FOV / 2);
+   *out_width = *out_height * m_AspectRatio;
 }

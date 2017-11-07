@@ -31,7 +31,10 @@ class Camera
 {
    public:
       Camera(glm::vec3 pos, unsigned int FOV, unsigned int focal, double angle) :
-             m_Pos(pos), m_FOV(FOV), m_Focal(focal), m_Angle(angle) {}
+             m_Pos(pos), m_FOV(FOV), m_Focal(focal), m_AspectRatio(angle) {}
+      Camera() : Camera(glm::vec3(), 0, 0, 0.0) {}
+
+      void GetImageDimensions(int* out_width, int* out_height);
 
       class Builder
       {
@@ -41,19 +44,18 @@ class Camera
             void operator=(const Builder&) = delete;
 
             Builder& ParseCamera(const std::string& data);
-            Camera GetCamera() { return Camera(m_Pos, m_FOV, m_Focal, m_Angle); }
+            Camera GetCamera() { return Camera(m_Pos, m_FOV, m_Focal, m_AspectRatio); }
 
          private:
             glm::vec3 m_Pos;
             unsigned int m_FOV;
             unsigned int m_Focal;
-            double m_Angle;
+            double m_AspectRatio;
       };
 
    private:
       glm::vec3 m_Pos;
       unsigned int m_FOV;
       unsigned int m_Focal;
-      double m_Angle;
+      double m_AspectRatio;
 };
-

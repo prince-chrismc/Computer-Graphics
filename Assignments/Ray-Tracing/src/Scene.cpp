@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "Scene.h"
 
-Scene::Scene(const char* path) : SceneFile(path), m_Camera(glm::vec3(), 0, 0 , 0.0)
+Scene::Scene(const char* path) : SceneFile(path)
 {
    if(m_Elements.size() > 0)
    {
