@@ -43,7 +43,24 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
    {
       if (attribute.find("pos:") == 0)
       {
-         m_Pos = glm::vec3(attribute.at(5) - '0', attribute.at(7) - '0', attribute.back() - '0');
+         attribute = attribute.substr(5);
+
+         std::vector<int> vals;
+         while (attribute.find(' ') != std::string::npos)
+         {
+            size_t index = attribute.find(' ');
+            std::stringstream ss(attribute.substr(0, index));
+            attribute = attribute.substr(index + 1);
+            int temp;
+            ss >> std::dec >> temp;
+            vals.push_back(temp);
+         }
+         std::stringstream ss(attribute);
+         float temp;
+         ss >> std::dec >> temp;
+         vals.push_back(temp);
+
+         m_Pos = glm::vec3(vals.at(0), vals.at(1), vals.at(2));
       }
       else if (attribute.find("fov:") == 0)
       {
