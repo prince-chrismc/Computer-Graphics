@@ -24,6 +24,9 @@ SOFTWARE.
 
 #include "Scene.h"
 
+using cimg_library::CImg;
+using cimg_library::CImgDisplay;
+
 Scene::Scene(const char* path) : SceneFile(path)
 {
    if(m_Elements.size() > 0)
@@ -31,5 +34,24 @@ Scene::Scene(const char* path) : SceneFile(path)
       // Do Work
       m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
       m_Lights.push_back(Light::Builder().ParseLight(GetAttributes("light")).GetLight());
+
+      GenerateScene();
    }
+}
+
+void Scene::Display()
+{
+   CImgDisplay display(m_Img, "Image");
+
+   while(!display.is_closed())
+   {
+      if(display.is_keyESC()) display.close();
+   }
+}
+
+void Scene::GenerateScene()
+{
+   int height = 0, width = 0;
+   m_Camera.GetImageDimensions(&width, &height);
+   m_Img = CImg<float>(height, width, 1, 3, 0);
 }

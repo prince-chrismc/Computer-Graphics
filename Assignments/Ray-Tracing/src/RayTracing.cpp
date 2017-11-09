@@ -27,12 +27,9 @@ SOFTWARE.
 #include <sstream>
 
 #include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
-#include "CImg.h"
 
 #include "Scene.h"
 
-using cimg_library::CImg;
-using cimg_library::CImgDisplay;
 
 // Function Declaration
 const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
@@ -50,17 +47,12 @@ int main()
    std::cout << "Loading Scene....";
    Scene scene("assets/scene1.txt");
 
-
-
-
    std::cout << "Generating Scene....";
-   CImg<float> image;
-
    /*
    * TO DO: Generate Scene as per assignemnt description
    */
 
-   CImgDisplay display(image, "Image");           // create window displaying image
+              // create window displaying image
 
    return 0;
 }
