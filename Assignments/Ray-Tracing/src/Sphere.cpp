@@ -23,3 +23,34 @@ SOFTWARE.
 */
 
 #include "Sphere.h"
+
+#include "glm\geometric.hpp"   //normalize
+
+bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const
+{
+   // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
+
+   float intersection_zero, intersection_one;
+   glm::vec3 length = m_Pos - cam_pos;
+   float tca = glm::dot(length, ray_dir);
+
+   float rad_dir_squared = glm::dot(length, length) - tca * tca;
+   if (rad_dir_squared > (m_Radius * m_Radius)) return false; // doesn't pass through
+
+   float thc = sqrt((m_Radius * m_Radius) - rad_dir_squared);
+   intersection_zero = tca - thc;
+   intersection_one = tca + thc;
+
+   if (intersection_zero > intersection_one) std::swap(intersection_zero, intersection_one);
+
+   if (intersection_zero < 0)
+   {
+      intersection_zero = intersection_one;
+      if (intersection_zero < 0) return false; // both intersection are negative
+   }
+
+   *out_distance = intersection_zero;
+   *out_intersection = cam_pos + ray_dir * intersection_zero;
+
+   return true;
+}

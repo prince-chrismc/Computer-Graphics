@@ -24,9 +24,24 @@ SOFTWARE.
 
 #pragma once
 
+#include "glm\vec3.hpp"
+
 class Sphere
 {
    public:
-      virtual void Draw() = 0;
+      Sphere() = default;
+      Sphere(glm::vec3 pos, double rad, glm::vec3 amb, glm::vec3 dif, glm::vec3 spe, double shine) : 
+             m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
+
+      bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_disstance) const;
+
+   private:
+      glm::vec3 m_Pos;
+      double m_Radius;
+      glm::vec3 m_Amb;
+      glm::vec3 m_Dif;
+      glm::vec3 m_Spe;
+      double m_Shine;
+
 };
 
