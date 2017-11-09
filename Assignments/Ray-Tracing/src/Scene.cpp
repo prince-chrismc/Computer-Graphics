@@ -24,6 +24,9 @@ SOFTWARE.
 
 #include "Scene.h"
 
+#include <string>
+#include <future>
+
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
 
@@ -33,7 +36,22 @@ Scene::Scene(const char* path) : SceneFile(path)
    {
       // Do Work
       m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
-      m_Lights.push_back(Light::Builder().ParseLight(GetAttributes("light")).GetLight());
+
+      std::async(std::launch::deferred, [this](){
+         std::string light_attr = "";
+         while ((light_attr = GetAttributes("light")) != "")
+         {
+            m_Lights.push_back(Light::Builder().ParseLight(light_attr).GetLight());
+         }
+      });
+
+      std::async(std::launch::deferred, [this](){
+         std::string sphere_attr = "";
+         while ((sphere_attr = GetAttributes("sphere")) != "")
+         {
+            m_Spheres.push_back(Sphere::Builder().ParseSphere(sphere_attr).GetSphere());
+         }
+      });
 
       GenerateScene();
    }
@@ -54,4 +72,6 @@ void Scene::GenerateScene()
    int height = 0, width = 0;
    m_Camera.GetImageDimensions(&width, &height);
    m_Img = CImg<float>(height, width, 1, 3, 0);
+
+   m_Img.save("render.bmp", true);
 }

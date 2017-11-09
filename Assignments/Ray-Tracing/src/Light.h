@@ -31,29 +31,29 @@ SOFTWARE.
 
 class Light
 {
-public:
-   Light(glm::vec3 pos, glm::vec3 col) : m_Pos(pos), m_Col(col) {}
-   Light() : Light(glm::vec3(), glm::vec3()) {}
+   public:
+      Light(const glm::vec3& pos, const glm::vec3& col) : m_Pos(pos), m_Col(col) {}
+      Light() : Light(glm::vec3(), glm::vec3()) {}
 
-    glm::vec3& getPos() { return m_Pos; }
-    glm::vec3& getCol() { return m_Col; }
+       glm::vec3& getPosition() { return m_Pos; }
+       glm::vec3& getColor() { return m_Col; }
 
-   class Builder : private BuilderUtility
-   {
-      public:
-         Builder() = default;
-         Builder(const Builder&) = delete;
-         void operator=(const Builder&) = delete;
+      class Builder : private BuilderUtility
+      {
+         public:
+            Builder() = default;
+            Builder(const Builder&) = delete;
+            void operator=(const Builder&) = delete;
 
-         Builder& ParseLight(const std::string& data);
-         Light GetLight() { return Light(m_Pos, m_Col); }
+            Builder& ParseLight(const std::string& data);
+            Light GetLight() { return Light(m_Pos, m_Col); }
 
-      private:
-         glm::vec3 m_Pos;
-         glm::vec3 m_Col;
-   };
+         private:
+            glm::vec3 m_Pos;
+            glm::vec3 m_Col;
+      };
 
-private:
-   glm::vec3 m_Pos;
-   glm::vec3 m_Col;
+   private:
+      glm::vec3 m_Pos;
+      glm::vec3 m_Col;
 };

@@ -32,7 +32,7 @@ class Sphere
 {
    public:
       Sphere() = default;
-      Sphere(glm::vec3 pos, double rad, glm::vec3 amb, glm::vec3 dif, glm::vec3 spe, double shine) : 
+      Sphere(const glm::vec3& pos, const double& rad, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const double& shine) :
              m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;

@@ -29,7 +29,7 @@ bool Triangle::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_d
 {
    // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
 
-   const float EPSILON = 0.0000001;
+   const double EPSILON = 0.0000001;
    glm::vec3 edge1, edge2, h, s, q;
    float a, f, u, v;
 

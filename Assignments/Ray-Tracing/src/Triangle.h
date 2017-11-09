@@ -32,7 +32,7 @@ class Triangle
 {
    public:
       Triangle() = default;
-      Triangle(glm::vec3 vert1, glm::vec3 vert2, glm::vec3 vert3, glm::vec3 amb, glm::vec3 dif, glm::vec3 spe, double shine) :
+      Triangle(const glm::vec3& vert1, const glm::vec3& vert2, const glm::vec3& vert3, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const double& shine) :
          m_Vert1(vert1), m_Vert2(vert2), m_Vert3(vert3), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
