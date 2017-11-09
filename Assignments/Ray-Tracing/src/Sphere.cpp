@@ -54,3 +54,38 @@ bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir
 
    return true;
 }
+
+Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
+{
+   std::string cut = data.substr(2, data.length() - 4);
+
+   for (std::string attribute : ParseParams(cut))
+   {
+      if (attribute.find("pos:") == 0)
+      {
+         m_Pos = ParseVec3(attribute.substr(5));
+      }
+      else if (attribute.find("rad:") == 0)
+      {
+         m_Radius = ParseDouble(attribute.substr(5));
+      }
+      else if (attribute.find("amb:") == 0)
+      {
+         m_Amb = ParseVec3(attribute.substr(5));
+      }
+      else if (attribute.find("dif:") == 0)
+      {
+         m_Dif = ParseVec3(attribute.substr(5));
+      }
+      else if (attribute.find("spe:") == 0)
+      {
+         m_Spe = ParseVec3(attribute.substr(5));
+      }
+      else if (attribute.find("shi:") == 0)
+      {
+         m_Shine = ParseDouble(attribute.substr(5));
+      }
+   }
+
+   return *this;
+}

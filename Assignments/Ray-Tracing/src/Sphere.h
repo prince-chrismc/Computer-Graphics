@@ -24,7 +24,9 @@ SOFTWARE.
 
 #pragma once
 
+#include "BuilderUtility.h"
 #include "glm\vec3.hpp"
+#include <string>
 
 class Sphere
 {
@@ -34,6 +36,25 @@ class Sphere
              m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_disstance) const;
+
+      class Builder : private BuilderUtility
+      {
+      public:
+         Builder() = default;
+         Builder(const Builder&) = delete;
+         void operator=(const Builder&) = delete;
+
+         Builder& ParseSphere(const std::string& data);
+         Sphere GetSphere() { return Sphere(m_Pos, m_Radius, m_Amb, m_Dif, m_Spe, m_Shine); }
+
+      private:
+         glm::vec3 m_Pos;
+         double m_Radius;
+         glm::vec3 m_Amb;
+         glm::vec3 m_Dif;
+         glm::vec3 m_Spe;
+         double m_Shine;
+      };
 
    private:
       glm::vec3 m_Pos;

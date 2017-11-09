@@ -31,7 +31,7 @@ SOFTWARE.
 
 class BuilderUtility abstract
 {
-   public:
+   protected:
       static std::vector<std::string> ParseParams(std::string cut);
       static glm::vec3 ParseVec3(std::string attribute);
       static unsigned int ParseUint(std::string attribute);
