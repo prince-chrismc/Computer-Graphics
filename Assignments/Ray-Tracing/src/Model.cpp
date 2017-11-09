@@ -22,32 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
-
-#include "SceneFile.h"
-#include "Camera.h"
-#include "Light.h"
-#include "Sphere.h"
-#include "Triangle.h"
 #include "Model.h"
 
-#include "CImg.h"
-
-class Scene : private SceneFile
+Model::Model()
 {
-   public:
-      Scene(const char* path);
+}
 
-      void Display();
-
-   private:
-      Camera m_Camera;
-      std::vector<Light> m_Lights;
-      std::vector<Sphere> m_Spheres;
-      std::vector<Model> m_Models;
-      std::vector<Triangle> m_Triangles;
-
-      cimg_library::CImg<float> m_Img;
-
-      void GenerateScene();
-};
+Model::~Model()
+{
+}

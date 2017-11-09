@@ -33,6 +33,9 @@ public:
    Light(glm::vec3 pos, glm::vec3 col) : m_Pos(pos), m_Col(col) {}
    Light() : Light(glm::vec3(), glm::vec3()) {}
 
+    glm::vec3& getPos() { return m_Pos; }
+    glm::vec3& getCol() { return m_Col; }
+
    class Builder
    {
       public:

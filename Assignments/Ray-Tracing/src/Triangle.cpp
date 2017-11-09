@@ -22,4 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "DrawableObject.h"
+#include "Triangle.h"
+
+Triangle::Triangle()
+{
+}
+
+Triangle::~Triangle()
+{
+}

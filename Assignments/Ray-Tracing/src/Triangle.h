@@ -24,9 +24,9 @@ SOFTWARE.
 
 #pragma once
 
-class DrawableObject abstract
+class Triangle
 {
    public:
-      virtual void Draw() = 0;
+      Triangle();
+      ~Triangle();
 };
-
