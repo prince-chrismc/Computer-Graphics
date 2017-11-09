@@ -22,9 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "Camera.h"
+
+#include "glm\trigonometric.hpp"
+
 #include <vector>
 #include <sstream>
-#include "Camera.h"
 
 Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 {
@@ -87,6 +90,6 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 
 void Camera::GetImageDimensions(int* out_width, int* out_height)
 {
-   *out_height = m_Focal * std::atan(m_FOV / 2);
+   *out_height = m_Focal * std::tan(glm::radians(m_FOV / 2));
    *out_width = *out_height * m_AspectRatio;
 }
