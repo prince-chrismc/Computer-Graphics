@@ -35,7 +35,7 @@ class Sphere
       Sphere(glm::vec3 pos, double rad, glm::vec3 amb, glm::vec3 dif, glm::vec3 spe, double shine) : 
              m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
-      bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_disstance) const;
+      bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
 
       class Builder : private BuilderUtility
       {
@@ -63,6 +63,4 @@ class Sphere
       glm::vec3 m_Dif;
       glm::vec3 m_Spe;
       double m_Shine;
-
 };
-

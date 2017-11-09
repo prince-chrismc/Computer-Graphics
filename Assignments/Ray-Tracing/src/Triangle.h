@@ -24,9 +24,45 @@ SOFTWARE.
 
 #pragma once
 
+#include "BuilderUtility.h"
+#include "glm\vec3.hpp"
+#include <string>
+
 class Triangle
 {
    public:
-      Triangle();
-      ~Triangle();
+      Triangle() = default;
+      Triangle(glm::vec3 vert1, glm::vec3 vert2, glm::vec3 vert3, glm::vec3 amb, glm::vec3 dif, glm::vec3 spe, double shine) :
+         m_Vert1(vert1), m_Vert2(vert2), m_Vert3(vert3), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
+
+      bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
+
+      class Builder : private BuilderUtility
+      {
+      public:
+         Builder() = default;
+         Builder(const Builder&) = delete;
+         void operator=(const Builder&) = delete;
+
+         Builder& ParseTriangle(const std::string& data);
+         Triangle GetTriangle() { return Triangle(m_Vert1, m_Vert2, m_Vert3, m_Amb, m_Dif, m_Spe, m_Shine); }
+
+      private:
+         glm::vec3 m_Vert1;
+         glm::vec3 m_Vert2;
+         glm::vec3 m_Vert3;
+         glm::vec3 m_Amb;
+         glm::vec3 m_Dif;
+         glm::vec3 m_Spe;
+         double m_Shine;
+      };
+
+private:
+   glm::vec3 m_Vert1;
+   glm::vec3 m_Vert2;
+   glm::vec3 m_Vert3;
+   glm::vec3 m_Amb;
+   glm::vec3 m_Dif;
+   glm::vec3 m_Spe;
+   double m_Shine;
 };
