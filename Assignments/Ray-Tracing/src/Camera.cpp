@@ -48,13 +48,13 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
       {
          attribute = attribute.substr(5);
 
-         std::vector<int> vals;
+         std::vector<float> vals;
          while (attribute.find(' ') != std::string::npos)
          {
             size_t index = attribute.find(' ');
             std::stringstream ss(attribute.substr(0, index));
             attribute = attribute.substr(index + 1);
-            int temp;
+            float temp;
             ss >> std::dec >> temp;
             vals.push_back(temp);
          }
@@ -90,6 +90,6 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 
 void Camera::GetImageDimensions(int* out_width, int* out_height)
 {
-   *out_height = m_Focal * std::tan(glm::radians(m_FOV / 2));
-   *out_width = *out_height * m_AspectRatio;
+   *out_height = static_cast<int>(m_Focal * std::tan(glm::radians(m_FOV / 2.0)));
+   *out_width = static_cast<int>(*out_height * m_AspectRatio);
 }
