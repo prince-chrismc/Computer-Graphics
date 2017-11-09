@@ -166,6 +166,7 @@
     <Text Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BuilderUtility.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BuilderUtility.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Sphere.h" />

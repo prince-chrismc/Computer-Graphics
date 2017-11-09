@@ -26,62 +26,28 @@ SOFTWARE.
 
 #include "glm\trigonometric.hpp"
 
-#include <vector>
-#include <sstream>
-
 Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 
-   std::vector<std::string> params;
-   while (cut.find(',') != std::string::npos)
-   {
-      size_t index = cut.find(',');
-      params.push_back(cut.substr(0, index));
-      cut = cut.substr(index + 1);
-   }
-   params.push_back(cut);
-
-   for (std::string attribute : params)
+   for (std::string attribute : ParseParams(cut))
    {
       if (attribute.find("pos:") == 0)
       {
-         attribute = attribute.substr(5);
-
-         std::vector<float> vals;
-         while (attribute.find(' ') != std::string::npos)
-         {
-            size_t index = attribute.find(' ');
-            std::stringstream ss(attribute.substr(0, index));
-            attribute = attribute.substr(index + 1);
-            float temp;
-            ss >> std::dec >> temp;
-            vals.push_back(temp);
-         }
-         std::stringstream ss(attribute);
-         float temp;
-         ss >> std::dec >> temp;
-         vals.push_back(temp);
-
-         m_Pos = glm::vec3(vals.at(0), vals.at(1), vals.at(2));
+         m_Pos = ParseVec3(attribute.substr(5));
       }
       else if (attribute.find("fov:") == 0)
       {
-         std::stringstream fov_val(attribute.substr(5));
-
-         fov_val >> std::dec >> m_FOV;
+         m_FOV = ParseUint(attribute.substr(5));
       }
       else if (attribute.find("f:") == 0)
       {
-         std::stringstream f_val(attribute.substr(3));
+         m_Focal = ParseUint(attribute.substr(3));
 
-         f_val >> std::dec >> m_Focal;
       }
       else if (attribute.find("a:") == 0)
       {
-         std::stringstream a_val(attribute.substr(3));
-
-         a_val >> std::dec >> m_AspectRatio;
+         m_AspectRatio = ParseDouble(attribute.substr(3));
       }
    }
 

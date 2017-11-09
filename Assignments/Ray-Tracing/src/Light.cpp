@@ -24,65 +24,19 @@ SOFTWARE.
 
 #include "Light.h"
 
-#include <vector>
-#include <sstream>
-
 Light::Builder& Light::Builder::ParseLight(const std::string& data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 
-   std::vector<std::string> params;
-   while (cut.find(',') != std::string::npos)
-   {
-      size_t index = cut.find(',');
-      params.push_back(cut.substr(0, index));
-      cut = cut.substr(index + 1);
-   }
-   params.push_back(cut);
-
-   for (std::string attribute : params)
+   for (std::string attribute : ParseParams(cut))
    {
       if (attribute.find("pos:") == 0)
       {
-         attribute = attribute.substr(5);
-
-         std::vector<int> vals;
-         while (attribute.find(' ') != std::string::npos)
-         {
-            size_t index = attribute.find(' ');
-            std::stringstream ss(attribute.substr(0, index));
-            attribute = attribute.substr(index + 1);
-            int temp;
-            ss >> std::dec >> temp;
-            vals.push_back(temp);
-         }
-         std::stringstream ss(attribute);
-         float temp;
-         ss >> std::dec >> temp;
-         vals.push_back(temp);
-
-         m_Pos = glm::vec3(vals.at(0), vals.at(1), vals.at(2));
+         m_Pos = ParseVec3(attribute.substr(5));
       }
       else if (attribute.find("col:") == 0)
       {
-         attribute = attribute.substr(5);
-
-         std::vector<float> vals;
-         while (attribute.find(' ') != std::string::npos)
-         {
-            size_t index = attribute.find(' ');
-            std::stringstream ss(attribute.substr(0, index));
-            attribute = attribute.substr(index + 1);
-            float temp;
-            ss >> std::dec >> temp;
-            vals.push_back(temp);
-         }
-         std::stringstream ss(attribute);
-         float temp;
-         ss >> std::dec >> temp;
-         vals.push_back(temp);
-
-         m_Col = glm::vec3(vals.at(0), vals.at(1), vals.at(2));
+         m_Col = ParseVec3(attribute.substr(5));
       }
    }
 

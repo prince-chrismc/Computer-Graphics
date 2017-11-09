@@ -24,36 +24,16 @@ SOFTWARE.
 
 #pragma once
 
-#include "BuilderUtility.h"
 #include "glm\vec3.hpp"
 
 #include <string>
+#include <vector>
 
-class Light
+class BuilderUtility abstract
 {
-public:
-   Light(glm::vec3 pos, glm::vec3 col) : m_Pos(pos), m_Col(col) {}
-   Light() : Light(glm::vec3(), glm::vec3()) {}
-
-    glm::vec3& getPos() { return m_Pos; }
-    glm::vec3& getCol() { return m_Col; }
-
-   class Builder : private BuilderUtility
-   {
-      public:
-         Builder() = default;
-         Builder(const Builder&) = delete;
-         void operator=(const Builder&) = delete;
-
-         Builder& ParseLight(const std::string& data);
-         Light GetLight() { return Light(m_Pos, m_Col); }
-
-      private:
-         glm::vec3 m_Pos;
-         glm::vec3 m_Col;
-   };
-
-private:
-   glm::vec3 m_Pos;
-   glm::vec3 m_Col;
+   public:
+      static std::vector<std::string> ParseParams(std::string cut);
+      static glm::vec3 ParseVec3(std::string attribute);
+      static unsigned int ParseUint(std::string attribute);
+      static double ParseDouble(std::string attribute);
 };

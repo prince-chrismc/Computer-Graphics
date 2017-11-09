@@ -24,8 +24,10 @@ SOFTWARE.
 
 #pragma once
 
-#include <string>
+#include "BuilderUtility.h"
 #include "glm\vec3.hpp"
+
+#include <string>
 
 class Camera
 {
@@ -36,7 +38,7 @@ class Camera
 
       void GetImageDimensions(int* out_width, int* out_height);
 
-      class Builder
+      class Builder : private BuilderUtility
       {
          public:
             Builder() = default;
