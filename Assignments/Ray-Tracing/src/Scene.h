@@ -53,15 +53,17 @@ class Scene : private SceneFile
       {
          enum ObjectType { INVALID, SPHERE, TRIANGLE };
 
-         IntersectingObject(glm::vec3 point, float dis, void* obj, ObjectType type) : m_Point(point), m_Distance(dis), m_Object(obj), m_ObjType(type) {}
-         IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr, IntersectingObject::INVALID) {}
+         IntersectingObject(glm::vec3 point, float dis, Sphere& sphere, ObjectType type) : m_Point(point), m_Distance(dis), m_Sphere(sphere), m_ObjType(type) {}
+         IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, Sphere(), IntersectingObject::INVALID) {}
 
          glm::vec3 m_Point;
          float m_Distance;
-         void* m_Object;
+         Sphere m_Sphere;
+         //Triangle* m_Triangle;
          ObjectType m_ObjType;
       };
 
       void GenerateScene();
       IntersectingObject FindNearestIntersectingObject(glm::vec3 ray_dir);
+      bool IsLightObstructed(Light* light, IntersectingObject* target);
 };

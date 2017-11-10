@@ -33,7 +33,7 @@ SOFTWARE.
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
 
-static const float LIGHT_BIAS = 1e-3;
+static const float LIGHT_BIAS = 1e-3f;
 
 Scene::Scene(const char* path) : SceneFile(path)
 {
@@ -90,33 +90,48 @@ void Scene::GenerateScene()
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
          glm::vec3 pixelColor;
 
-         if (target.m_Object != nullptr)
+         if (target.m_ObjType != IntersectingObject::INVALID)
          {
-            /*for (Light light : m_Lights)
+            for (Light light : m_Lights)
             {
-               glm::vec3 lightRay = glm::normalize(light.GetPosition() - target.m_Point);
-               glm::vec3 lightRayWithBias = target.m_Point + LIGHT_BIAS * lightRay;
 
                switch (target.m_ObjType)
                {
                case IntersectingObject::SPHERE:
-                  float distance;
-                  glm::vec3 intersectpoint;
-                  ((Sphere*)target.m_Object)->TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance);
+                  if (IsLightObstructed(&light, &target))
+                  {
+                     pixelColor += target.m_Sphere.GetAmbientlight();
+                  }
+                  else
+                  {
+                     glm::vec3 normal = glm::normalize(target.m_Sphere.GetPosition() - target.m_Point);
+                     glm::vec3 v = -rayDirection;
+
+                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
+                     glm::vec3 reflection = glm::reflect(light_direction, normal);
+
+                     float ln = glm::dot(normal, light_direction);
+                     float rv = glm::dot(reflection, v);
+
+                     if (ln < 0) { ln = 0; }
+                     if (rv < 0) { rv = 0; }
+
+                     rv = std::pow(rv, target.m_Sphere.GetShine());
+
+                     pixelColor += target.m_Sphere.GetAmbientlight();
+                     glm::vec3 lightAddition = light.GetColor() * (target.m_Sphere.GetDiffusion()*ln + (target.m_Sphere.GetSpecular()*rv));
+                     pixelColor += lightAddition;
+                  }
 
                   break;
                case IntersectingObject::TRIANGLE:
-                  float distance;
-                  glm::vec3 intersectpoint;
-                  ((Triangle*)target.m_Object)->TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance);
                   break;
 
                default:
                   break;
                }
-            }*/
+            }
 
-            pixelColor = glm::vec3(0.3,0.1,0.8);
          }
 
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
@@ -139,9 +154,9 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
 
       if (sphere.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_Object == nullptr || distance < target.m_Distance)
+         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, &sphere, IntersectingObject::SPHERE);
+            target = IntersectingObject(intersectpoint, distance, sphere, IntersectingObject::SPHERE);
          }
       }
    }
@@ -153,12 +168,33 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
 
       if(triangle.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_Object == nullptr || distance < target.m_Distance)
+         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, &triangle, IntersectingObject::SPHERE);
+            //target = IntersectingObject(intersectpoint, distance, &triangle, IntersectingObject::SPHERE);
          }
       }
    }
 
    return target;
+}
+
+bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
+{
+   glm::vec3 lightRay = glm::normalize(light->GetPosition() - target->m_Point);
+   glm::vec3 lightRayWithBias = target->m_Point + LIGHT_BIAS * lightRay;
+
+   float distance;
+   glm::vec3 intersectpoint;
+
+   for (Sphere sphere : m_Spheres)
+   {
+      if (sphere.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
+   }
+
+   for (Triangle triangle : m_Triangles)
+   {
+      if (triangle.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
+   }
+
+   return false;
 }
