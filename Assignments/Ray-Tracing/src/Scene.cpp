@@ -66,6 +66,14 @@ Scene::Scene(const char* path) : SceneFile(path)
          }
       }
 
+      {
+         std::string plane_attr = "";
+         while ((plane_attr = GetAttributes("plane")) != "")
+         {
+            m_Planes.push_back(Plane::Builder().ParsePlane(plane_attr).GetPlane());
+         }
+      }
+
       GenerateScene();
    }
 }
@@ -130,7 +138,6 @@ void Scene::GenerateScene()
                      glm::vec3 lightAddition = light.GetColor() * (target.m_Sphere.GetDiffusion()*ln + (target.m_Sphere.GetSpecular()*rv));
                      pixelColor += lightAddition;
                   }
-
                   break;
                case IntersectingObject::TRIANGLE:
                   if (IsLightObstructed(&light, &target))
@@ -150,14 +157,36 @@ void Scene::GenerateScene()
                      float rv = glm::dot(reflection, v);
                      if (ln < 0) { ln = 0; }
                      if (rv < 0) { rv = 0; }
-                     rv = pow(rv, target.m_Triangle.GetShine());
+                     rv = std::pow(rv, target.m_Triangle.GetShine());
 
                      pixelColor += target.m_Triangle.GetAmbientlight();
                      glm::vec3 lightAddition = light.GetColor()*(target.m_Triangle.GetDiffusion()*ln + target.m_Triangle.GetSpecular()*rv);
                      pixelColor += lightAddition;
                   }
                   break;
+               case IntersectingObject::PLANE:
+                  if (IsLightObstructed(&light, &target))
+                  {
+                     pixelColor += target.m_Plane.GetAmbientlight();
+                  }
+                  else
+                  {
+                     glm::vec3 normal = glm::normalize(target.m_Plane.GetNormal());
+                     glm::vec3 v = -rayDirection;
+                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
+                     glm::vec3 reflection = glm::reflect(light_direction, normal);
+                     float ln = glm::dot(normal, light_direction);
+                     float rv = glm::dot(reflection, v);
+                     if (ln < 0) { ln = 0; }
+                     if (rv < 0) { rv = 0; }
 
+                     rv = std::pow(rv, target.m_Plane.GetShine());
+                     pixelColor += target.m_Plane.GetAmbientlight();
+                     glm::vec3 lightAddition = light.GetColor()*(target.m_Plane.GetDiffusion()*ln + target.m_Plane.GetSpecular()*rv);
+                     pixelColor += lightAddition;
+
+                  }
+                  break;
                default:
                   break;
                }
@@ -206,6 +235,20 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
       }
    }
 
+   for (Plane plane : m_Planes)
+   {
+      float distance;
+      glm::vec3 intersectpoint;
+
+      if (plane.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      {
+         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         {
+            target = IntersectingObject(intersectpoint, distance, plane);
+         }
+      }
+   }
+
    return target;
 }
 
@@ -225,6 +268,11 @@ bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
    for (Triangle triangle : m_Triangles)
    {
       if (triangle.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
+   }
+
+   for (Plane plane : m_Planes)
+   {
+      if(plane.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
    }
 
    return false;

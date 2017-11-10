@@ -169,6 +169,7 @@
     <ClCompile Include="src\BuilderUtility.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\RayTracing.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\BuilderUtility.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\Plane.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Scene.h" />
