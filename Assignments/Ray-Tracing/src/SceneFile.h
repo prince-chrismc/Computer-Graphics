@@ -31,7 +31,7 @@ class SceneFile
    public:
       SceneFile(const char* path);
 
-      std::string GetAttributes(const char* name) const;
+      std::string GetAttributes(const char* name);
 
    protected:
       class ObjDescriptor
@@ -39,7 +39,7 @@ class SceneFile
          public:
             ObjDescriptor(const char* name, const std::string& attributes) : m_Name(name), m_Attributes(attributes) {}
 
-            bool DoesNameMatch(const char* name) { return !std::string(name).compare(m_Name); }
+            bool DoesNameMatch(const char* name) const { return !std::string(name).compare(m_Name); }
             std::string GetAttributes() const { return m_Attributes; }
 
          private:

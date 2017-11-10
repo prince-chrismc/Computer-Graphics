@@ -62,12 +62,19 @@ SceneFile::SceneFile(const char* path)
    if(m_Elements.size() != num_elem) m_Elements.clear();
 }
 
-std::string SceneFile::GetAttributes(const char * name) const {
-   for (ObjDescriptor obj : m_Elements)
+std::string SceneFile::GetAttributes(const char* name)
+{
+   std::string retval = "";
+   for (auto itor = m_Elements.begin(); itor != m_Elements.end(); itor++)
    {
-      if (obj.DoesNameMatch(name)) return obj.GetAttributes();
+      if (itor->DoesNameMatch(name))
+      {
+         retval = itor->GetAttributes();;
+         itor = m_Elements.erase(itor);
+         break;
+      }
    }
-   return std::string();
+   return retval;
 }
 
 void SceneFile::ExtractCamera(std::ifstream* file)

@@ -39,6 +39,7 @@ class Camera
       void GetImageDimensions(int* out_width, int* out_height) const;
       glm::vec3 GetPosition() const { return m_Pos; }
       double GetAspectRatio() const { return m_AspectRatio; }
+      unsigned int GetFeildOfView() const { return m_FOV; }
 
       class Builder : private BuilderUtility
       {
