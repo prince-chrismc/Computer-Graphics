@@ -49,5 +49,19 @@ class Scene : private SceneFile
 
       cimg_library::CImg<float> m_Img;
 
+      struct IntersectingObject
+      {
+         enum ObjectType { INVALID, SPHERE, TRIANGLE };
+
+         IntersectingObject(glm::vec3 point, float dis, void* obj, ObjectType type) : m_Point(point), m_Distance(dis), m_Object(obj), m_ObjType(type) {}
+         IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr, IntersectingObject::INVALID) {}
+
+         glm::vec3 m_Point;
+         float m_Distance;
+         void* m_Object;
+         ObjectType m_ObjType;
+      };
+
       void GenerateScene();
+      IntersectingObject FindNearestIntersectingObject(glm::vec3 ray_dir);
 };
