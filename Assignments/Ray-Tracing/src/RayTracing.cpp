@@ -36,7 +36,7 @@ int main()
 
    // ---------------------------------------------------------------------------------------------
    std::cout << "Loading Scene....";
-   Scene scene("assets/scene1.txt");
+   Scene scene("assets/scene2.txt");
    std::cout << "  COMPLETE!" << std::endl;
 
    scene.Display();

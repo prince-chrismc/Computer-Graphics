@@ -171,7 +171,7 @@ void Scene::GenerateScene()
    }
 
    m_Img.normalize(0, 255);
-   m_Img.save("render.bmp", true);
+   m_Img.save("render2.bmp", true);
 }
 
 Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir)
@@ -212,7 +212,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
 bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
 {
    glm::vec3 lightRay = glm::normalize(light->GetPosition() - target->m_Point);
-   glm::vec3 lightRayWithBias = target->m_Point + LIGHT_BIAS * lightRay;
+   glm::vec3 lightRayWithBias = (LIGHT_BIAS * lightRay) + target->m_Point;
 
    float distance;
    glm::vec3 intersectpoint;
