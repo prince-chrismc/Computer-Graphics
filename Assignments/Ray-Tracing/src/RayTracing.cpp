@@ -30,57 +30,16 @@ SOFTWARE.
 
 #include "Scene.h"
 
-
-// Function Declaration
-const unsigned long CalcHexColorFromPixelVal(const float& pixel_value);
-
 int main()
 {
    std::cout << "Welcome to Ray Tracing Effect!" << std::endl;
 
-   // Constant vectors
-   const glm::vec3 center(0.0f, 0.0f, 0.0f);
-   const glm::vec3 up(0.0f, 1.0f, 0.0f);
-   const glm::vec3 eye(0.0f, 35.0f, 35.0f);
-
    // ---------------------------------------------------------------------------------------------
    std::cout << "Loading Scene....";
    Scene scene("assets/scene1.txt");
+   std::cout << "  COMPLETE!" << std::endl;
 
-   std::cout << "Generating Scene....";
-   /*
-   * TO DO: Generate Scene as per assignemnt description
-   */
-
-              // create window displaying image
+   scene.Display();
 
    return 0;
-}
-
-// ------------------------------------------------------------------------------------------------ //
-//                                          UTILITY CODE                                          - //
-// ------------------------------------------------------------------------------------------------ //
-
-const unsigned long CalcHexColorFromPixelVal(const float & pixel_value)
-{
-   return static_cast<unsigned long>(std::floor(std::pow(pixel_value, 2.0))); // blue to green
-}
-
-float GetUserInputFraction(const float& precision)
-{
-   float selection = 0.0;
-   do
-   {
-      std::cout << "Selcetion: ";
-      std::string input;
-      std::getline(std::cin, input);
-      std::stringstream ss(input);
-      ss >> selection;
-
-      if (selection < 0.0 || selection > 1.0 )
-         std::cout << "Invalid option. Please Try again..." << std::endl;
-
-   } while (selection < 0.0 || selection > 1.0);
-
-   return floor(selection / precision + 0.5f) * precision; // https://stackoverflow.com/a/798070/8480874
 }
