@@ -53,13 +53,14 @@ class Scene : private SceneFile
       {
          enum ObjectType { INVALID, SPHERE, TRIANGLE };
 
-         IntersectingObject(glm::vec3 point, float dis, Sphere& sphere, ObjectType type) : m_Point(point), m_Distance(dis), m_Sphere(sphere), m_ObjType(type) {}
-         IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, Sphere(), IntersectingObject::INVALID) {}
+         IntersectingObject(glm::vec3 point, float dis, Sphere& sphere) : m_Point(point), m_Distance(dis), m_Sphere(sphere), m_Triangle(), m_ObjType(IntersectingObject::SPHERE) {}
+         IntersectingObject(glm::vec3 point, float dis, Triangle& triangle) : m_Point(point), m_Distance(dis), m_Sphere(), m_Triangle(triangle), m_ObjType(IntersectingObject::TRIANGLE) {}
+         IntersectingObject() : m_Point(0.0f), m_Distance(0.0f), m_Sphere(), m_Triangle(), m_ObjType(IntersectingObject::INVALID) {}
 
          glm::vec3 m_Point;
          float m_Distance;
          Sphere m_Sphere;
-         //Triangle* m_Triangle;
+         Triangle m_Triangle;
          ObjectType m_ObjType;
       };
 

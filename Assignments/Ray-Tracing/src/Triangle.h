@@ -37,6 +37,14 @@ class Triangle
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
 
+      glm::vec3 GetVertexOne() const { return m_Vert1; }
+      glm::vec3 GetVertexTwo() const { return m_Vert2; }
+      glm::vec3 GetVertexThree() const { return m_Vert3; }
+      glm::vec3 GetAmbientlight() const { return m_Amb; }
+      glm::vec3 GetDiffusion() const { return m_Dif; }
+      glm::vec3 GetSpecular() const { return m_Spe; }
+      double GetShine() const { return m_Shine; }
+
       class Builder : private BuilderUtility
       {
       public:

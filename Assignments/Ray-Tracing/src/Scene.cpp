@@ -58,6 +58,14 @@ Scene::Scene(const char* path) : SceneFile(path)
          }
       }
 
+      {
+         std::string triangle_attr = "";
+         while ((triangle_attr = GetAttributes("triangle")) != "")
+         {
+            m_Triangles.push_back(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle());
+         }
+      }
+
       GenerateScene();
    }
 }
@@ -125,6 +133,29 @@ void Scene::GenerateScene()
 
                   break;
                case IntersectingObject::TRIANGLE:
+                  if (IsLightObstructed(&light, &target))
+                  {
+                     pixelColor += target.m_Triangle.GetAmbientlight();
+                  }
+                  else
+                  {
+                     glm::vec3 line1 = target.m_Triangle.GetVertexTwo() - target.m_Triangle.GetVertexOne();
+                     glm::vec3 line2 = target.m_Triangle.GetVertexThree() - target.m_Triangle.GetVertexOne();
+                     glm::vec3 normal = -glm::normalize(glm::cross(line1, line2));
+
+                     glm::vec3 v = -rayDirection;
+                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
+                     glm::vec3 reflection = glm::reflect(light_direction, normal);
+                     float ln = glm::dot(normal, light_direction);
+                     float rv = glm::dot(reflection, v);
+                     if (ln < 0) { ln = 0; }
+                     if (rv < 0) { rv = 0; }
+                     rv = pow(rv, target.m_Triangle.GetShine());
+
+                     pixelColor += target.m_Triangle.GetAmbientlight();
+                     glm::vec3 lightAddition = light.GetColor()*(target.m_Triangle.GetDiffusion()*ln + target.m_Triangle.GetSpecular()*rv);
+                     pixelColor += lightAddition;
+                  }
                   break;
 
                default:
@@ -156,7 +187,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
       {
          if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, sphere, IntersectingObject::SPHERE);
+            target = IntersectingObject(intersectpoint, distance, sphere);
          }
       }
    }
@@ -170,7 +201,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
       {
          if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
          {
-            //target = IntersectingObject(intersectpoint, distance, &triangle, IntersectingObject::SPHERE);
+            target = IntersectingObject(intersectpoint, distance, triangle);
          }
       }
    }
