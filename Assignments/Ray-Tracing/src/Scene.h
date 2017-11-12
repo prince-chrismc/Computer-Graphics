@@ -67,6 +67,6 @@ class Scene : private SceneFile
       };
 
       void GenerateScene();
-      IntersectingObject FindNearestIntersectingObject(glm::vec3 ray_dir);
+      IntersectingObject FindNearestIntersectingObject(const glm::vec3& ray_dir);
       bool IsLightObstructed(Light* light, IntersectingObject* target);
 };

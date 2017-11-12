@@ -147,7 +147,7 @@ void Scene::GenerateScene()
    m_Image.save("render2.bmp", true);
 }
 
-Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir)
+Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& ray_dir)
 {
    IntersectingObject target;
 
