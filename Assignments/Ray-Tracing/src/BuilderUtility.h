@@ -25,7 +25,6 @@ SOFTWARE.
 #pragma once
 
 #include "glm\vec3.hpp"
-
 #include <string>
 #include <vector>
 

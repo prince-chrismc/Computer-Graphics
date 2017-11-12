@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 #include "Camera.h"
-
 #include "glm\trigonometric.hpp"
 
 Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)

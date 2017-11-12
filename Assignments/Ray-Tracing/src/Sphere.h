@@ -24,9 +24,9 @@ SOFTWARE.
 
 #pragma once
 
-#include <string>
-#include "glm\vec3.hpp"
 #include "BuilderUtility.h"
+#include "glm\vec3.hpp"
+#include <string>
 
 class Light;
 

@@ -23,9 +23,7 @@ SOFTWARE.
 */
 
 #include "Scene.h"
-
 #include "glm\geometric.hpp"
-
 #include <string>
 #include <future>
 #include <corecrt_math_defines.h>

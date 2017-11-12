@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "BuilderUtility.h"
 #include "glm\vec3.hpp"
-
 #include <string>
 
 class Light
@@ -45,8 +44,8 @@ class Light
             Builder(const Builder&) = delete;
             void operator=(const Builder&) = delete;
 
-            Builder& ParseLight(const std::string& data);
-            Light GetLight() { return Light(m_Pos, m_Col); }
+            const Builder& ParseLight(const std::string& data);
+            Light GetLight() const { return Light(m_Pos, m_Col); }
 
          private:
             glm::vec3 m_Pos;

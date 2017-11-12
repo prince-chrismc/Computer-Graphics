@@ -22,13 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "Scene.h"
+#include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
 #include <vector>
 #include <iostream>
 #include <sstream>
-
-#include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
-
-#include "Scene.h"
 
 int main()
 {

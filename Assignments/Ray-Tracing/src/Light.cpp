@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "Light.h"
 
-Light::Builder& Light::Builder::ParseLight(const std::string& data)
+const Light::Builder& Light::Builder::ParseLight(const std::string& data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 

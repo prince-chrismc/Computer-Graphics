@@ -24,9 +24,7 @@ SOFTWARE.
 
 #include "Sphere.h"
 #include "Light.h"
-
 #include "glm\geometric.hpp"   //normalize
-
 #include <algorithm>
 
 bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const

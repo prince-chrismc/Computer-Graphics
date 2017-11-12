@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "SceneFile.h"
 #include <fstream>
 #include <sstream>
-#include "SceneFile.h"
 
 // Element types
 static const char* CAMERA = "camera";
