@@ -104,36 +104,14 @@ void Scene::GenerateScene()
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
          glm::vec3 pixelColor;
 
-         if (target.m_ObjType != IntersectingObject::INVALID)
+         if (target.m_Element != nullptr)
          {
             for (Light light : m_Lights)
             {
-
-               switch (target.m_ObjType)
+               pixelColor += target.m_Element->GetAmbientlight();
+               if (!IsLightObstructed(&light, &target))
                {
-               case IntersectingObject::SPHERE:
-                  pixelColor += target.m_Sphere.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-                  {
-                     pixelColor += target.m_Sphere.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::TRIANGLE:
-                  pixelColor += target.m_Triangle.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-         {
-                     pixelColor += target.m_Triangle.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::PLANE:
-                  pixelColor += target.m_Plane.GetAmbientlight();
-            if (!IsLightObstructed(&light, &target))
-            {
-                     pixelColor += target.m_Plane.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               default:
-                  break;
+                  pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
                }
             }
          }
@@ -151,44 +129,44 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
 {
    IntersectingObject target;
 
-   for (Sphere sphere : m_Spheres)
+   for (auto itor = m_Spheres.cbegin(); itor != m_Spheres.cend(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
 
-      if (sphere.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      if (itor->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         if (target.m_Element == nullptr || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, sphere);
+            target = IntersectingObject(intersectpoint, distance, &*itor);
          }
       }
    }
 
-   for (Triangle triangle : m_Triangles)
+   for (auto itor = m_Triangles.cbegin(); itor != m_Triangles.cend(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
 
-      if(triangle.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      if (itor->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         if (target.m_Element == nullptr || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, triangle);
+            target = IntersectingObject(intersectpoint, distance, &*itor);
          }
       }
    }
 
-   for (Plane plane : m_Planes)
+   for (auto itor = m_Planes.cbegin(); itor != m_Planes.cend(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
 
-      if (plane.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      if (itor->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         if (target.m_Element == nullptr || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, plane);
+            target = IntersectingObject(intersectpoint, distance, &*itor);
          }
       }
    }
