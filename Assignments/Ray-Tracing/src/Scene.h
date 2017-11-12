@@ -31,6 +31,7 @@ SOFTWARE.
 #include "Triangle.h"
 #include "Plane.h"
 #include "SceneElement.h"
+#include <memory>
 
 #include "CImg.h"
 
@@ -52,12 +53,12 @@ class Scene : private SceneFile
 
       struct IntersectingObject
       {
-         IntersectingObject(glm::vec3 point, float dis, const SceneElement* elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
+         IntersectingObject(glm::vec3 point, float dis, std::shared_ptr<SceneElement> elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
          IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr) {}
 
          glm::vec3 m_Point;
          float m_Distance;
-         const SceneElement* m_Element;
+         std::shared_ptr<SceneElement> m_Element;
       };
 
       void GenerateScene();

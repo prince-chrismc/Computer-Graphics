@@ -129,7 +129,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
 {
    IntersectingObject target;
 
-   for (auto itor = m_Spheres.cbegin(); itor != m_Spheres.cend(); itor++)
+   for (auto itor = m_Spheres.begin(); itor != m_Spheres.end(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
@@ -143,7 +143,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
       }
    }
 
-   for (auto itor = m_Triangles.cbegin(); itor != m_Triangles.cend(); itor++)
+   for (auto itor = m_Triangles.begin(); itor != m_Triangles.end(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
@@ -157,7 +157,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir
       }
    }
 
-   for (auto itor = m_Planes.cbegin(); itor != m_Planes.cend(); itor++)
+   for (auto itor = m_Planes.begin(); itor != m_Planes.end(); itor++)
    {
       float distance;
       glm::vec3 intersectpoint;
