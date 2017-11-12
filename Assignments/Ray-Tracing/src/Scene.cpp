@@ -23,6 +23,9 @@ SOFTWARE.
 */
 
 #include "Scene.h"
+#include "Sphere.h"
+#include "Triangle.h"
+#include "Plane.h"
 #include "glm\geometric.hpp"
 #include <string>
 #include <future>
@@ -52,7 +55,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string sphere_attr = "";
          while ((sphere_attr = GetAttributes("sphere")) != "")
          {
-            m_Spheres.push_back(Sphere::Builder().ParseSphere(sphere_attr).GetSphere());
+            m_Objects.push_back(std::make_shared<Sphere>(Sphere::Builder().ParseSphere(sphere_attr).GetSphere()));
          }
       }
 
@@ -60,7 +63,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string triangle_attr = "";
          while ((triangle_attr = GetAttributes("triangle")) != "")
          {
-            m_Triangles.push_back(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle());
+            m_Objects.push_back(std::make_shared<Triangle>(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle()));
          }
       }
 
@@ -68,7 +71,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string plane_attr = "";
          while ((plane_attr = GetAttributes("plane")) != "")
          {
-            m_Planes.push_back(Plane::Builder().ParsePlane(plane_attr).GetPlane());
+            m_Objects.push_back(std::make_shared<Plane>(Plane::Builder().ParsePlane(plane_attr).GetPlane()));
          }
       }
 
@@ -104,36 +107,14 @@ void Scene::GenerateScene()
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
          glm::vec3 pixelColor;
 
-         if (target.m_ObjType != IntersectingObject::INVALID)
+         if (target.m_Element != nullptr)
          {
             for (Light light : m_Lights)
             {
-
-               switch (target.m_ObjType)
+               pixelColor += target.m_Element->GetAmbientlight();
+               if (!IsLightObstructed(&light, &target))
                {
-               case IntersectingObject::SPHERE:
-                  pixelColor += target.m_Sphere.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-                  {
-                     pixelColor += target.m_Sphere.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::TRIANGLE:
-                  pixelColor += target.m_Triangle.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-         {
-                     pixelColor += target.m_Triangle.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::PLANE:
-                  pixelColor += target.m_Plane.GetAmbientlight();
-            if (!IsLightObstructed(&light, &target))
-            {
-                     pixelColor += target.m_Plane.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               default:
-                  break;
+                  pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
                }
             }
          }
@@ -151,44 +132,17 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& 
 {
    IntersectingObject target;
 
-   for (Sphere sphere : m_Spheres)
+
+   for (auto elem : m_Objects)
    {
       float distance;
       glm::vec3 intersectpoint;
 
-      if (sphere.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      if (elem->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         if (target.m_Element == nullptr || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, sphere);
-         }
-      }
-   }
-
-   for (Triangle triangle : m_Triangles)
-   {
-      float distance;
-      glm::vec3 intersectpoint;
-
-      if(triangle.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
-      {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
-         {
-            target = IntersectingObject(intersectpoint, distance, triangle);
-         }
-      }
-   }
-
-   for (Plane plane : m_Planes)
-   {
-      float distance;
-      glm::vec3 intersectpoint;
-
-      if (plane.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
-      {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
-         {
-            target = IntersectingObject(intersectpoint, distance, plane);
+            target = IntersectingObject(intersectpoint, distance, elem);
          }
       }
    }
@@ -204,19 +158,9 @@ bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
    float distance;
    glm::vec3 intersectpoint;
 
-   for (Sphere sphere : m_Spheres)
+   for (auto elem : m_Objects)
    {
-      if (sphere.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
-   }
-
-   for (Triangle triangle : m_Triangles)
-   {
-      if (triangle.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
-   }
-
-   for (Plane plane : m_Planes)
-   {
-      if(plane.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
+      if (elem->TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
    }
 
    return false;
