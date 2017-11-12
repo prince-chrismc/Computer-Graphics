@@ -35,8 +35,8 @@ class Light
       Light(const glm::vec3& pos, const glm::vec3& col) : m_Pos(pos), m_Col(col) {}
       Light() : Light(glm::vec3(), glm::vec3()) {}
 
-       glm::vec3& GetPosition() { return m_Pos; }
-       glm::vec3& GetColor() { return m_Col; }
+       glm::vec3 GetPosition() const { return m_Pos; }
+       glm::vec3 GetColor() const { return m_Col; }
 
       class Builder : private BuilderUtility
       {

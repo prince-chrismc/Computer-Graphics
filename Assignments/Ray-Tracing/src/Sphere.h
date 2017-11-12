@@ -24,9 +24,11 @@ SOFTWARE.
 
 #pragma once
 
-#include "BuilderUtility.h"
-#include "glm\vec3.hpp"
 #include <string>
+#include "glm\vec3.hpp"
+#include "BuilderUtility.h"
+
+class Light;
 
 class Sphere
 {
@@ -36,6 +38,7 @@ class Sphere
              m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
+      glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light);
 
       glm::vec3 GetPosition() const { return m_Pos; }
       glm::vec3 GetAmbientlight() const { return m_Amb; }

@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "Sphere.h"
+#include "Light.h"
 
 #include "glm\geometric.hpp"   //normalize
 
@@ -53,6 +54,25 @@ bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir
    *out_intersection = cam_pos + ray_dir * intersection_zero;
 
    return true;
+}
+
+glm::vec3 Sphere::CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3 & intersection_point, const Light & light)
+{
+   glm::vec3 normal = glm::normalize(m_Pos - intersection_point);
+   glm::vec3 v = -ray_dir;
+
+   glm::vec3 light_direction = glm::normalize(intersection_point - light.GetPosition());
+   glm::vec3 reflection = glm::reflect(light_direction, normal);
+
+   float ln = glm::dot(normal, light_direction);
+   float rv = glm::dot(reflection, v);
+
+   if (ln < 0) { ln = 0; }
+   if (rv < 0) { rv = 0; }
+
+   rv = std::pow(rv, m_Shine);
+
+   return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
 }
 
 Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)

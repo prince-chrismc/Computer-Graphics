@@ -114,29 +114,10 @@ void Scene::GenerateScene()
                switch (target.m_ObjType)
                {
                case IntersectingObject::SPHERE:
-                  if (IsLightObstructed(&light, &target))
+                  pixelColor += target.m_Sphere.GetAmbientlight();
+                  if (!IsLightObstructed(&light, &target))
                   {
-                     pixelColor += target.m_Sphere.GetAmbientlight();
-                  }
-                  else
-                  {
-                     glm::vec3 normal = glm::normalize(target.m_Sphere.GetPosition() - target.m_Point);
-                     glm::vec3 v = -rayDirection;
-
-                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
-                     glm::vec3 reflection = glm::reflect(light_direction, normal);
-
-                     float ln = glm::dot(normal, light_direction);
-                     float rv = glm::dot(reflection, v);
-
-                     if (ln < 0) { ln = 0; }
-                     if (rv < 0) { rv = 0; }
-
-                     rv = std::pow(rv, target.m_Sphere.GetShine());
-
-                     pixelColor += target.m_Sphere.GetAmbientlight();
-                     glm::vec3 lightAddition = light.GetColor() * (target.m_Sphere.GetDiffusion()*ln + (target.m_Sphere.GetSpecular()*rv));
-                     pixelColor += lightAddition;
+                     pixelColor += target.m_Sphere.CalcLightOuput(rayDirection, target.m_Point, light);
                   }
                   break;
                case IntersectingObject::TRIANGLE:
