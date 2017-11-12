@@ -78,7 +78,7 @@ Scene::Scene(const char* path) : SceneFile(path)
 
 void Scene::Display()
 {
-   CImgDisplay display(m_Img, "Image");
+   CImgDisplay display(m_Image, "Image");
 
    while(!display.is_closed())
    {
@@ -90,7 +90,7 @@ void Scene::GenerateScene()
 {
    int width = 0, height = 0;
    m_Camera.GetImageDimensions(&width, &height);
-   m_Img = CImg<float>(width, height, 1, 3, 0);
+   m_Image = CImg<float>(width, height, 1, 3, 0);
 
    for (int i = 0; i < width; i += 1)
    {
@@ -121,14 +121,14 @@ void Scene::GenerateScene()
                case IntersectingObject::TRIANGLE:
                   pixelColor += target.m_Triangle.GetAmbientlight();
                   if (!IsLightObstructed(&light, &target))
-                  {
+         {
                      pixelColor += target.m_Triangle.CalcLightOuput(rayDirection, target.m_Point, light);
                   }
                   break;
                case IntersectingObject::PLANE:
                   pixelColor += target.m_Plane.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-                  {
+            if (!IsLightObstructed(&light, &target))
+            {
                      pixelColor += target.m_Plane.CalcLightOuput(rayDirection, target.m_Point, light);
                   }
                   break;
@@ -139,12 +139,12 @@ void Scene::GenerateScene()
          }
 
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
-         m_Img.draw_point(i, j, color);
+         m_Image.draw_point(i, j, color);
       }
    }
 
-   m_Img.normalize(0, 255);
-   m_Img.save("render2.bmp", true);
+   m_Image.normalize(0, 255);
+   m_Image.save("render2.bmp", true);
 }
 
 Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir)

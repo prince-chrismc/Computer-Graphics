@@ -47,7 +47,7 @@ class Scene : private SceneFile
       std::vector<Plane> m_Planes;
       std::vector<Triangle> m_Triangles;
 
-      cimg_library::CImg<float> m_Img;
+      cimg_library::CImg<float> m_Image;
 
       struct IntersectingObject
       {
