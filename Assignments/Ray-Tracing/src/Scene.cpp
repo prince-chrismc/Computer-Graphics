@@ -23,6 +23,9 @@ SOFTWARE.
 */
 
 #include "Scene.h"
+#include "Sphere.h"
+#include "Plane.h"
+#include "Triangle.h"
 #include "glm\geometric.hpp"
 #include <string>
 #include <future>
@@ -52,7 +55,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string sphere_attr = "";
          while ((sphere_attr = GetAttributes("sphere")) != "")
          {
-            m_Spheres.push_back(Sphere::Builder().ParseSphere(sphere_attr).GetSphere());
+            m_Objects.push_back(&Sphere::Builder().ParseSphere(sphere_attr).GetSphere());
          }
       }
 
@@ -60,7 +63,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string triangle_attr = "";
          while ((triangle_attr = GetAttributes("triangle")) != "")
          {
-            m_Triangles.push_back(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle());
+            m_Objects.push_back(&Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle());
          }
       }
 
@@ -68,7 +71,7 @@ Scene::Scene(const char* path) : SceneFile(path)
          std::string plane_attr = "";
          while ((plane_attr = GetAttributes("plane")) != "")
          {
-            m_Planes.push_back(Plane::Builder().ParsePlane(plane_attr).GetPlane());
+            m_Objects.push_back(&Plane::Builder().ParsePlane(plane_attr).GetPlane());
          }
       }
 
@@ -96,45 +99,19 @@ void Scene::GenerateScene()
    {
       for (int j = 0; j < height; j += 1)
       {
-         // Calc direction of ray
-         double PCx = (2.0 * ((i + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
-         double PCy = (1.0 - 2.0 * ((j + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
-         glm::vec3 rayDirection = glm::normalize(glm::vec3(PCx, PCy, -1) - m_Camera.GetPosition());
+         glm::vec3 rayDirection = CalcRayDirection(i, j);
 
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
          glm::vec3 pixelColor;
 
-         if (target.m_ObjType != IntersectingObject::INVALID)
-         {
-            for (Light light : m_Lights)
-            {
+         if (target.m_Element == nullptr) continue;
 
-               switch (target.m_ObjType)
-               {
-               case IntersectingObject::SPHERE:
-                  pixelColor += target.m_Sphere.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
-                  {
-                     pixelColor += target.m_Sphere.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::TRIANGLE:
-                  pixelColor += target.m_Triangle.GetAmbientlight();
-                  if (!IsLightObstructed(&light, &target))
+         for (Light light : m_Lights)
          {
-                     pixelColor += target.m_Triangle.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               case IntersectingObject::PLANE:
-                  pixelColor += target.m_Plane.GetAmbientlight();
+            pixelColor += target.m_Element->GetAmbientlight();
             if (!IsLightObstructed(&light, &target))
             {
-                     pixelColor += target.m_Plane.CalcLightOuput(rayDirection, target.m_Point, light);
-                  }
-                  break;
-               default:
-                  break;
-               }
+               pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
             }
          }
 
@@ -147,48 +124,31 @@ void Scene::GenerateScene()
    m_Image.save("render2.bmp", true);
 }
 
+glm::vec3 Scene::CalcRayDirection(const int& x_val, const int& y_val)
+{
+   int width = 0, height = 0;
+   m_Camera.GetImageDimensions(&width, &height);
+
+   double PCx = (2.0 * ((x_val + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
+   double PCy = (1.0 - 2.0 * ((y_val + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
+
+   return glm::normalize(glm::vec3(PCx, PCy, -1) - m_Camera.GetPosition());
+}
+
 Scene::IntersectingObject Scene::FindNearestIntersectingObject(glm::vec3 ray_dir)
 {
    IntersectingObject target;
 
-   for (Sphere sphere : m_Spheres)
+   for (SceneElement* elem : m_Objects)
    {
       float distance;
       glm::vec3 intersectpoint;
 
-      if (sphere.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
+      if (elem->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
+         if (target.m_Element == nullptr || distance < target.m_Distance)
          {
-            target = IntersectingObject(intersectpoint, distance, sphere);
-         }
-      }
-   }
-
-   for (Triangle triangle : m_Triangles)
-   {
-      float distance;
-      glm::vec3 intersectpoint;
-
-      if(triangle.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
-      {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
-         {
-            target = IntersectingObject(intersectpoint, distance, triangle);
-         }
-      }
-   }
-
-   for (Plane plane : m_Planes)
-   {
-      float distance;
-      glm::vec3 intersectpoint;
-
-      if (plane.TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
-      {
-         if (target.m_ObjType == IntersectingObject::INVALID || distance < target.m_Distance)
-         {
-            target = IntersectingObject(intersectpoint, distance, plane);
+            target = IntersectingObject(intersectpoint, distance, elem);
          }
       }
    }
@@ -204,19 +164,9 @@ bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
    float distance;
    glm::vec3 intersectpoint;
 
-   for (Sphere sphere : m_Spheres)
+   for (SceneElement* elem : m_Objects)
    {
-      if (sphere.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
-   }
-
-   for (Triangle triangle : m_Triangles)
-   {
-      if (triangle.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
-   }
-
-   for (Plane plane : m_Planes)
-   {
-      if(plane.TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
+      if (elem->TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
    }
 
    return false;
