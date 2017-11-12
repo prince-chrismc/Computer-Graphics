@@ -27,9 +27,6 @@ SOFTWARE.
 #include "SceneFile.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Sphere.h"
-#include "Triangle.h"
-#include "Plane.h"
 #include "SceneElement.h"
 #include <memory>
 
@@ -45,9 +42,7 @@ class Scene : private SceneFile
    private:
       Camera m_Camera;
       std::vector<Light> m_Lights;
-      std::vector<Sphere> m_Spheres;
-      std::vector<Plane> m_Planes;
-      std::vector<Triangle> m_Triangles;
+      std::vector<std::shared_ptr<SceneElement>> m_Objects;
 
       cimg_library::CImg<float> m_Image;
 
