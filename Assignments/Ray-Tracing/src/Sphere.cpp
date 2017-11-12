@@ -56,7 +56,7 @@ bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir
    return true;
 }
 
-glm::vec3 Sphere::CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3 & intersection_point, const Light & light)
+glm::vec3 Sphere::CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3 & intersection_point, const Light & light) const
 {
    glm::vec3 normal = glm::normalize(m_Pos - intersection_point);
    glm::vec3 v = -ray_dir;

@@ -28,22 +28,19 @@ SOFTWARE.
 #include "glm\vec3.hpp"
 #include <string>
 
+class Light;
+
 class Triangle
 {
    public:
       Triangle() = default;
-      Triangle(const glm::vec3& vert1, const glm::vec3& vert2, const glm::vec3& vert3, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const double& shine) :
+      Triangle(const glm::vec3& vert1, const glm::vec3& vert2, const glm::vec3& vert3, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const float& shine) :
          m_Vert1(vert1), m_Vert2(vert2), m_Vert3(vert3), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
+      glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light) const;
 
-      glm::vec3 GetVertexOne() const { return m_Vert1; }
-      glm::vec3 GetVertexTwo() const { return m_Vert2; }
-      glm::vec3 GetVertexThree() const { return m_Vert3; }
       glm::vec3 GetAmbientlight() const { return m_Amb; }
-      glm::vec3 GetDiffusion() const { return m_Dif; }
-      glm::vec3 GetSpecular() const { return m_Spe; }
-      double GetShine() const { return m_Shine; }
 
       class Builder : private BuilderUtility
       {
@@ -52,8 +49,8 @@ class Triangle
          Builder(const Builder&) = delete;
          void operator=(const Builder&) = delete;
 
-         Builder& ParseTriangle(const std::string& data);
-         Triangle GetTriangle() { return Triangle(m_Vert1, m_Vert2, m_Vert3, m_Amb, m_Dif, m_Spe, m_Shine); }
+         const Builder& ParseTriangle(const std::string& data);
+         Triangle GetTriangle() const { return Triangle(m_Vert1, m_Vert2, m_Vert3, m_Amb, m_Dif, m_Spe, m_Shine); }
 
       private:
          glm::vec3 m_Vert1;
@@ -62,7 +59,7 @@ class Triangle
          glm::vec3 m_Amb;
          glm::vec3 m_Dif;
          glm::vec3 m_Spe;
-         double m_Shine;
+         float m_Shine;
       };
 
 private:
@@ -72,5 +69,5 @@ private:
    glm::vec3 m_Amb;
    glm::vec3 m_Dif;
    glm::vec3 m_Spe;
-   double m_Shine;
+   float m_Shine;
 };

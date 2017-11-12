@@ -23,7 +23,9 @@ SOFTWARE.
 */
 
 #include "Plane.h"
+#include "Light.h"
 #include "glm\geometric.hpp"
+#include <algorithm>
 
 bool Plane::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const
 {
@@ -43,7 +45,26 @@ bool Plane::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir,
    return false;
 }
 
-Plane::Builder& Plane::Builder::ParsePlane(const std::string& data)
+glm::vec3 Plane::CalcLightOuput(const glm::vec3 & ray_dir, const glm::vec3 & intersection_point, const Light & light) const
+{
+   glm::vec3 normal = glm::normalize(m_Normal);
+   glm::vec3 v = -ray_dir;
+
+   glm::vec3 light_direction = glm::normalize(intersection_point - light.GetPosition());
+   glm::vec3 reflection = glm::reflect(light_direction, normal);
+
+   float ln = glm::dot(normal, light_direction);
+   float rv = glm::dot(reflection, v);
+
+   ln = std::max(ln, 0.0f);
+   rv = std::max(rv, 0.0f);
+
+   rv = std::pow(rv, m_Shine);
+
+   return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
+}
+
+const Plane::Builder& Plane::Builder::ParsePlane(const std::string& data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 
@@ -71,7 +92,7 @@ Plane::Builder& Plane::Builder::ParsePlane(const std::string& data)
       }
       else if (attribute.find("shi:") == 0)
       {
-         m_Shine = ParseDouble(attribute.substr(5));
+         m_Shine = ParseFloat(attribute.substr(5));
       }
    }
 

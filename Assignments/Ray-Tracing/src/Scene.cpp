@@ -119,58 +119,23 @@ void Scene::GenerateScene()
                   }
                   break;
                case IntersectingObject::TRIANGLE:
-                  if (IsLightObstructed(&light, &target))
+                  pixelColor += target.m_Triangle.GetAmbientlight();
+                  if (!IsLightObstructed(&light, &target))
                   {
-                     pixelColor += target.m_Triangle.GetAmbientlight();
-                  }
-                  else
-                  {
-                     glm::vec3 line1 = target.m_Triangle.GetVertexTwo() - target.m_Triangle.GetVertexOne();
-                     glm::vec3 line2 = target.m_Triangle.GetVertexThree() - target.m_Triangle.GetVertexOne();
-                     glm::vec3 normal = -glm::normalize(glm::cross(line1, line2));
-
-                     glm::vec3 v = -rayDirection;
-                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
-                     glm::vec3 reflection = glm::reflect(light_direction, normal);
-                     float ln = glm::dot(normal, light_direction);
-                     float rv = glm::dot(reflection, v);
-                     if (ln < 0) { ln = 0; }
-                     if (rv < 0) { rv = 0; }
-                     rv = std::pow(rv, target.m_Triangle.GetShine());
-
-                     pixelColor += target.m_Triangle.GetAmbientlight();
-                     glm::vec3 lightAddition = light.GetColor()*(target.m_Triangle.GetDiffusion()*ln + target.m_Triangle.GetSpecular()*rv);
-                     pixelColor += lightAddition;
+                     pixelColor += target.m_Triangle.CalcLightOuput(rayDirection, target.m_Point, light);
                   }
                   break;
                case IntersectingObject::PLANE:
-                  if (IsLightObstructed(&light, &target))
+                  pixelColor += target.m_Plane.GetAmbientlight();
+                  if (!IsLightObstructed(&light, &target))
                   {
-                     pixelColor += target.m_Plane.GetAmbientlight();
-                  }
-                  else
-                  {
-                     glm::vec3 normal = glm::normalize(target.m_Plane.GetNormal());
-                     glm::vec3 v = -rayDirection;
-                     glm::vec3 light_direction = glm::normalize(target.m_Point - light.GetPosition());
-                     glm::vec3 reflection = glm::reflect(light_direction, normal);
-                     float ln = glm::dot(normal, light_direction);
-                     float rv = glm::dot(reflection, v);
-                     if (ln < 0) { ln = 0; }
-                     if (rv < 0) { rv = 0; }
-
-                     rv = std::pow(rv, target.m_Plane.GetShine());
-                     pixelColor += target.m_Plane.GetAmbientlight();
-                     glm::vec3 lightAddition = light.GetColor()*(target.m_Plane.GetDiffusion()*ln + target.m_Plane.GetSpecular()*rv);
-                     pixelColor += lightAddition;
-
+                     pixelColor += target.m_Plane.CalcLightOuput(rayDirection, target.m_Point, light);
                   }
                   break;
                default:
                   break;
                }
             }
-
          }
 
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };

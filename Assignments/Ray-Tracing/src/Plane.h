@@ -28,21 +28,19 @@ SOFTWARE.
 #include "glm\vec3.hpp"
 #include <string>
 
+class Light;
+
 class Plane
 {
    public:
       Plane() = default;
-      Plane(const glm::vec3& pos, const glm::vec3& nor, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const double& shine) :
+      Plane(const glm::vec3& pos, const glm::vec3& nor, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const float& shine) :
          m_Pos(pos), m_Normal(nor),  m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
+      glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light) const;
 
-      glm::vec3 GetPosition() const { return m_Pos; }
-      glm::vec3 GetNormal() const { return m_Normal; }
       glm::vec3 GetAmbientlight() const { return m_Amb; }
-      glm::vec3 GetDiffusion() const { return m_Dif; }
-      glm::vec3 GetSpecular() const { return m_Spe; }
-      double GetShine() const { return m_Shine; }
 
       class Builder : private BuilderUtility
       {
@@ -51,8 +49,8 @@ class Plane
          Builder(const Builder&) = delete;
          void operator=(const Builder&) = delete;
 
-         Builder& ParsePlane(const std::string& data);
-         Plane GetPlane() { return Plane(m_Pos, m_Normal, m_Amb, m_Dif, m_Spe, m_Shine); }
+         const Builder& ParsePlane(const std::string& data);
+         Plane GetPlane() const { return Plane(m_Pos, m_Normal, m_Amb, m_Dif, m_Spe, m_Shine); }
 
       private:
          glm::vec3 m_Pos;
@@ -60,7 +58,7 @@ class Plane
          glm::vec3 m_Amb;
          glm::vec3 m_Dif;
          glm::vec3 m_Spe;
-         double m_Shine;
+         float m_Shine;
       };
 
 private:
@@ -69,5 +67,5 @@ private:
    glm::vec3 m_Amb;
    glm::vec3 m_Dif;
    glm::vec3 m_Spe;
-   double m_Shine;
+   float m_Shine;
 };
