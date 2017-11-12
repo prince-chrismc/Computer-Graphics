@@ -27,6 +27,8 @@ SOFTWARE.
 
 #include "glm\geometric.hpp"   //normalize
 
+#include <algorithm>
+
 bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const
 {
    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
@@ -38,16 +40,16 @@ bool Sphere::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir
    float rad_dir_squared = glm::dot(length, length) - tca * tca;
    if (rad_dir_squared > (m_Radius * m_Radius)) return false; // doesn't pass through
 
-   float thc = sqrt((m_Radius * m_Radius) - rad_dir_squared);
+   float thc = std::sqrt((m_Radius * m_Radius) - rad_dir_squared);
    intersection_zero = tca - thc;
    intersection_one = tca + thc;
 
    if (intersection_zero > intersection_one) std::swap(intersection_zero, intersection_one);
 
-   if (intersection_zero < 0)
+   if (intersection_zero < 0.0f)
    {
       intersection_zero = intersection_one;
-      if (intersection_zero < 0) return false; // both intersection are negative
+      if (intersection_zero < 0.0f) return false; // both intersection are negative
    }
 
    *out_distance = intersection_zero;
@@ -67,15 +69,15 @@ glm::vec3 Sphere::CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3 & int
    float ln = glm::dot(normal, light_direction);
    float rv = glm::dot(reflection, v);
 
-   if (ln < 0) { ln = 0; }
-   if (rv < 0) { rv = 0; }
+   ln = std::max(ln, 0.0f);
+   rv = std::max(rv, 0.0f);
 
    rv = std::pow(rv, m_Shine);
 
    return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
 }
 
-Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
+const Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 
@@ -87,7 +89,7 @@ Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
       }
       else if (attribute.find("rad:") == 0)
       {
-         m_Radius = ParseDouble(attribute.substr(5));
+         m_Radius = ParseFloat(attribute.substr(5));
       }
       else if (attribute.find("amb:") == 0)
       {
@@ -103,7 +105,7 @@ Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
       }
       else if (attribute.find("shi:") == 0)
       {
-         m_Shine = ParseDouble(attribute.substr(5));
+         m_Shine = ParseFloat(attribute.substr(5));
       }
    }
 

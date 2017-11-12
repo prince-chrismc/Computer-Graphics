@@ -51,3 +51,11 @@ double BuilderUtility::ParseDouble(std::string attribute)
    ss >> std::dec >> temp;
    return temp;
 }
+
+float BuilderUtility::ParseFloat(std::string attribute)
+{
+   float temp = 0;
+   std::stringstream ss(attribute);
+   ss >> std::dec >> temp;
+   return temp;
+}

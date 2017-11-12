@@ -34,17 +34,13 @@ class Sphere
 {
    public:
       Sphere() = default;
-      Sphere(const glm::vec3& pos, const double& rad, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const double& shine) :
+      Sphere(const glm::vec3& pos, const float& rad, const glm::vec3& amb, const glm::vec3& dif, const glm::vec3& spe, const float& shine) :
              m_Pos(pos), m_Radius(rad), m_Amb(amb), m_Dif(dif), m_Spe(spe), m_Shine(shine) {}
 
       bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const;
       glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light);
 
-      glm::vec3 GetPosition() const { return m_Pos; }
       glm::vec3 GetAmbientlight() const { return m_Amb; }
-      glm::vec3 GetDiffusion() const { return m_Dif; }
-      glm::vec3 GetSpecular() const { return m_Spe; }
-      double GetShine() const { return m_Shine; }
 
       class Builder : private BuilderUtility
       {
@@ -53,23 +49,23 @@ class Sphere
          Builder(const Builder&) = delete;
          void operator=(const Builder&) = delete;
 
-         Builder& ParseSphere(const std::string& data);
-         Sphere GetSphere() { return Sphere(m_Pos, m_Radius, m_Amb, m_Dif, m_Spe, m_Shine); }
+         const Builder& ParseSphere(const std::string& data);
+         Sphere GetSphere() const { return Sphere(m_Pos, m_Radius, m_Amb, m_Dif, m_Spe, m_Shine); }
 
       private:
          glm::vec3 m_Pos;
-         double m_Radius;
+         float m_Radius;
          glm::vec3 m_Amb;
          glm::vec3 m_Dif;
          glm::vec3 m_Spe;
-         double m_Shine;
+         float m_Shine;
       };
 
    private:
       glm::vec3 m_Pos;
-      double m_Radius;
+      float m_Radius;
       glm::vec3 m_Amb;
       glm::vec3 m_Dif;
       glm::vec3 m_Spe;
-      double m_Shine;
+      float m_Shine;
 };

@@ -36,4 +36,5 @@ class BuilderUtility abstract
       static glm::vec3 ParseVec3(std::string attribute);
       static unsigned int ParseUint(std::string attribute);
       static double ParseDouble(std::string attribute);
+      static float ParseFloat(std::string attribute);
 };
