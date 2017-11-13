@@ -157,11 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\DrawableObject.h" />
     <ClInclude Include="src\GlfwWindow.h" />
     <ClInclude Include="src\objloader.h" />
+    <ClInclude Include="src\RenderMode.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DrawableObject.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
     <ClCompile Include="src\objloader.cpp" />
     <ClCompile Include="src\Shader.cpp" />
