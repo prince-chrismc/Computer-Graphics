@@ -26,10 +26,10 @@ SOFTWARE.
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <random>          //std::mt19937
+#include <random>                               //std::mt19937
 
-#include "GL/glew.h"       // include GL Extension Wrangler
-#include "glm/gtc/matrix_transform.hpp" //glm::lookAt
+#include "GL/glew.h"                            // include GL Extension Wrangler
+#include "glm/gtc/matrix_transform.hpp"         //glm::lookAt
 
 #include "objloader.h"
 #include "GlfwWindow.h"
@@ -97,16 +97,16 @@ int main()
    unsigned int grid_size = GetUserInputOddNum(9, 35) - 1;
 
    // Create a GLFWwindow
-   GlfwWindow window(GlfwWindow::DEFAULT_WIDTH, GlfwWindow::DEFAULT_HEIGHT);
-   if (!window()) // Make sure it exists
+   std::shared_ptr<GlfwWindow> window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
+   if (!window->IsValid()) // Make sure it exists
    {
       return -1;
    }
 
    // Set the required callback functions
-   window.SetKeyCallback(key_callback);
-   window.SetMouseButtonCallback(mouse_callback);
-   window.SetCursorPosCallback(cursor_callback);
+   window->SetKeyCallback(key_callback);
+   window->SetMouseButtonCallback(mouse_callback);
+   window->SetCursorPosCallback(cursor_callback);
 
    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
    glewExperimental = GL_TRUE;
@@ -114,6 +114,8 @@ int main()
    if (glewInit() != GLEW_OK)
    {
       std::cout << "Failed to initialize GLEW" << std::endl;
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
@@ -123,14 +125,16 @@ int main()
    // make sure they are ready to use
    if (!vertexShader() || !fragmentShader())
    {
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
-   ShaderLinker* shaderProgram = &ShaderLinker::GetInstance();
-   shaderProgram->AddShader(&vertexShader);
-   shaderProgram->AddShader(&fragmentShader);
-   if (!shaderProgram->Link())
+   auto shaderProgram = ShaderLinker::GetInstance();
+   if (!shaderProgram->Link(&vertexShader, &fragmentShader))
    {
+      std::cout << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
@@ -218,7 +222,7 @@ int main()
    // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> cube_vertices;
    std::vector<glm::vec3> cube_normals;
-   loadOBJ("assets/cube.obj", cube_vertices, cube_normals, std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
+   LoadObjFile("assets/cube.obj", &cube_vertices, &cube_normals, &std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
 
    GLuint VAO_cube;
    glGenVertexArrays(1, &VAO_cube);
@@ -247,7 +251,7 @@ int main()
    // pacman ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> pacman_vertices;
    std::vector<glm::vec3> pacman_normals;
-   loadOBJ("assets/pacman.obj", pacman_vertices, pacman_normals, std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
+   LoadObjFile("assets/pacman.obj", &pacman_vertices, &pacman_normals, &std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
 
    GLuint VAO_pacman;
    glGenVertexArrays(1, &VAO_pacman);
@@ -276,7 +280,7 @@ int main()
    // alien ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> alien_vertices;
    std::vector<glm::vec3> alien_normals;
-   loadOBJ("assets/teapot.obj", alien_vertices, alien_normals, std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
+   LoadObjFile("assets/teapot.obj", &alien_vertices, &alien_normals, &std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
 
    GLuint VAO_alien;
    glGenVertexArrays(1, &VAO_alien);
@@ -309,7 +313,7 @@ int main()
    GLuint objectColorLoc = shaderProgram->GetUniformLocation("object_color");
 
    // Game loop
-   while (! ~window)
+   while (!window->ShouldClose())
    {
       // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
       glfwPollEvents();
@@ -319,7 +323,7 @@ int main()
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      shaderProgram->SetShaderMat4("projection_matrix", window.GetProjectionMatrix());
+      shaderProgram->SetShaderMat4("projection_matrix", window->GetProjectionMatrix());
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
@@ -441,7 +445,7 @@ int main()
       }
 
 
-      ++window; // swap buffers
+      window->NextBuffer(); // swap buffers
    }
 
    return 0;
