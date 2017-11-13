@@ -25,12 +25,10 @@ SOFTWARE.
 #pragma once
 
 #include "BuilderUtility.h"
-#include "glm\vec3.hpp"
+#include "SceneElement.h"
 #include <string>
 
-class Light;
-
-class Triangle
+class Triangle : public SceneElement
 {
    public:
       Triangle() = default;

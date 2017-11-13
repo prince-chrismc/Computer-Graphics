@@ -25,12 +25,10 @@ SOFTWARE.
 #pragma once
 
 #include "BuilderUtility.h"
-#include "glm\vec3.hpp"
+#include "SceneElement.h"
 #include <string>
 
-class Light;
-
-class Plane
+class Plane : public SceneElement
 {
    public:
       Plane() = default;

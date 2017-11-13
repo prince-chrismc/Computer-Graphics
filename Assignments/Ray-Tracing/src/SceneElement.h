@@ -24,39 +24,14 @@ SOFTWARE.
 
 #pragma once
 
-#include "SceneFile.h"
-#include "Camera.h"
-#include "Light.h"
-#include "SceneElement.h"
-#include <memory>
+#include "glm\vec3.hpp"
 
-#include "CImg.h"
+class Light;
 
-class Scene : private SceneFile
+class SceneElement abstract
 {
    public:
-      Scene(const char* path);
-
-      void Display();
-
-   private:
-      Camera m_Camera;
-      std::vector<Light> m_Lights;
-      std::vector<std::shared_ptr<SceneElement>> m_Objects;
-
-      cimg_library::CImg<float> m_Image;
-
-      struct IntersectingObject
-      {
-         IntersectingObject(const glm::vec3& point, const float& dis, const std::shared_ptr<SceneElement>& elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
-         IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr) {}
-
-         glm::vec3 m_Point;
-         float m_Distance;
-         std::shared_ptr<SceneElement> m_Element;
-      };
-
-      void GenerateScene();
-      IntersectingObject FindNearestIntersectingObject(const glm::vec3& ray_dir);
-      bool IsLightObstructed(const Light& light, const IntersectingObject& target);
+      virtual bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const = 0;
+      virtual glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light) const = 0;
+      virtual glm::vec3 GetAmbientlight() const = 0;
 };

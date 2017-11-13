@@ -180,6 +180,7 @@
     <ClInclude Include="src\BuilderUtility.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Plane.h" />
+    <ClInclude Include="src\SceneElement.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Scene.h" />
