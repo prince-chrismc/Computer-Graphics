@@ -34,6 +34,7 @@ SOFTWARE.
 #include "objloader.h"
 #include "GlfwWindow.h"
 #include "Shader.h"
+#include "DrawableObject.h"
 
 // Globals
 // rotation, translation and scalar globals
@@ -48,7 +49,6 @@ float alien_scalar = 0.0f;                                    // controll : uj
 // enums
 enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
 enum class PacmanDirection { W_KEY = 270, D_KEY = 0, S_KEY = 90, A_KEY = 180 };
-enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
 
 // dynamic user set values
 GLuint grid_size = 20;
@@ -251,16 +251,16 @@ int main()
    // pacman ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> pacman_vertices;
    std::vector<glm::vec3> pacman_normals;
-   LoadObjFile("assets/pacman.obj", &pacman_vertices, &pacman_normals, &std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file
+   LoadObjFile("assets/pacman.obj", &pacman_vertices, &pacman_normals, &std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
 
    GLuint VAO_pacman;
    glGenVertexArrays(1, &VAO_pacman);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
    GLuint pacman_vertices_VBO, pacman_normals_VBO;
    glGenBuffers(1, &pacman_vertices_VBO);
    glGenBuffers(1, &pacman_normals_VBO);
 
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
    glBindVertexArray(VAO_pacman);
 
    glBindBuffer(GL_ARRAY_BUFFER, pacman_vertices_VBO);
@@ -280,16 +280,16 @@ int main()
    // alien ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> alien_vertices;
    std::vector<glm::vec3> alien_normals;
-   LoadObjFile("assets/teapot.obj", &alien_vertices, &alien_normals, &std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file
+   LoadObjFile("assets/teapot.obj", &alien_vertices, &alien_normals, &std::vector<glm::vec2>()); //read the alien_vertices from the alien.obj file 
 
    GLuint VAO_alien;
    glGenVertexArrays(1, &VAO_alien);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
    GLuint alien_vertices_VBO, alien_normals_VBO;
    glGenBuffers(1, &alien_vertices_VBO);
    glGenBuffers(1, &alien_normals_VBO);
 
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
    glBindVertexArray(VAO_alien);
 
    glBindBuffer(GL_ARRAY_BUFFER, alien_vertices_VBO);
@@ -308,6 +308,9 @@ int main()
 
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
+   GLuint transformLoc = shaderProgram->GetUniformLocation("model_matrix");
+   GLuint objectColorLoc = shaderProgram->GetUniformLocation("object_color");
+
    // Game loop
    while (!window->ShouldClose())
    {
@@ -319,7 +322,7 @@ int main()
       glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      shaderProgram->SetShaderMat4("projection_matrix", window->GetProjectionMatrix());
+      shaderProgram->SetUniformMat4("projection_matrix", window->GetProjectionMatrix());
 
       glm::mat4 view_matrix;
       view_matrix = glm::lookAt(eye, center, up);
@@ -330,10 +333,11 @@ int main()
       //arrow key actions
       view_matrix = glm::rotate(view_matrix, glm::radians(view_rotx), glm::vec3(1.0f, 0.0f, 0.0f)); // apply rotation on x axis
       view_matrix = glm::rotate(view_matrix, glm::radians(view_roty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply rotation on y axis
-      shaderProgram->SetShaderMat4("view_model", view_matrix);
+      shaderProgram->SetUniformMat4("view_matrix", view_matrix);
 
-      glm::mat4 model_matrix = glm::scale(model_matrix, glm::vec3(0.25f));
-      shaderProgram->SetShaderMat4("model_matrix", model_matrix);
+      glm::mat4 model_matrix;
+      model_matrix = glm::scale(model_matrix, glm::vec3(0.25f));
+      shaderProgram->SetUniformMat4("model_matrix", model_matrix);
 
       // Cube -------------------------------------------------------------------------------------------------------------------------------------
       //glUniform1i(objectTypeLoc, 3);
@@ -341,22 +345,22 @@ int main()
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
       //glBindVertexArray(0);
       // Grid -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREY);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREY);
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
       glBindVertexArray(0);
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::RED);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::GREEN);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREEN);
       glBindVertexArray(VAO_yaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::BLUE);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
       glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
@@ -368,9 +372,9 @@ int main()
          glm::vec3 food_scale(0.075f + food_scalar); // cmc-edit : this scales the object
          food_model_matrix = glm::translate(food_model_matrix, glm::vec3(food.transx, food.transy, 0.0f));
          food_model_matrix = glm::scale(food_model_matrix, food_scale);
-         shaderProgram->SetShaderMat4("model_matrix", food_model_matrix);
+         shaderProgram->SetUniformMat4("model_matrix", food_model_matrix);
 
-         shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::RED);
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
          glBindVertexArray(VAO_cube);
          glDrawArrays((unsigned int)render_mode, 0, (GLsizei)cube_vertices.size());
          glBindVertexArray(0);
@@ -383,9 +387,9 @@ int main()
          glm::vec3 alien_scale(0.125f + alien_scalar); // cmc-edit : this scales the object
          alien_model_matrix = glm::translate(alien_model_matrix, glm::vec3(alien.transx, alien.transy, 0.0f));
          alien_model_matrix = glm::scale(alien_model_matrix, alien_scale);
-         shaderProgram->SetShaderMat4("model_matrix", alien_model_matrix);
+         shaderProgram->SetUniformMat4("model_matrix", alien_model_matrix);
 
-         shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::BLUE);
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
          glBindVertexArray(VAO_alien);
          glDrawArrays((unsigned int)render_mode, 0, (GLsizei)alien_vertices.size());
          glBindVertexArray(0);
@@ -397,9 +401,9 @@ int main()
       pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0f));                   // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      shaderProgram->SetShaderMat4("model_matrix", pacman_model_matrix);
+      shaderProgram->SetUniformMat4("model_matrix", pacman_model_matrix);
 
-      shaderProgram->SetShaderInt("object_color", (GLint)ObjectColors::YELLOW);
+      glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
       glDrawArrays((unsigned int)render_mode, 0, (GLsizei)pacman_vertices.size());
       glBindVertexArray(0);
@@ -420,17 +424,28 @@ int main()
          }
       }
 
-      for each(AlienPos alien in Aliens) // lets not touch aliens =S
+      for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
       {
-         if (alien.transx == pacman_transx && alien.transy == pacman_transy)
+         if (alien->transx == pacman_transx && alien->transy == pacman_transy)
          {
             ResetGame();
             break;
          }
          else
          {
-            // TODO : figure out why the aliens dont move =?
-            (std::abs(alien.transx - pacman_transx) >= std::abs(alien.transy - pacman_transy)) ? alien.transx - 0.25f : alien.transy + 0.25f;
+            unsigned int dif_x = std::abs(alien->transx - pacman_transx);
+            unsigned int dif_y = std::abs(alien->transy - pacman_transy);
+
+            if (dif_x >= dif_y)
+            {
+               (pacman_transx > alien->transx) ? alien->transx += 0.25f : alien->transx -= 0.25f;
+               (pacman_transx < alien->transx) ? alien->transx -= 0.25f : alien->transx += 0.25f;
+            }
+            else if (dif_y > dif_x)
+            {
+               (pacman_transy > alien->transy) ? alien->transy += 0.25f : alien->transy -= 0.25f;
+               (pacman_transy < alien->transy) ? alien->transy -= 0.25f : alien->transy += 0.25f;
+            }
          }
       }
 
