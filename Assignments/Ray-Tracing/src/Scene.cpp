@@ -139,10 +139,9 @@ void Scene::GenerateScene()
    {
          auto pixelColor = itor->get();
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
-         m_Image.draw_point(x++, y++, color);
+         m_Image.draw_point(x, y++, color);
 
-         if (x >= width) x = 0;
-         if (y >= height) y = 0;
+         if (y >= height) { y = 0; x++; }
    }
 
    m_Image.normalize(0, 255);
