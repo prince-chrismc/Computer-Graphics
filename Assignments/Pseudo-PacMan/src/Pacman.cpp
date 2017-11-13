@@ -390,7 +390,7 @@ int main()
          alien_model_matrix = glm::scale(alien_model_matrix, alien_scale);
          glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(alien_model_matrix));
 
-         glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
+         glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
          glBindVertexArray(VAO_alien);
          glDrawArrays((unsigned int)render_mode, 0, (GLsizei)alien_vertices.size());
          glBindVertexArray(0);
@@ -411,8 +411,8 @@ int main()
       // --------------------------------------------------------------------------------------------------------------------------------------------
 
       /*                    *
-      *     GAME LOGIC     *
-      *                    */
+       *     GAME LOGIC     *
+       *                    */
       for (std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */) // lets eat food =)
       {
          if (food->transx == pacman_transx && food->transy == pacman_transy)
