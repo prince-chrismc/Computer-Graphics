@@ -99,10 +99,7 @@ void Scene::GenerateScene()
    {
       for (int y = 0; y < height; y += 1)
       {
-         // Calc direction of ray
-         const double PCx = (2.0 * ((x + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
-         const double PCy = (1.0 - 2.0 * ((y + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
-         glm::vec3 rayDirection = glm::normalize(glm::vec3(PCx, PCy, -1) - m_Camera.GetPosition());
+         glm::vec3 rayDirection = CalcRayDirection(x, y);
 
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
          glm::vec3 pixelColor(0.0f);
@@ -128,6 +125,17 @@ void Scene::GenerateScene()
    m_Image.save("render2.bmp", true);
 }
 
+glm::vec3 Scene::CalcRayDirection(const int x_val, const int y_val)
+{
+   int width = 0, height = 0;
+   m_Camera.GetImageDimensions(&width, &height);
+
+   double PCx = (2.0 * ((x_val + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
+   double PCy = (1.0 - 2.0 * ((y_val + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
+
+   return glm::normalize(glm::vec3(PCx, PCy, -1) - m_Camera.GetPosition());
+}
+
 Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& ray_dir)
 {
    IntersectingObject target;
@@ -139,7 +147,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& 
 
       if (elem->TestIntersection(m_Camera.GetPosition(), ray_dir, &intersectpoint, &distance))
       {
-         if (target.m_Element == nullptr || distance < target.m_Distance)
+         if (!target.m_Element || distance < target.m_Distance)
          {
             target = IntersectingObject(intersectpoint, distance, elem);
          }
