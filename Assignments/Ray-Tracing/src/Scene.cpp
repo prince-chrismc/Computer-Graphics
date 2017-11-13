@@ -99,29 +99,44 @@ void Scene::GenerateScene()
    m_Camera.GetImageDimensions(&width, &height);
    m_Image = CImg<float>(width, height, 1, 3, 0);
 
+   std::vector<std::future<std::vector<glm::vec3>>> results;
    for (int x = 0; x < width; x += 1)
    {
-      for (int y = 0; y < height; y += 1)
-      {
-         glm::vec3 rayDirection = CalcRayDirection(x, y);
-
-         IntersectingObject target = FindNearestIntersectingObject(rayDirection);
-         glm::vec3 pixelColor(0.0f);
-
-         if (target.m_Element)
+      results.push_back( std::async(std::launch::async, [this, x, height]{
+         std::vector<glm::vec3> retval;
+         for (int y = 0; y < height; y += 1)
          {
-            for (const Light light : m_Lights)
+            glm::vec3 rayDirection = CalcRayDirection(x, y);
+
+            IntersectingObject target = FindNearestIntersectingObject(rayDirection);
+            glm::vec3 pixelColor(0.0f);
+
+            if (target.m_Element)
             {
-               pixelColor += target.m_Element->GetAmbientlight();
-               if (!IsLightObstructed(light, target))
+               for (const Light light : m_Lights)
                {
-                  pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
+                  pixelColor += target.m_Element->GetAmbientlight();
+                  if (!IsLightObstructed(light, target))
+                  {
+                     pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
+                  }
                }
             }
+            retval.push_back(pixelColor);
          }
+         return retval;
+      }));
+   }
 
+   int x = 0, y = 0;
+   for (auto itor = results.begin(); itor != results.end(); itor++)
+   {
+      for(auto pixelColor : itor->get())
+      {
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
-         m_Image.draw_point(x, y, color);
+         m_Image.draw_point(x, y++, color);
+
+         if (y >= height) { y = 0; x++; }
       }
    }
 
