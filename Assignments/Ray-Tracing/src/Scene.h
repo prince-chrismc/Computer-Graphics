@@ -48,7 +48,7 @@ class Scene : private SceneFile
 
       struct IntersectingObject
       {
-         IntersectingObject(glm::vec3 point, float dis, std::shared_ptr<SceneElement> elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
+         IntersectingObject(const glm::vec3& point, const float& dis, const std::shared_ptr<SceneElement>& elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
          IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr) {}
 
          glm::vec3 m_Point;
@@ -58,5 +58,5 @@ class Scene : private SceneFile
 
       void GenerateScene();
       IntersectingObject FindNearestIntersectingObject(const glm::vec3& ray_dir);
-      bool IsLightObstructed(Light* light, IntersectingObject* target);
+      bool IsLightObstructed(const Light& light, const IntersectingObject& target);
 };

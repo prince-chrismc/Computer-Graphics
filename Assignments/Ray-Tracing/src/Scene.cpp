@@ -95,24 +95,24 @@ void Scene::GenerateScene()
    m_Camera.GetImageDimensions(&width, &height);
    m_Image = CImg<float>(width, height, 1, 3, 0);
 
-   for (int i = 0; i < width; i += 1)
+   for (int x = 0; x < width; x += 1)
    {
-      for (int j = 0; j < height; j += 1)
+      for (int y = 0; y < height; y += 1)
       {
          // Calc direction of ray
-         double PCx = (2.0 * ((i + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
-         double PCy = (1.0 - 2.0 * ((j + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
+         const double PCx = (2.0 * ((x + 0.5) / width) - 1.0) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0) * m_Camera.GetAspectRatio();
+         const double PCy = (1.0 - 2.0 * ((y + 0.5) / height)) * tan(m_Camera.GetFeildOfView() / 2.0 * M_PI / 180.0);
          glm::vec3 rayDirection = glm::normalize(glm::vec3(PCx, PCy, -1) - m_Camera.GetPosition());
 
          IntersectingObject target = FindNearestIntersectingObject(rayDirection);
-         glm::vec3 pixelColor;
+         glm::vec3 pixelColor(0.0f);
 
-         if (target.m_Element != nullptr)
+         if (target.m_Element)
          {
-            for (Light light : m_Lights)
+            for (const Light light : m_Lights)
             {
                pixelColor += target.m_Element->GetAmbientlight();
-               if (!IsLightObstructed(&light, &target))
+               if (!IsLightObstructed(light, target))
                {
                   pixelColor += target.m_Element->CalcLightOuput(rayDirection, target.m_Point, light);
                }
@@ -120,7 +120,7 @@ void Scene::GenerateScene()
          }
 
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
-         m_Image.draw_point(i, j, color);
+         m_Image.draw_point(x, y, color);
       }
    }
 
@@ -132,8 +132,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& 
 {
    IntersectingObject target;
 
-
-   for (auto elem : m_Objects)
+   for (const auto elem : m_Objects)
    {
       float distance;
       glm::vec3 intersectpoint;
@@ -150,15 +149,15 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& 
    return target;
 }
 
-bool Scene::IsLightObstructed(Light* light, IntersectingObject* target)
+bool Scene::IsLightObstructed(const Light& light, const IntersectingObject& target)
 {
-   glm::vec3 lightRay = glm::normalize(light->GetPosition() - target->m_Point);
-   glm::vec3 lightRayWithBias = (LIGHT_BIAS * lightRay) + target->m_Point;
+   glm::vec3 lightRay = glm::normalize(light.GetPosition() - target.m_Point);
+   glm::vec3 lightRayWithBias = (LIGHT_BIAS * lightRay) + target.m_Point;
 
    float distance;
    glm::vec3 intersectpoint;
 
-   for (auto elem : m_Objects)
+   for (const auto elem : m_Objects)
    {
       if (elem->TestIntersection(lightRayWithBias, lightRay, &intersectpoint, &distance)) return true;
    }
