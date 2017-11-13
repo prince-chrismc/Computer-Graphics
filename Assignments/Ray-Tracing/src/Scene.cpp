@@ -40,40 +40,11 @@ Scene::Scene(const char* path) : SceneFile(path)
 {
    if(m_Elements.size() > 0)
    {
-      // Do Work
       m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
-
-      {
-         std::string light_attr = "";
-         while ((light_attr = GetAttributes("light")) != "")
-         {
-            m_Lights.push_back(Light::Builder().ParseLight(light_attr).GetLight());
-         }
-      }
-
-      {
-         std::string sphere_attr = "";
-         while ((sphere_attr = GetAttributes("sphere")) != "")
-         {
-            m_Objects.push_back(std::make_shared<Sphere>(Sphere::Builder().ParseSphere(sphere_attr).GetSphere()));
-         }
-      }
-
-      {
-         std::string triangle_attr = "";
-         while ((triangle_attr = GetAttributes("triangle")) != "")
-         {
-            m_Objects.push_back(std::make_shared<Triangle>(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle()));
-         }
-      }
-
-      {
-         std::string plane_attr = "";
-         while ((plane_attr = GetAttributes("plane")) != "")
-         {
-            m_Objects.push_back(std::make_shared<Plane>(Plane::Builder().ParsePlane(plane_attr).GetPlane()));
-         }
-      }
+      ExtractLights();
+      ExtractSpheres();
+      ExtractTrianlges();
+      ExtractPlanes();
 
       GenerateScene();
    }
@@ -86,6 +57,39 @@ void Scene::Display()
    while(!display.is_closed())
    {
       if(display.is_keyESC()) display.close();
+   }
+}
+
+void Scene::ExtractLights()
+{
+   std::string light_attr = "";
+   while ((light_attr = GetAttributes("light")) != "")
+   {
+      m_Lights.push_back(Light::Builder().ParseLight(light_attr).GetLight());
+   }
+}
+void Scene::ExtractSpheres()
+{
+   std::string sphere_attr = "";
+   while ((sphere_attr = GetAttributes("sphere")) != "")
+   {
+      m_Objects.push_back(std::make_shared<Sphere>(Sphere::Builder().ParseSphere(sphere_attr).GetSphere()));
+   }
+}
+void Scene::ExtractTrianlges()
+{
+   std::string triangle_attr = "";
+   while ((triangle_attr = GetAttributes("triangle")) != "")
+   {
+      m_Objects.push_back(std::make_shared<Triangle>(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle()));
+   }
+}
+void Scene::ExtractPlanes()
+{
+   std::string plane_attr = "";
+   while ((plane_attr = GetAttributes("plane")) != "")
+   {
+      m_Objects.push_back(std::make_shared<Plane>(Plane::Builder().ParsePlane(plane_attr).GetPlane()));
    }
 }
 

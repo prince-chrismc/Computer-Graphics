@@ -46,6 +46,11 @@ class Scene : private SceneFile
 
       cimg_library::CImg<float> m_Image;
 
+      void ExtractLights();
+      void ExtractSpheres();
+      void ExtractTrianlges();
+      void ExtractPlanes();
+
       struct IntersectingObject
       {
          IntersectingObject(const glm::vec3& point, const float& dis, const std::shared_ptr<SceneElement>& elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
