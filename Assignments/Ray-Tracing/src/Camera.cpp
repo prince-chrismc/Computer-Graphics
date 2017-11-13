@@ -54,6 +54,6 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 
 void Camera::GetImageDimensions(int* out_width, int* out_height) const
 {
-   *out_height = static_cast<int>(m_Focal * std::tan(glm::radians(m_FOV / 2.0)));
+   *out_height = 4*static_cast<int>(m_Focal * std::tan(glm::radians(m_FOV / 2.0)));
    *out_width = static_cast<int>(*out_height * m_AspectRatio);
 }
