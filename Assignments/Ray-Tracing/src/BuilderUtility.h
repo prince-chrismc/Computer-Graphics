@@ -36,4 +36,13 @@ class BuilderUtility abstract
       static unsigned int ParseUint(std::string attribute);
       static double ParseDouble(std::string attribute);
       static float ParseFloat(std::string attribute);
+
+      const char* POS = "pos:";
+
+      const char* AMB = "amb:";
+      const char* DIF = "dfi:";
+      const char* SPE = "spe:";
+      const char* SHI = "shi:";
+
+      enum NameOffset { OFFSET_3CHAR = 5, OFFSET_2CHAR = 4, OFFSET_1CHAR = 3 };
 };

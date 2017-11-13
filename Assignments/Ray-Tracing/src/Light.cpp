@@ -30,13 +30,13 @@ const Light::Builder& Light::Builder::ParseLight(const std::string& data)
 
    for (std::string attribute : ParseParams(cut))
    {
-      if (attribute.find("pos:") == 0)
+      if (attribute.find(POS) == 0)
       {
-         m_Pos = ParseVec3(attribute.substr(5));
+         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("col:") == 0)
+      else if (attribute.find(COL) == 0)
       {
-         m_Col = ParseVec3(attribute.substr(5));
+         m_Col = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
    }
 

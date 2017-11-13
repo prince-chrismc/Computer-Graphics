@@ -55,6 +55,10 @@ class Camera
             unsigned int m_FOV;
             unsigned int m_Focal;
             double m_AspectRatio;
+
+            const char* FOV = "fov:";
+            const char* F = "f:";
+            const char* A = "a:";
       };
 
    private:

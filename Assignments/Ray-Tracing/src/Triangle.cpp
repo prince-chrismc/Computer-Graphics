@@ -94,33 +94,33 @@ const Triangle::Builder& Triangle::Builder::ParseTriangle(const std::string& dat
 
    for (std::string attribute : ParseParams(cut))
    {
-      if (attribute.find("v1:") == 0)
+      if (attribute.find(V1) == 0)
       {
-         m_Vert1 = ParseVec3(attribute.substr(4));
+         m_Vert1 = ParseVec3(attribute.substr(OFFSET_2CHAR));
       }
-      else if (attribute.find("v2:") == 0)
+      else if (attribute.find(V2) == 0)
       {
-         m_Vert2 = ParseVec3(attribute.substr(4));
+         m_Vert2 = ParseVec3(attribute.substr(OFFSET_2CHAR));
       }
-      else if (attribute.find("v3:") == 0)
+      else if (attribute.find(V3) == 0)
       {
-         m_Vert3 = ParseVec3(attribute.substr(4));
+         m_Vert3 = ParseVec3(attribute.substr(OFFSET_2CHAR));
       }
-      else if (attribute.find("amb:") == 0)
+      else if (attribute.find(AMB) == 0)
       {
-         m_Amb = ParseVec3(attribute.substr(5));
+         m_Amb = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("dif:") == 0)
+      else if (attribute.find(DIF) == 0)
       {
-         m_Dif = ParseVec3(attribute.substr(5));
+         m_Dif = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("spe:") == 0)
+      else if (attribute.find(SPE) == 0)
       {
-         m_Spe = ParseVec3(attribute.substr(5));
+         m_Spe = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("shi:") == 0)
+      else if (attribute.find(SHI) == 0)
       {
-         m_Shine = ParseFloat(attribute.substr(5));
+         m_Shine = ParseFloat(attribute.substr(OFFSET_3CHAR));
       }
    }
 

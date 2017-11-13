@@ -57,6 +57,8 @@ class Plane : public SceneElement
          glm::vec3 m_Dif;
          glm::vec3 m_Spe;
          float m_Shine;
+
+         const char* NOR = "nor:";
       };
 
 private:

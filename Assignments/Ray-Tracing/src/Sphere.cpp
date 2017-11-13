@@ -75,35 +75,35 @@ glm::vec3 Sphere::CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3 & int
    return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
 }
 
-const Sphere::Builder& Sphere::Builder::ParseSphere(const std::string & data)
+const Sphere::Builder& Sphere::Builder::ParseSphere(const std::string& data)
 {
    std::string cut = data.substr(2, data.length() - 4);
 
    for (std::string attribute : ParseParams(cut))
    {
-      if (attribute.find("pos:") == 0)
+      if (attribute.find(POS) == 0)
       {
-         m_Pos = ParseVec3(attribute.substr(5));
+         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("rad:") == 0)
+      else if (attribute.find(RAD) == 0)
       {
-         m_Radius = ParseFloat(attribute.substr(5));
+         m_Radius = ParseFloat(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("amb:") == 0)
+      else if (attribute.find(AMB) == 0)
       {
-         m_Amb = ParseVec3(attribute.substr(5));
+         m_Amb = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("dif:") == 0)
+      else if (attribute.find(DIF) == 0)
       {
-         m_Dif = ParseVec3(attribute.substr(5));
+         m_Dif = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("spe:") == 0)
+      else if (attribute.find(SPE) == 0)
       {
-         m_Spe = ParseVec3(attribute.substr(5));
+         m_Spe = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("shi:") == 0)
+      else if (attribute.find(SHI) == 0)
       {
-         m_Shine = ParseFloat(attribute.substr(5));
+         m_Shine = ParseFloat(attribute.substr(OFFSET_3CHAR));
       }
    }
 

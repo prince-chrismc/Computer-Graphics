@@ -31,22 +31,21 @@ Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
 
    for (std::string attribute : ParseParams(cut))
    {
-      if (attribute.find("pos:") == 0)
+      if (attribute.find(POS) == 0)
       {
-         m_Pos = ParseVec3(attribute.substr(5));
+         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("fov:") == 0)
+      else if (attribute.find(FOV) == 0)
       {
-         m_FOV = ParseUint(attribute.substr(5));
+         m_FOV = ParseUint(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("f:") == 0)
+      else if (attribute.find(F) == 0)
       {
-         m_Focal = ParseUint(attribute.substr(3));
-
+         m_Focal = ParseUint(attribute.substr(OFFSET_1CHAR));
       }
-      else if (attribute.find("a:") == 0)
+      else if (attribute.find(A) == 0)
       {
-         m_AspectRatio = ParseDouble(attribute.substr(3));
+         m_AspectRatio = ParseDouble(attribute.substr(OFFSET_1CHAR));
       }
    }
 

@@ -70,29 +70,29 @@ const Plane::Builder& Plane::Builder::ParsePlane(const std::string& data)
 
    for (std::string attribute : ParseParams(cut))
    {
-      if (attribute.find("pos:") == 0)
+      if (attribute.find(POS) == 0)
       {
-         m_Pos = ParseVec3(attribute.substr(5));
+         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("nor:") == 0)
+      else if (attribute.find(NOR) == 0)
       {
-         m_Normal = ParseVec3(attribute.substr(5));
+         m_Normal = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("amb:") == 0)
+      else if (attribute.find(AMB) == 0)
       {
-         m_Amb = ParseVec3(attribute.substr(5));
+         m_Amb = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("dif:") == 0)
+      else if (attribute.find(DIF) == 0)
       {
-         m_Dif = ParseVec3(attribute.substr(5));
+         m_Dif = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("spe:") == 0)
+      else if (attribute.find(SPE) == 0)
       {
-         m_Spe = ParseVec3(attribute.substr(5));
+         m_Spe = ParseVec3(attribute.substr(OFFSET_3CHAR));
       }
-      else if (attribute.find("shi:") == 0)
+      else if (attribute.find(SHI) == 0)
       {
-         m_Shine = ParseFloat(attribute.substr(5));
+         m_Shine = ParseFloat(attribute.substr(OFFSET_3CHAR));
       }
    }
 

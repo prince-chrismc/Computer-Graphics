@@ -58,6 +58,10 @@ class Triangle : public SceneElement
          glm::vec3 m_Dif;
          glm::vec3 m_Spe;
          float m_Shine;
+
+         const char* V1 = "v1:";
+         const char* V2 = "v2:";
+         const char* V3 = "v3:";
       };
 
 private:

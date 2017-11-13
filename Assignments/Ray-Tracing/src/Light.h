@@ -50,6 +50,8 @@ class Light
          private:
             glm::vec3 m_Pos;
             glm::vec3 m_Col;
+
+            const char* COL = "col:";
       };
 
    private:
