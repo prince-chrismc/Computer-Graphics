@@ -85,6 +85,7 @@ const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned 
 void GenerateFood();
 void GenerateAlien();
 void ResetGame();
+void MoveAliens();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -431,22 +432,6 @@ int main()
             ResetGame();
             break;
          }
-         else
-         {
-            unsigned int dif_x = std::abs(alien->transx - pacman_transx);
-            unsigned int dif_y = std::abs(alien->transy - pacman_transy);
-
-            if (dif_x >= dif_y)
-            {
-               (pacman_transx > alien->transx) ? alien->transx += 0.25f : alien->transx -= 0.25f;
-               (pacman_transx < alien->transx) ? alien->transx -= 0.25f : alien->transx += 0.25f;
-            }
-            else if (dif_y > dif_x)
-            {
-               (pacman_transy > alien->transy) ? alien->transy += 0.25f : alien->transy -= 0.25f;
-               (pacman_transy < alien->transy) ? alien->transy -= 0.25f : alien->transy += 0.25f;
-            }
-         }
       }
 
       if (Foods.empty()) // game won =)
@@ -531,6 +516,24 @@ void ResetGame()
 
    pacman_transx = 0.0f;
    pacman_transy = 0.0f;
+}
+
+void MoveAliens()
+{
+   for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
+   {
+      unsigned int dif_x = std::abs(alien->transx - pacman_transx);
+      unsigned int dif_y = std::abs(alien->transy - pacman_transy);
+
+      if (dif_x >= dif_y)
+      {
+         (pacman_transx >= alien->transx) ? alien->transx += 0.25f : alien->transx -= 0.25f;
+      }
+      else if (dif_y > dif_x)
+      {
+         (pacman_transy >= alien->transy) ? alien->transy += 0.25f : alien->transy -= 0.25f;
+      }
+   }
 }
 
 // ------------------------------------------------------------------------------------------------ //
@@ -619,21 +622,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       pacman_rotation_dec = (float)PacmanDirection::W_KEY + pacman_viewing_offset_dec;
       if (pacman_transx < upper_move_limit)
          pacman_transx += 0.25f;
+      MoveAliens();
       break;
    case GLFW_KEY_A:
       pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
       if (pacman_transx > lower_move_limit)
          pacman_transx -= 0.25f;
+      MoveAliens();
       break;
    case GLFW_KEY_S:
       pacman_rotation_dec = (float)PacmanDirection::D_KEY + pacman_viewing_offset_dec;
       if (pacman_transy > lower_move_limit)
          pacman_transy -= 0.25f;
+      MoveAliens();
       break;
    case GLFW_KEY_W:
       pacman_rotation_dec = (float)PacmanDirection::A_KEY + pacman_viewing_offset_dec;
       if (pacman_transy < upper_move_limit)
          pacman_transy += 0.25f;
+      MoveAliens();
       break;
    default:
       return;
