@@ -346,22 +346,22 @@ int main()
       //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
       //glBindVertexArray(0);
       // Grid -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREY);
+      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
       glBindVertexArray(VAO_grid);
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
       glBindVertexArray(0);
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
+      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::GREEN);
+      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREEN);
       glBindVertexArray(VAO_yaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
       // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
+      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::BLUE);
       glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
       glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
@@ -375,7 +375,7 @@ int main()
          food_model_matrix = glm::scale(food_model_matrix, food_scale);
          shaderProgram->SetUniformMat4("model_matrix", food_model_matrix);
 
-         glUniform1i(objectColorLoc, (GLint)ObjectColors::RED);
+         shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
          glBindVertexArray(VAO_cube);
          glDrawArrays((unsigned int)render_mode, 0, (GLsizei)cube_vertices.size());
          glBindVertexArray(0);
@@ -390,7 +390,7 @@ int main()
          alien_model_matrix = glm::scale(alien_model_matrix, alien_scale);
          shaderProgram->SetUniformMat4("model_matrix", alien_model_matrix);
 
-         glUniform1i(objectColorLoc, (GLint)ObjectColors::BLUE);
+         shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::BLUE);
          glBindVertexArray(VAO_alien);
          glDrawArrays((unsigned int)render_mode, 0, (GLsizei)alien_vertices.size());
          glBindVertexArray(0);
@@ -404,7 +404,7 @@ int main()
       pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
       shaderProgram->SetUniformMat4("model_matrix", pacman_model_matrix);
 
-      glUniform1i(objectColorLoc, (GLint)ObjectColors::YELLOW);
+      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::YELLOW);
       glBindVertexArray(VAO_pacman);
       glDrawArrays((unsigned int)render_mode, 0, (GLsizei)pacman_vertices.size());
       glBindVertexArray(0);
