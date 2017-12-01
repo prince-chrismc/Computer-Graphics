@@ -86,6 +86,12 @@ void GenerateFood();
 void GenerateAlien();
 void ResetGame();
 void MoveAliens();
+void ClearFrame();
+bool SetupGlew();
+bool SetupShaders();
+int ExitOnEnter();
+void SetCalbacks(std::shared_ptr<GlfwWindow> window);
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_callback(GLFWwindow* window, double xpos, double ypos);
@@ -99,45 +105,13 @@ int main()
 
    // Create a GLFWwindow
    std::shared_ptr<GlfwWindow> window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
-   if (!window->IsValid()) // Make sure it exists
-   {
-      return -1;
-   }
+   if (!window->IsValid()) return ExitOnEnter();
+   SetCalbacks(window);
 
-   // Set the required callback functions
-   window->SetKeyCallback(key_callback);
-   window->SetMouseButtonCallback(mouse_callback);
-   window->SetCursorPosCallback(cursor_callback);
+   if (!SetupGlew()) return ExitOnEnter();
 
-   // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
-   glewExperimental = GL_TRUE;
-   // Initialize GLEW to setup the OpenGL Function pointers
-   if (glewInit() != GLEW_OK)
-   {
-      std::cout << "Failed to initialize GLEW" << std::endl;
-      std::cout << "Press 'enter' to exit." << std::endl;
-      std::getline(std::cin, std::string());
-      return -1;
-   }
-
-   // Build and compile our shader program
-   VertexShader vertexShader("shaders/vertex.shader");
-   FragmentShader fragmentShader("shaders/fragment.shader");
-   // make sure they are ready to use
-   if (!vertexShader() || !fragmentShader())
-   {
-      std::cout << "Press 'enter' to exit." << std::endl;
-      std::getline(std::cin, std::string());
-      return -1;
-   }
-
+   if (!SetupShaders()) return ExitOnEnter();
    auto shaderProgram = ShaderLinker::GetInstance();
-   if (!shaderProgram->Link(&vertexShader, &fragmentShader))
-   {
-      std::cout << "Press 'enter' to exit." << std::endl;
-      std::getline(std::cin, std::string());
-      return -1;
-   }
 
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
@@ -309,19 +283,15 @@ int main()
 
    // -----------------------------------------------------------------------------------------------------------------------------------------------
 
+   /*glEnable(GL_DEPTH_TEST);*/
    GLuint transformLoc = shaderProgram->GetUniformLocation("model_matrix");
    GLuint objectColorLoc = shaderProgram->GetUniformLocation("object_color");
 
    // Game loop
    while (!window->ShouldClose())
    {
-      // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
-      glfwPollEvents();
-
-      // Render
-      // Clear the colorbuffer
-      glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
+      GlfwWindow::TriggerCallbacks();           // For all windows check callbacks
+      ClearFrame();                             // Reset background color and z buffer test
 
       shaderProgram->SetUniformMat4("projection_matrix", window->GetProjectionMatrix());
 
@@ -534,6 +504,53 @@ void MoveAliens()
          (pacman_transy >= alien->transy) ? alien->transy += 0.25f : alien->transy -= 0.25f;
       }
    }
+}
+
+bool SetupShaders()
+{
+   VertexShader vertexShader("shaders/vertex.shader");
+   FragmentShader fragmentShader("shaders/fragment.shader");
+   // make sure they are ready to use
+   if (!vertexShader() || !fragmentShader()) return false;
+
+   auto shaderProgram = ShaderLinker::GetInstance();
+   if (!shaderProgram->Link(&vertexShader, &fragmentShader)) return false;
+
+   return true;
+}
+
+void SetCalbacks(std::shared_ptr<GlfwWindow> window)
+{
+   // Set the required callback functions
+   window->SetKeyCallback(key_callback);
+   window->SetMouseButtonCallback(mouse_callback);
+   window->SetCursorPosCallback(cursor_callback);
+}
+
+int ExitOnEnter()
+{
+   std::cout << "Press 'enter' to exit." << std::endl;
+   std::getline(std::cin, std::string());
+   return -1;
+}
+
+void ClearFrame()
+{
+   glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
+   glClear(GL_COLOR_BUFFER_BIT /*| GL_DEPTH_BUFFER_BIT*/);             // Clear the depth buffer
+}
+
+bool SetupGlew()
+{
+   // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+   glewExperimental = GL_TRUE;
+   // Initialize GLEW to setup the OpenGL Function pointers
+   if (glewInit() != GLEW_OK)
+   {
+      std::cout << "Failed to initialize GLEW" << std::endl;
+      return false;
+   }
+   return true;
 }
 
 // ------------------------------------------------------------------------------------------------ //
