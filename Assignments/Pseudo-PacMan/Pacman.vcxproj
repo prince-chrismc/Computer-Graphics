@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="src\DrawableObject.h" />
     <ClInclude Include="src\GlfwWindow.h" />
+    <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\objloader.h" />
     <ClInclude Include="src\RenderMode.h" />
     <ClInclude Include="src\Shader.h" />
@@ -170,6 +171,7 @@
   <ItemGroup>
     <ClCompile Include="src\DrawableObject.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
+    <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\objloader.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Pacman.cpp" />
