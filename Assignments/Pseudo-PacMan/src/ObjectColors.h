@@ -23,21 +23,5 @@ SOFTWARE.
 */
 
 #pragma once
-#include <gl\glew.h>
 
-class Grid final
-{
-public:
-   Grid(const unsigned int& grid_size);
-   ~Grid();
-
-   void Draw();
-
-protected:
-   GLuint m_VAO;
-   GLuint m_Vertices;
-   //GLuint m_Colors;
-
-   GLsizei m_NumVertices;
-};
-
+enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };

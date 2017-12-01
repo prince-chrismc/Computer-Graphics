@@ -24,23 +24,59 @@ SOFTWARE.
 
 
 #include "Grid.h"
-#include "RenderMode.h"
+#include "Shader.h"
+#include "ObjectColors.h"
 #include "glm\vec3.hpp"
 #include <vector>
 
-Grid::Grid()
+Grid::Grid(const unsigned int& grid_size)
 {
-   std::vector<glm::vec3> verticies;
-   std::vector<glm::vec3> colors;
-   std::vector<GLuint> indicies;
+   auto shaderProgram = ShaderLinker::GetInstance();
+   GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
 
+   std::vector<glm::vec3> vertices;
+   std::vector<glm::vec3> colors;
+
+   float half_grid(grid_size / 2.0f);
+   float half_length(half_grid + 0.5f);
+
+   for (unsigned int index = 0; index <= grid_size; index++)
+   {
+      // line of x-axis
+      vertices.emplace_back(float(index - half_grid), 0 - half_length, 0.0f);
+      vertices.emplace_back(float(index - half_grid), half_length, 0.0f);
+
+      // line of y-axis
+      vertices.emplace_back(0 - half_length, float(index - half_grid), 0.0f);
+      vertices.emplace_back(half_length, float(index - half_grid), 0.0f);
+   }
+
+   glGenVertexArrays(1, &m_VAO);
+   glBindVertexArray(m_VAO);
+
+   glGenBuffers(1, &m_Vertices);
+   glBindBuffer(GL_ARRAY_BUFFER, m_Vertices);
+   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices.front(), GL_STATIC_DRAW);
+   glVertexAttribPointer(PositonIndex, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+   glEnableVertexAttribArray(PositonIndex);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+   glBindVertexArray(0);
+
+   m_NumVertices = (GLsizei)vertices.size();
 }
 
 Grid::~Grid()
 {
+   glDeleteBuffers(1, &m_Vertices);
+   //glDeleteBuffers(1, &m_Colors);
+   glDeleteVertexArrays(1, &m_VAO);
 }
 
 void Grid::Draw()
 {
-   const RenderMode render_mode;
+   ShaderLinker::GetInstance()->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
+   glBindVertexArray(m_VAO);
+   glDrawArrays(GL_LINES, 0, m_NumVertices);
+   glBindVertexArray(0);
 }

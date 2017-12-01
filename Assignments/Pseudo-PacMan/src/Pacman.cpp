@@ -34,7 +34,9 @@ SOFTWARE.
 #include "objloader.h"
 #include "GlfwWindow.h"
 #include "Shader.h"
-#include "DrawableObject.h"
+#include "RenderMode.h"
+#include "ObjectColors.h"
+#include "Grid.h"
 
 // Globals
 // rotation, translation and scalar globals
@@ -47,7 +49,7 @@ float food_scalar = 0.0f;                                     // controll : uj
 float alien_scalar = 0.0f;                                    // controll : uj
 
 // enums
-enum class ObjectColors { RED, GREEN, BLUE, GREY, YELLOW, TEAL };
+
 enum class PacmanDirection { W_KEY = 270, D_KEY = 0, S_KEY = 90, A_KEY = 180 };
 
 // dynamic user set values
@@ -166,33 +168,7 @@ int main()
    glBindVertexArray(0);
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : this will be the grid lines
-   std::vector<glm::vec3> vertices_grid;
-   float half_grid(grid_size / 2.0f);
-   float half_length(half_grid + 0.5f);
-
-   for (unsigned int index = 0; index <= grid_size; index++)
-   {
-      // line of x-axis
-      vertices_grid.emplace_back(float(index - half_grid), 0 - half_length, 0.0f);
-      vertices_grid.emplace_back(float(index - half_grid), half_length, 0.0f);
-
-      // line of y-axis
-      vertices_grid.emplace_back(0 - half_length, float(index - half_grid), 0.0f);
-      vertices_grid.emplace_back(half_length, float(index - half_grid), 0.0f);
-   }
-
-   GLuint VAO_grid, VBO_grid;
-   glGenVertexArrays(1, &VAO_grid);
-   glBindVertexArray(VAO_grid);
-
-   glGenBuffers(1, &VBO_grid);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_grid);
-   glBufferData(GL_ARRAY_BUFFER, vertices_grid.size() * sizeof(glm::vec3), &vertices_grid.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
+   Grid grid(grid_size);
 
    // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> cube_vertices;
@@ -310,16 +286,7 @@ int main()
       model_matrix = glm::scale(model_matrix, glm::vec3(0.25f));
       shaderProgram->SetUniformMat4("model_matrix", model_matrix);
 
-      // Cube -------------------------------------------------------------------------------------------------------------------------------------
-      //glUniform1i(objectTypeLoc, 3);
-      //glBindVertexArray(VAO_cube);
-      //glDrawArrays(GL_TRIANGLES, 0, (GLsizei)cube_vertices.size());
-      //glBindVertexArray(0);
-      // Grid -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
-      glBindVertexArray(VAO_grid);
-      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_grid.size());
-      glBindVertexArray(0);
+      grid.Draw();
       // X-axis -------------------------------------------------------------------------------------------------------------------------------------
       shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
       glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis

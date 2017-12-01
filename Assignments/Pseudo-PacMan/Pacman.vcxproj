@@ -164,6 +164,7 @@
     <ClInclude Include="src\DrawableObject.h" />
     <ClInclude Include="src\GlfwWindow.h" />
     <ClInclude Include="src\Grid.h" />
+    <ClInclude Include="src\ObjectColors.h" />
     <ClInclude Include="src\objloader.h" />
     <ClInclude Include="src\RenderMode.h" />
     <ClInclude Include="src\Shader.h" />
