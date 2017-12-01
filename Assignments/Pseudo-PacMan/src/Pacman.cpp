@@ -173,12 +173,12 @@ int main()
    for (unsigned int index = 0; index <= grid_size; index++)
    {
       // line of x-axis
-      vertices_grid.emplace_back(glm::vec3(float(index - half_grid), 0 - half_length, 0.0f));
-      vertices_grid.emplace_back(glm::vec3(float(index - half_grid), half_length, 0.0f));
+      vertices_grid.emplace_back(float(index - half_grid), 0 - half_length, 0.0f);
+      vertices_grid.emplace_back(float(index - half_grid), half_length, 0.0f);
 
       // line of y-axis
-      vertices_grid.emplace_back(glm::vec3(0 - half_length, float(index - half_grid), 0.0f));
-      vertices_grid.emplace_back(glm::vec3(half_length, float(index - half_grid), 0.0f));
+      vertices_grid.emplace_back(0 - half_length, float(index - half_grid), 0.0f);
+      vertices_grid.emplace_back(half_length, float(index - half_grid), 0.0f);
    }
 
    GLuint VAO_grid, VBO_grid;
