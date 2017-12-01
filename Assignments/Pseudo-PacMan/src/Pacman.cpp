@@ -522,8 +522,8 @@ void MoveAliens()
 {
    for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
    {
-      unsigned int dif_x = std::abs(alien->transx - pacman_transx);
-      unsigned int dif_y = std::abs(alien->transy - pacman_transy);
+      unsigned int dif_x = (unsigned int)std::abs(alien->transx - pacman_transx);
+      unsigned int dif_y = (unsigned int)std::abs(alien->transy - pacman_transy);
 
       if (dif_x >= dif_y)
       {
