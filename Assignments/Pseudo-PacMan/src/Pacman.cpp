@@ -310,13 +310,9 @@ int main()
       for (std::vector<Food>::iterator itor = Foods.begin(); itor != Foods.end(); /* no itor */) // lets eat food =)
       {
          if (itor->ComparePosition(pacman_transx, pacman_transy))
-         {
             itor = Foods.erase(itor);
-         }
          else
-         {
             itor++;
-         }
       }
 
       for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
@@ -533,18 +529,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_U:
       if (pacman_scalar < 0.09f)
          pacman_scalar += 0.01f;
-      if (Food::s_FoodScalar < 0.675f)
-         Food::s_FoodScalar += 0.075f;
       if (alien_scalar < 1.250f)
          alien_scalar += 0.125f;
+      Food::IncrementScalar();
       break;
    case GLFW_KEY_J:
       if (pacman_scalar > -0.01f)
          pacman_scalar -= 0.01f;
-      if (Food::s_FoodScalar > -0.075f)
-         Food::s_FoodScalar -= 0.075f;
       if (alien_scalar > -0.125f)
          alien_scalar -= 0.125f;
+      Food::DecrementScalar();
       break;
 
       // render mode

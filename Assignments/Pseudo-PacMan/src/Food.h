@@ -36,7 +36,8 @@ class Food
 
       bool ComparePosition(float trans_x, float trans_y) const { return (m_TransX == trans_x) && (m_TransY == trans_y); }
 
-      static float s_FoodScalar;
+      static void IncrementScalar() { if (s_FoodScalar < BASE_SCALE_FACTOR*MAX_SCALE_COEFFICIENT) s_FoodScalar += BASE_SCALE_FACTOR; }
+      static void DecrementScalar() { if (s_FoodScalar > BASE_SCALE_FACTOR*MIN_SCALE_COEFFICIENT) s_FoodScalar -= BASE_SCALE_FACTOR; }
 
    private:
       float m_TransX;
@@ -44,7 +45,10 @@ class Food
 
       class Drawable;
 
+      static float s_FoodScalar;
       static constexpr float BASE_SCALE_FACTOR = 0.075f;
+      static constexpr float MAX_SCALE_COEFFICIENT = 9.0f;
+      static constexpr float MIN_SCALE_COEFFICIENT = -1.0f;
 };
 
 class Food::Drawable

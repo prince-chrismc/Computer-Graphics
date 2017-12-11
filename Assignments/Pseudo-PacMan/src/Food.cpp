@@ -36,11 +36,11 @@ void Food::Draw(const RenderMode& render_mode) const
 {
    auto shaderProgram = ShaderLinker::GetInstance();
 
-   glm::mat4 food_model_matrix;
-   glm::vec3 food_scale(BASE_SCALE_FACTOR + s_FoodScalar); // cmc-edit : this scales the object
-   food_model_matrix = glm::translate(food_model_matrix, glm::vec3(m_TransX, m_TransY, 0.0f));
-   food_model_matrix = glm::scale(food_model_matrix, food_scale);
-   shaderProgram->SetUniformMat4("model_matrix", food_model_matrix);
+   glm::mat4 model_matrix;
+   glm::vec3 food_scale(BASE_SCALE_FACTOR + s_FoodScalar);
+   model_matrix = glm::translate(model_matrix, glm::vec3(m_TransX, m_TransY, 0.0f));
+   model_matrix = glm::scale(model_matrix, food_scale);
+   shaderProgram->SetUniformMat4("model_matrix", model_matrix);
 
    shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
 
