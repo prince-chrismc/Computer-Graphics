@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Shader.h"
 #include "ObjectColors.h"
 #include "glm\vec3.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include <vector>
 
 Grid::Grid(const unsigned int& grid_size)
@@ -35,7 +36,6 @@ Grid::Grid(const unsigned int& grid_size)
    GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
 
    std::vector<glm::vec3> vertices;
-   //std::vector<glm::vec3> colors;
 
    float half_grid(grid_size / 2.0f);
    float half_length(half_grid + 0.5f);
@@ -69,13 +69,15 @@ Grid::Grid(const unsigned int& grid_size)
 Grid::~Grid()
 {
    glDeleteBuffers(1, &m_Vertices);
-   //glDeleteBuffers(1, &m_Colors);
    glDeleteVertexArrays(1, &m_VAO);
 }
 
 void Grid::Draw()
 {
-   ShaderLinker::GetInstance()->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
+   auto shaderProgram = ShaderLinker::GetInstance();
+   shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
+   shaderProgram->SetUniformMat4("model_matrix", glm::scale(glm::mat4(), glm::vec3(0.25f)));
+
    glBindVertexArray(m_VAO);
    glDrawArrays(GL_LINES, 0, m_NumVertices);
    glBindVertexArray(0);

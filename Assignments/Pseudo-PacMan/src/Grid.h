@@ -36,7 +36,6 @@ public:
 protected:
    GLuint m_VAO;
    GLuint m_Vertices;
-   //GLuint m_Colors;
 
    GLsizei m_NumVertices;
 };
