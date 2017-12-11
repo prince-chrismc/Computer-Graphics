@@ -36,6 +36,9 @@
     <ClInclude Include="src\ObjectColors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Food.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GlfwWindow.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Food.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

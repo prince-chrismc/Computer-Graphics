@@ -23,7 +23,50 @@ SOFTWARE.
 */
 
 #pragma once
+#include "RenderMode.h"
+#include <mutex>
 
-#include <gl\glew.h>
+class Food
+{
+   public:
+      Food(float trans_x, float trans_y) : m_TransX(trans_x), m_TransY(trans_y) {}
+      ~Food() = default;
 
-enum class RenderMode { POINTS = GL_POINTS, LINES = GL_LINES, TRIANGLES = GL_TRIANGLES };
+      void Draw(const RenderMode& render_mode) const;
+
+      bool ComparePosition(float trans_x, float trans_y) const { return (m_TransX == trans_x) && (m_TransY == trans_y); }
+
+      static float s_FoodScalar;
+
+   private:
+      float m_TransX;
+      float m_TransY;
+
+      class Drawable;
+
+      static constexpr float BASE_SCALE_FACTOR = 0.075f;
+};
+
+class Food::Drawable
+{
+public:
+   ~Drawable();
+   Drawable(const Drawable&) = delete;
+   Drawable& operator=(const Drawable&) = delete;
+
+   static std::shared_ptr<Drawable> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Drawable()); }); return s_Instance; }
+
+   void Draw(const RenderMode& render_mode) const;
+
+private:
+   Drawable();
+
+   GLuint m_VAO;
+   GLuint m_Vertices;
+   //GLuint m_Colors;
+
+   GLsizei m_NumVertices;
+
+   static std::once_flag s_Flag;
+   static std::shared_ptr<Drawable> s_Instance;
+};

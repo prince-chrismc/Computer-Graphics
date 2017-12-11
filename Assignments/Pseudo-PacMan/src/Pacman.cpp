@@ -37,6 +37,7 @@ SOFTWARE.
 #include "RenderMode.h"
 #include "ObjectColors.h"
 #include "Grid.h"
+#include "Food.h"
 
 // Globals
 // rotation, translation and scalar globals
@@ -45,7 +46,6 @@ float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
 float pacman_rotation_dec = 0.0f;                             // controll : wasd
 const float pacman_viewing_offset_dec = 0.0f;
 float pacman_scalar = 0.0f;                                   // controll : uj
-float food_scalar = 0.0f;                                     // controll : uj
 float alien_scalar = 0.0f;                                    // controll : uj
 
 // enums
@@ -63,14 +63,7 @@ float view_panx = 0.0f, view_tilty = 0.0f, view_zoomz = 1.0f;
 const float sensitivity = 0.05f;
 
 // food structure and variables
-struct FoodPos
-{
-   float transx = 0.0f;
-   float transy = 0.0f;
-
-   FoodPos(float x, float y) { transx = x; transy = y; }
-};
-std::vector<FoodPos> Foods;
+std::vector<Food> Foods;
 
 // alien structure and variables
 struct AlienPos
@@ -171,33 +164,6 @@ int main()
    Grid grid(grid_size);
 
    // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
-   std::vector<glm::vec3> cube_vertices;
-   std::vector<glm::vec3> cube_normals;
-   LoadObjFile("assets/cube.obj", &cube_vertices, &cube_normals, &std::vector<glm::vec2>()); //read the cube_vertices from the cube.obj file
-
-   GLuint VAO_cube;
-   glGenVertexArrays(1, &VAO_cube);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   GLuint cube_vertices_VBO, cube_normals_VBO;
-   glGenBuffers(1, &cube_vertices_VBO);
-   glGenBuffers(1, &cube_normals_VBO);
-
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-   glBindVertexArray(VAO_cube);
-
-   glBindBuffer(GL_ARRAY_BUFFER, cube_vertices_VBO);
-   glBufferData(GL_ARRAY_BUFFER, cube_vertices.size() * sizeof(glm::vec3), &cube_vertices.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-
-   glBindBuffer(GL_ARRAY_BUFFER, cube_normals_VBO);
-   glBufferData(GL_ARRAY_BUFFER, cube_normals.size() * sizeof(glm::vec3), &cube_normals.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(1);
-
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0); // Unbind VAO_cube (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
    // pacman ----------------------------------------------------------------------------------------------------------------------------------------
    std::vector<glm::vec3> pacman_vertices;
@@ -304,18 +270,9 @@ int main()
       glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
 
       // foods --------------------------------------------------------------------------------------------------------------------------------------
-      for each (FoodPos food in Foods)
+      for each (Food food in Foods)
       {
-         glm::mat4 food_model_matrix;
-         glm::vec3 food_scale(0.075f + food_scalar); // cmc-edit : this scales the object
-         food_model_matrix = glm::translate(food_model_matrix, glm::vec3(food.transx, food.transy, 0.0f));
-         food_model_matrix = glm::scale(food_model_matrix, food_scale);
-         shaderProgram->SetUniformMat4("model_matrix", food_model_matrix);
-
-         shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
-         glBindVertexArray(VAO_cube);
-         glDrawArrays((unsigned int)render_mode, 0, (GLsizei)cube_vertices.size());
-         glBindVertexArray(0);
+         food.Draw(render_mode);
       }
 
       // aliens --------------------------------------------------------------------------------------------------------------------------------------
@@ -350,15 +307,15 @@ int main()
       /*                    *
        *     GAME LOGIC     *
        *                    */
-      for (std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */) // lets eat food =)
+      for (std::vector<Food>::iterator itor = Foods.begin(); itor != Foods.end(); /* no itor */) // lets eat food =)
       {
-         if (food->transx == pacman_transx && food->transy == pacman_transy)
+         if (itor->ComparePosition(pacman_transx, pacman_transy))
          {
-            food = Foods.erase(food);
+            itor = Foods.erase(itor);
          }
          else
          {
-            food++;
+            itor++;
          }
       }
 
@@ -415,7 +372,7 @@ void GenerateFood()
    unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
    for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
    {
-      Foods.emplace_back(FoodPos(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f));
+      Foods.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
    }
 }
 
@@ -439,11 +396,11 @@ void ResetGame()
    GenerateFood();
    GenerateAlien();
 
-   for (std::vector<FoodPos>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */)
+   for (std::vector<Food>::iterator food = Foods.begin(); food != Foods.end(); /* no itor */)
    {
       for each(AlienPos alien in Aliens)
       {
-         if (food->transx == alien.transx && food->transy == alien.transy)
+         if (food->ComparePosition(alien.transx, alien.transy))
          {
             food = Foods.erase(food);
          }
@@ -576,16 +533,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    case GLFW_KEY_U:
       if (pacman_scalar < 0.09f)
          pacman_scalar += 0.01f;
-      if (food_scalar < 0.675f)
-         food_scalar += 0.075f;
+      if (Food::s_FoodScalar < 0.675f)
+         Food::s_FoodScalar += 0.075f;
       if (alien_scalar < 1.250f)
          alien_scalar += 0.125f;
       break;
    case GLFW_KEY_J:
       if (pacman_scalar > -0.01f)
          pacman_scalar -= 0.01f;
-      if (food_scalar > -0.075f)
-         food_scalar -= 0.075f;
+      if (Food::s_FoodScalar > -0.075f)
+         Food::s_FoodScalar -= 0.075f;
       if (alien_scalar > -0.125f)
          alien_scalar -= 0.125f;
       break;
