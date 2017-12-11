@@ -162,7 +162,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Axis.h" />
-    <ClInclude Include="src\DrawableObject.h" />
     <ClInclude Include="src\Food.h" />
     <ClInclude Include="src\GlfwWindow.h" />
     <ClInclude Include="src\Grid.h" />
@@ -173,7 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Axis.cpp" />
-    <ClCompile Include="src\DrawableObject.cpp" />
     <ClCompile Include="src\Food.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
     <ClCompile Include="src\Grid.cpp" />
