@@ -38,6 +38,7 @@ SOFTWARE.
 #include "ObjectColors.h"
 #include "Grid.h"
 #include "Food.h"
+#include "Axis.h"
 
 // Globals
 // rotation, translation and scalar globals
@@ -116,49 +117,14 @@ int main()
    // ********************************************************************************************* //
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : This will be a test for drawing a the xaxis
-   std::vector<glm::vec3> vertices_xaxis = { { -0.5f, 0.0f, 0.0f },{ 2.5f, 0.0f, 0.0f } };  // cmc-edit : this is the start-end points for the x axis
-   GLuint VAO_xaxis, VBO_xaxis;               // cmc-edit : basic memory buffers
-   glGenVertexArrays(1, &VAO_xaxis);          // cmc-edit : get mem_buf https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGenVertexArrays.xhtml should always be one for this usage
-   glBindVertexArray(VAO_xaxis);              // cmc-edit : now we start to work with our mem_buf
-
-   glGenBuffers(1, &VBO_xaxis);               // cmc-edit : associate buffer within index 0 (matches vertex.shader)
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_xaxis);  // cmc-edit : bind array buffer for use
-   glBufferData(GL_ARRAY_BUFFER, vertices_xaxis.size() * sizeof(glm::vec3), &vertices_xaxis.front(), GL_STATIC_DRAW); // cmc-edit : load the vec of verticies
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0); // cmc-edit : bind vertices at index 0
-   glEnableVertexAttribArray(0);             // cmc-edit : close verticies at 0
-   glBindBuffer(GL_ARRAY_BUFFER, 0);         // cmc-edit : close buffer
-
-   glBindVertexArray(0);                     // cmc-edit : Unbind VAO_xaxis (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+   Axis xaxis({ { -0.5f, 0.0f, 0.0f },{ 2.5f, 0.0f, 0.0f } }, ObjectColors::RED);
 
    // Y-axis ----------------------------------------------------------------------------------------------------------------------------------------
-   std::vector<glm::vec3> vertices_yaxis = { { 0.0f, -0.5f, 0.0f },{ 0.0f, 2.5f, 0.0f } };
-   GLuint VAO_yaxis, VBO_yaxis;
-   glGenVertexArrays(1, &VAO_yaxis);
-   glBindVertexArray(VAO_yaxis);
-
-   glGenBuffers(1, &VBO_yaxis);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_yaxis);
-   glBufferData(GL_ARRAY_BUFFER, vertices_yaxis.size() * sizeof(glm::vec3), &vertices_yaxis.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
+   Axis yaxis({ { 0.0f, -0.5f, 0.0f },{ 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN);
 
    // Z-axis ----------------------------------------------------------------------------------------------------------------------------------------
-   std::vector<glm::vec3> vertices_zaxis = { { 0.0f, 0.0f, -0.5f },{ 0.0f, 0.0f, 2.5f } };
-   GLuint VAO_zaxis, VBO_zaxis;
-   glGenVertexArrays(1, &VAO_zaxis);
-   glBindVertexArray(VAO_zaxis);
+   Axis zaxis({ { 0.0f, 0.0f, -0.5f },{ 0.0f, 0.0f, 2.5f } }, ObjectColors::GREEN);
 
-   glGenBuffers(1, &VBO_zaxis);
-   glBindBuffer(GL_ARRAY_BUFFER, VBO_zaxis);
-   glBufferData(GL_ARRAY_BUFFER, vertices_zaxis.size() * sizeof(glm::vec3), &vertices_zaxis.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0);
    // -----------------------------------------------------------------------------------------------------------------------------------------------
    // cmc-edit : this will be the grid lines
    Grid grid(grid_size);
@@ -248,28 +214,11 @@ int main()
       view_matrix = glm::rotate(view_matrix, glm::radians(view_roty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply rotation on y axis
       shaderProgram->SetUniformMat4("view_matrix", view_matrix);
 
-      glm::mat4 model_matrix;
-      model_matrix = glm::scale(model_matrix, glm::vec3(0.25f));
-      shaderProgram->SetUniformMat4("model_matrix", model_matrix);
-
       grid.Draw();
-      // X-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::RED);
-      glBindVertexArray(VAO_xaxis);                                   // cmc-edit : lets displays the axis
-      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_xaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
-      // Y-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREEN);
-      glBindVertexArray(VAO_yaxis);                                   // cmc-edit : lets displays the axis
-      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_yaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
-      // Z-axis -------------------------------------------------------------------------------------------------------------------------------------
-      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::BLUE);
-      glBindVertexArray(VAO_zaxis);                                   // cmc-edit : lets displays the axis
-      glDrawArrays(GL_LINES, 0, (GLsizei)vertices_zaxis.size());      // cmc-edit : lets displays the axis
-      glBindVertexArray(0);                                           // cmc-edit : lets displays the axis
+      xaxis.Draw();
+      yaxis.Draw();
+      zaxis.Draw();
 
-      // foods --------------------------------------------------------------------------------------------------------------------------------------
       for each (Food food in Foods)
       {
          food.Draw(render_mode);
