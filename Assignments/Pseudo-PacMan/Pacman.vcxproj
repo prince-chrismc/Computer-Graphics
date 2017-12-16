@@ -161,7 +161,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Alien.h" />
     <ClInclude Include="src\Axis.h" />
+    <ClInclude Include="src\Positioning.h" />
     <ClInclude Include="src\Food.h" />
     <ClInclude Include="src\GlfwWindow.h" />
     <ClInclude Include="src\Grid.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Alien.cpp" />
     <ClCompile Include="src\Axis.cpp" />
     <ClCompile Include="src\Food.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
