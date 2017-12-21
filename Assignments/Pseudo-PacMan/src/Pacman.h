@@ -23,10 +23,54 @@ SOFTWARE.
 */
 
 #pragma once
+#include "RenderMode.h"
+#include "Positioning.h"
+#include <mutex>
 
-class Pacman
+class Pacman : public PositionMoveDirected
 {
 public:
-   Pacman();
-   ~Pacman();
+   Pacman() { m_TransX = 0.0f; m_TransY = 0.0f; }
+   ~Pacman() = default;
+
+   void Draw(const RenderMode& render_mode) const;
+   void Move(const Direction& dir, const unsigned int& grid_size);
+
+   static void IncrementScalar() { if (s_PacmanScalar < BASE_SCALE_FACTOR*MAX_SCALE_COEFFICIENT) s_PacmanScalar += BASE_SCALE_FACTOR; }
+   static void DecrementScalar() { if (s_PacmanScalar > BASE_SCALE_FACTOR*MIN_SCALE_COEFFICIENT) s_PacmanScalar -= BASE_SCALE_FACTOR; }
+
+private:
+   Direction m_Direction;
+
+   class Drawable;
+
+   static float s_PacmanScalar;
+   static constexpr float BASE_SCALE_FACTOR = 0.01f;
+   static constexpr float MAX_SCALE_COEFFICIENT = 9.0f;
+   static constexpr float MIN_SCALE_COEFFICIENT = -1.0f;
+   static constexpr float STEP_SIZE = 0.25f;
+};
+
+class Pacman::Drawable
+{
+public:
+   ~Drawable();
+   Drawable(const Drawable&) = delete;
+   Drawable& operator=(const Drawable&) = delete;
+
+   static std::shared_ptr<Drawable> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Drawable()); }); return s_Instance; }
+
+   void Draw(const RenderMode& render_mode) const;
+
+private:
+   Drawable();
+
+   GLuint m_VAO;
+   GLuint m_Vertices;
+   //GLuint m_Colors;
+
+   GLsizei m_NumVertices;
+
+   static std::once_flag s_Flag;
+   static std::shared_ptr<Drawable> s_Instance;
 };

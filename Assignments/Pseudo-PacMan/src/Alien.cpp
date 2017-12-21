@@ -54,9 +54,10 @@ void Alien::MoveTowards(float trans_x, float trans_y)
    static std::random_device rd;
    static std::mt19937 rand_gen(rd());
 
-   unsigned int dif_x = (unsigned int)std::abs(m_TransX - trans_x);
-   unsigned int dif_y = (unsigned int)std::abs(m_TransY - trans_y);
+   float dif_x = std::abs(m_TransX - trans_x);
+   float dif_y = std::abs(m_TransY - trans_y);
 
+   if(dif_x == 0.0f && dif_y == 0.0f) return;
 
    if (rand_gen() % 2 == 0)
    {

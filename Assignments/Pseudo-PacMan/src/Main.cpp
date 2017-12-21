@@ -40,17 +40,11 @@ SOFTWARE.
 #include "Food.h"
 #include "Axis.h"
 #include "Alien.h"
+#include "Pacman.h"
 
 // Globals
 // rotation, translation and scalar globals
 float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
-float pacman_transx = 0.0f, pacman_transy = 0.0f;             // controll : wasd
-float pacman_rotation_dec = 0.0f;                             // controll : wasd
-const float pacman_viewing_offset_dec = 0.0f;
-float pacman_scalar = 0.0f;                                   // controll : uj
-
-// enums
-enum class PacmanDirection { W_KEY = 270, D_KEY = 0, S_KEY = 90, A_KEY = 180 };
 
 // dynamic user set values
 GLuint grid_size = 20;
@@ -67,6 +61,8 @@ std::vector<Food> Foods;
 
 // alien structure and variables
 std::vector<Alien> Aliens;
+
+Pacman pacman;
 
 // Function Declaration
 const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned int& upper);
@@ -121,33 +117,6 @@ int main()
    // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
 
    // pacman ----------------------------------------------------------------------------------------------------------------------------------------
-   std::vector<glm::vec3> pacman_vertices;
-   std::vector<glm::vec3> pacman_normals;
-   LoadObjFile("assets/pacman.obj", &pacman_vertices, &pacman_normals, &std::vector<glm::vec2>()); //read the pacman_vertices from the pacman.obj file 
-
-   GLuint VAO_pacman;
-   glGenVertexArrays(1, &VAO_pacman);
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
-   GLuint pacman_vertices_VBO, pacman_normals_VBO;
-   glGenBuffers(1, &pacman_vertices_VBO);
-   glGenBuffers(1, &pacman_normals_VBO);
-
-   // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s). 
-   glBindVertexArray(VAO_pacman);
-
-   glBindBuffer(GL_ARRAY_BUFFER, pacman_vertices_VBO);
-   glBufferData(GL_ARRAY_BUFFER, pacman_vertices.size() * sizeof(glm::vec3), &pacman_vertices.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(0);
-
-   glBindBuffer(GL_ARRAY_BUFFER, pacman_normals_VBO);
-   glBufferData(GL_ARRAY_BUFFER, pacman_normals.size() * sizeof(glm::vec3), &pacman_normals.front(), GL_STATIC_DRAW);
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-   glEnableVertexAttribArray(1);
-
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   glBindVertexArray(0); // Unbind VAO_pacman (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
    // alien ----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -183,19 +152,8 @@ int main()
 
       for (Food food : Foods) food.Draw(render_mode);
       for (Alien alien : Aliens) alien.Draw(render_mode);
+      pacman.Draw(render_mode);
 
-      // pacman -------------------------------------------------------------------------------------------------------------------------------------
-      glm::mat4 pacman_model_matrix;
-      glm::vec3 pacman_scale(0.01f + pacman_scalar); // cmc-edit : this scales the object
-      pacman_model_matrix = glm::translate(pacman_model_matrix, glm::vec3(pacman_transx, pacman_transy, 0.0f));                   // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      pacman_model_matrix = glm::rotate(pacman_model_matrix, glm::radians(pacman_rotation_dec), glm::vec3(0.0f, 0.0f, 1.0f));     // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      pacman_model_matrix = glm::scale(pacman_model_matrix, pacman_scale);                                                        // cmc-edit : inspiration https://learnopengl.com/#!Getting-started/Transformations
-      shaderProgram->SetUniformMat4("model_matrix", pacman_model_matrix);
-
-      shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::YELLOW);
-      glBindVertexArray(VAO_pacman);
-      glDrawArrays((unsigned int)render_mode, 0, (GLsizei)pacman_vertices.size());
-      glBindVertexArray(0);
       // --------------------------------------------------------------------------------------------------------------------------------------------
 
       /*                    *
@@ -203,7 +161,7 @@ int main()
        *                    */
       for (std::vector<Food>::iterator itor = Foods.begin(); itor != Foods.end(); /* no itor */) // lets eat food =)
       {
-         if (itor->ComparePosition(pacman_transx, pacman_transy))
+         if (itor->ComparePosition(&pacman))
             itor = Foods.erase(itor);
          else
             itor++;
@@ -211,7 +169,7 @@ int main()
 
       for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
       {
-         if (alien->ComparePosition(pacman_transx, pacman_transy))
+         if (alien->ComparePosition(&pacman))
          {
             ResetGame();
             break;
@@ -298,15 +256,14 @@ void ResetGame()
       food++;
    }
 
-   pacman_transx = 0.0f;
-   pacman_transy = 0.0f;
+   pacman = Pacman();
 }
 
 void MoveAliens()
 {
    for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++)
    {
-      alien->MoveTowards(pacman_transx, pacman_transy);
+      alien->PositionMoveTowards::MoveTowards(&pacman);
    }
 }
 
@@ -375,9 +332,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
    else
       std::cout << key << std::endl;
 
-   float upper_move_limit = float((grid_size / 2.0)*0.25);
-   float lower_move_limit = float(0 - ((grid_size / 2.0)*0.25));
-
    switch (key)
    {
       // windows close
@@ -411,14 +365,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
       // scaling
    case GLFW_KEY_U:
-      if (pacman_scalar < 0.09f)
-         pacman_scalar += 0.01f;
+      Pacman::IncrementScalar();
       Alien::IncrementScalar();
       Food::IncrementScalar();
       break;
    case GLFW_KEY_J:
-      if (pacman_scalar > -0.01f)
-         pacman_scalar -= 0.01f;
+      Pacman::DecrementScalar();
       Alien::DecrementScalar();
       Food::DecrementScalar();
       break;
@@ -436,27 +388,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
       // move pacman
    case GLFW_KEY_D:
-      pacman_rotation_dec = (float)PacmanDirection::W_KEY + pacman_viewing_offset_dec;
-      if (pacman_transx < upper_move_limit)
-         pacman_transx += 0.25f;
+      pacman.Move(Pacman::Direction::D_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_A:
-      pacman_rotation_dec = (float)PacmanDirection::S_KEY + pacman_viewing_offset_dec;
-      if (pacman_transx > lower_move_limit)
-         pacman_transx -= 0.25f;
+      pacman.Move(Pacman::Direction::A_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_S:
-      pacman_rotation_dec = (float)PacmanDirection::D_KEY + pacman_viewing_offset_dec;
-      if (pacman_transy > lower_move_limit)
-         pacman_transy -= 0.25f;
+      pacman.Move(Pacman::Direction::S_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_W:
-      pacman_rotation_dec = (float)PacmanDirection::A_KEY + pacman_viewing_offset_dec;
-      if (pacman_transy < upper_move_limit)
-         pacman_transy += 0.25f;
+      pacman.Move(Pacman::Direction::W_KEY, grid_size);
       MoveAliens();
       break;
    default:

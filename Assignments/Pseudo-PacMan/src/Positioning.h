@@ -24,6 +24,9 @@ SOFTWARE.
 
 #pragma once
 
+class PositionMoveTowards;
+class PositionMoveDirected;
+
 class PositionComparable abstract
 {
 public:
@@ -33,11 +36,28 @@ public:
 protected:
    float m_TransX;
    float m_TransY;
+
+   friend class PositionMoveTowards;
+   friend class PositionMoveDirected;
 };
 
 class PositionMoveable abstract : public PositionComparable
 {
 public:
+   virtual void MoveTowards(PositionComparable* point) = 0;
+};
+
+class PositionMoveTowards abstract : public PositionMoveable
+{
+public:
    virtual void MoveTowards(float trans_x, float trans_y) = 0;
-   void MoveTowards(PositionMoveable* point) { MoveTowards(point->m_TransX, point->m_TransY); }
+   void MoveTowards(PositionComparable* point) { MoveTowards(point->m_TransX, point->m_TransY); }
+};
+
+class PositionMoveDirected abstract : public PositionMoveable
+{
+public:
+   enum class Direction { W_KEY = 270, D_KEY = 0, S_KEY = 90, A_KEY = 180 };
+   virtual void Move(const Direction& dir, const unsigned int& grid_size) = 0;
+   void MoveTowards(PositionComparable* point) { /* DO NOTHING */ }
 };

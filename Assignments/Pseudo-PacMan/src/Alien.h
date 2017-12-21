@@ -27,7 +27,7 @@ SOFTWARE.
 #include "Positioning.h"
 #include <mutex>
 
-class Alien : public PositionMoveable
+class Alien final : public PositionMoveTowards
 {
    public:
       Alien(float trans_x, float trans_y) { m_TransX = trans_x; m_TransY = trans_y; }
