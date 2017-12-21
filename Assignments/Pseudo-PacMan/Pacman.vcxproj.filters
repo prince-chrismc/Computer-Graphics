@@ -74,9 +74,6 @@
     <ClCompile Include="src\Alien.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pacman.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

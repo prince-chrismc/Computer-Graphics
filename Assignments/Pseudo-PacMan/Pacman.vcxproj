@@ -174,7 +174,6 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="src\Alien.cpp" />
     <ClCompile Include="src\Axis.cpp" />
     <ClCompile Include="src\Food.cpp" />
