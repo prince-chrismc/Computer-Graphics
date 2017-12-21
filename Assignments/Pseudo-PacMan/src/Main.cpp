@@ -52,13 +52,10 @@ bool zoom = false, tilt = false, pan = false;
 double lastX, lastY;
 const float sensitivity = 0.05f;
 
-// food structure and variables
-std::vector<Food> Foods;
-
-// alien structure and variables
-std::vector<Alien> Aliens;
-
+// Game Elements
 Pacman pacman;
+std::vector<Food> Foods;
+std::vector<Alien> Aliens;
 
 // Function Declaration
 const unsigned int GetUserInputOddNum(const unsigned int& lower, const unsigned int& upper);
@@ -93,34 +90,10 @@ int main()
    if (!SetupShaders()) return ExitOnEnter();
    auto shaderProgram = ShaderLinker::GetInstance();
 
-   // Constant vectors
-   const glm::vec3 center(0.0f, 0.0f, 0.0f);
-   const glm::vec3 up(0.0f, 0.0f, 1.0f);
-   const glm::vec3 eye(0.0f, -5.0f, 3.0f);
-
-   // X-axis ----------------------------------------------------------------------------------------------------------------------------------------
-   Axis xaxis({ { -0.5f, 0.0f, 0.0f },{ 2.5f, 0.0f, 0.0f } }, ObjectColors::RED);
-
-   // Y-axis ----------------------------------------------------------------------------------------------------------------------------------------
-   Axis yaxis({ { 0.0f, -0.5f, 0.0f },{ 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN);
-
-   // Z-axis ----------------------------------------------------------------------------------------------------------------------------------------
-   Axis zaxis({ { 0.0f, 0.0f, -0.5f },{ 0.0f, 0.0f, 2.5f } }, ObjectColors::BLUE);
-
-   // Grid ------------------------------------------------------------------------------------------------------------------------------------------
+   Axis xaxis({ { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } }, ObjectColors::RED);
+   Axis yaxis({ { 0.0f, -0.5f, 0.0f }, { 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN);
+   Axis zaxis({ { 0.0f, 0.0f, -0.5f }, { 0.0f, 0.0f, 2.5f } }, ObjectColors::BLUE);
    Grid grid(grid_size);
-
-   // cube (food) -----------------------------------------------------------------------------------------------------------------------------------
-
-   // pacman ----------------------------------------------------------------------------------------------------------------------------------------
-
-   // alien ----------------------------------------------------------------------------------------------------------------------------------------
-
-   // -----------------------------------------------------------------------------------------------------------------------------------------------
-
-   /*glEnable(GL_DEPTH_TEST);*/
-   GLuint transformLoc = shaderProgram->GetUniformLocation("model_matrix");
-   GLuint objectColorLoc = shaderProgram->GetUniformLocation("object_color");
 
    // Game loop
    while (!window->ShouldClose())
