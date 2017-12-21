@@ -41,10 +41,7 @@ SOFTWARE.
 #include "Axis.h"
 #include "Alien.h"
 #include "Pacman.h"
-
-// Globals
-// rotation, translation and scalar globals
-float view_rotx = 0.0f, view_roty = 0.0f;                     // controll : arrow keys
+#include "Camera.h"
 
 // dynamic user set values
 GLuint grid_size = 20;
@@ -53,7 +50,6 @@ RenderMode render_mode(RenderMode::TRIANGLES);
 // mouse and cursor callback variables
 bool zoom = false, tilt = false, pan = false;
 double lastX, lastY;
-float view_panx = 0.0f, view_tilty = 0.0f, view_zoomz = 1.0f;
 const float sensitivity = 0.05f;
 
 // food structure and variables
@@ -133,17 +129,7 @@ int main()
       ClearFrame();                             // Reset background color and z buffer test
 
       shaderProgram->SetUniformMat4("projection_matrix", window->GetProjectionMatrix());
-
-      glm::mat4 view_matrix;
-      view_matrix = glm::lookAt(eye, center, up);
-      //mouse actions
-      view_matrix = glm::translate(view_matrix, glm::vec3(view_panx, 0.0f, 0.0f));
-      view_matrix = glm::rotate(view_matrix, glm::radians(view_tilty), glm::vec3(0.0f, 0.0f, 1.0f)); // apply tilt on y axis
-      view_matrix = glm::scale(view_matrix, glm::vec3(view_zoomz));
-      //arrow key actions
-      view_matrix = glm::rotate(view_matrix, glm::radians(view_rotx), glm::vec3(1.0f, 0.0f, 0.0f)); // apply rotation on x axis
-      view_matrix = glm::rotate(view_matrix, glm::radians(view_roty), glm::vec3(0.0f, 1.0f, 0.0f)); // apply rotation on y axis
-      shaderProgram->SetUniformMat4("view_matrix", view_matrix);
+      shaderProgram->SetUniformMat4("view_matrix", Camera::GetInstance()->GetViewMatrix());
 
       grid.Draw();
       xaxis.Draw();
@@ -341,26 +327,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
       // move camera
    case GLFW_KEY_UP:
-      view_rotx += 5.0;
+      Camera::GetInstance()->IncrementRotationX();
       break;
    case GLFW_KEY_DOWN:
-      view_rotx -= 5.0;
+      Camera::GetInstance()->DecrementRotationX();
       break;
    case GLFW_KEY_LEFT:
-      view_roty += 5.0;
+      Camera::GetInstance()->IncrementRotationY();
       break;
    case GLFW_KEY_RIGHT:
-      view_roty -= 5.0;
+      Camera::GetInstance()->DecrementRotationY();
       break;
 
       // reset everything
    case GLFW_KEY_HOME:
-      view_rotx = 0.0;
-      view_roty = 0.0;
-
-      view_panx = 0.0;
-      view_tilty = 0.0;
-      view_zoomz = 1.0;
+      Camera::GetInstance()->Reset();
       break;
 
       // scaling
@@ -472,11 +453,9 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    {
       float xoffset = static_cast<float>(xpos - lastX);
       lastX = xpos;
-      xoffset *= sensitivity / 10;
+      xoffset *= sensitivity / 10.0f;
 
-      view_panx += xoffset;
-
-      std::cout << "panx: " << view_panx << std::endl;
+      Camera::GetInstance()->AdjustPanX(xoffset);
    }
    else if (tilt)
    {
@@ -484,14 +463,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
       lastY = ypos;
       yoffset *= sensitivity;
 
-      view_tilty += yoffset;
-
-      if (view_tilty > 89.0f)
-         view_tilty = 89.0f;
-      if (view_tilty < -89.0f)
-         view_tilty = -89.0f;
-
-      std::cout << "tilty: " << view_tilty << std::endl;
+      Camera::GetInstance()->AdjustTiltY(yoffset);
    }
    else if (zoom)
    {
@@ -499,14 +471,6 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
       lastX = xpos;
       xoffset *= sensitivity;
 
-      view_zoomz += xoffset;
-
-      if (view_zoomz < 0.5f)
-         view_zoomz = 0.5f;
-
-      if (view_zoomz > 5.0f)
-         view_zoomz = 5.0f;
-
-      std::cout << "zoomz: " << view_zoomz << std::endl;
+      Camera::GetInstance()->AdjustZoomZ(xoffset);
    }
 }
