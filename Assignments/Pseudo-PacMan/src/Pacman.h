@@ -22,12 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Pacman.h"
+#pragma once
 
-Pacman::Pacman()
+class Pacman
 {
-}
-
-Pacman::~Pacman()
-{
-}
+public:
+   Pacman();
+   ~Pacman();
+};

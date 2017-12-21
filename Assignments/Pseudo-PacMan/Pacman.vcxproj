@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="src\Alien.h" />
     <ClInclude Include="src\Axis.h" />
+    <ClInclude Include="src\Pacman.h" />
     <ClInclude Include="src\Positioning.h" />
     <ClInclude Include="src\Food.h" />
     <ClInclude Include="src\GlfwWindow.h" />
@@ -173,11 +174,13 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="src\Alien.cpp" />
     <ClCompile Include="src\Axis.cpp" />
     <ClCompile Include="src\Food.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
     <ClCompile Include="src\Grid.cpp" />
+    <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\objloader.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Pacman.cpp" />
