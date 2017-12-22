@@ -39,7 +39,7 @@ int main()
       std::cout << std::endl << "Please Select a grid size: (odd number) recommended: 21" << std::endl;
       unsigned int grid_size = GetUserInputOddNum(9, 35) - 1;
 
-      GameEngine game(grid_size);
+      Game::Engine game(grid_size);
       bool retval = game.Play();
 
       std::cout << (retval ? " You won! " : " Aww you lost. ") << "Would you like to play again? (y/n)" << std::endl;

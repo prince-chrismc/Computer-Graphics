@@ -82,9 +82,9 @@ auto shaderProgram = ShaderLinker::GetInstance();
 Line xaxis({ { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } }, ObjectColors::RED);
 Line yaxis({ { 0.0f, -0.5f, 0.0f }, { 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN);
 Line zaxis({ { 0.0f, 0.0f, -0.5f }, { 0.0f, 0.0f, 2.5f } }, ObjectColors::BLUE);
-Grid grid(grid_size);
+Grid m_Grid(grid_size);
 
-// Game loop
+// Elements loop
 while (!window->ShouldClose())
 {
 GlfwWindow::TriggerCallbacks();           // For all windows check callbacks
@@ -93,38 +93,38 @@ ClearFrame();                             // Reset background color and z buffer
 shaderProgram->SetUniformMat4("projection_matrix", window->GetProjectionMatrix());
 shaderProgram->SetUniformMat4("view_matrix", Camera::GetInstance()->GetViewMatrix());
 
-grid.Draw();
+m_Grid.Draw();
 xaxis.Draw();
 yaxis.Draw();
 zaxis.Draw();
 
-for (Food food : Foods) food.Draw(render_mode);
-for (Alien alien : Aliens) alien.Draw(render_mode);
-pacman.Draw(render_mode);
+for (Food food : m_Foods) food.Draw(render_mode);
+for (Alien alien : m_Aliens) alien.Draw(render_mode);
+m_Pacman.Draw(render_mode);
 
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 /*                    *
 *     GAME LOGIC     *
 *                    *
-for (std::vector<Food>::iterator itor = Foods.begin(); itor != Foods.end(); /* no itor *) // lets eat food =)
+for (std::vector<Food>::iterator itor = m_Foods.begin(); itor != m_Foods.end(); /* no itor *) // lets eat food =)
 {
-   if (itor->ComparePosition(&pacman))
-      itor = Foods.erase(itor);
+   if (itor->ComparePosition(&m_Pacman))
+      itor = m_Foods.erase(itor);
    else
       itor++;
 }
 
-for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++) // lets not touch aliens =S
+for (auto alien = m_Aliens.begin(); alien != m_Aliens.end(); alien++) // lets not touch aliens =S
 {
-   if (alien->ComparePosition(&pacman))
+   if (alien->ComparePosition(&m_Pacman))
    {
       ResetGame();
       break;
    }
 }
 
-if (Foods.empty()) // game won =)
+if (m_Foods.empty()) // game won =)
 {
    ResetGame();
 }
@@ -167,7 +167,7 @@ window->NextBuffer(); // swap buffers
    unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
    for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
    {
-   Foods.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
+   m_Foods.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
    }
    }
 
@@ -179,38 +179,38 @@ window->NextBuffer(); // swap buffers
    unsigned int num_alien = static_cast<unsigned int>(std::floor(4.0*(grid_size / 20.0)));
    for (unsigned int new_alien = 0; new_alien < num_alien; new_alien += 1)
    {
-   Aliens.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
+   m_Aliens.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
    }
    }
 
    void ResetGame()
    {
-   Foods.clear();
-   Aliens.clear();
+   m_Foods.clear();
+   m_Aliens.clear();
 
    GenerateFood();
    GenerateAlien();
 
-   for (std::vector<Food>::iterator food = Foods.begin(); food != Foods.end(); )
+   for (std::vector<Food>::iterator food = m_Foods.begin(); food != m_Foods.end(); )
    {
-   for (Alien alien : Aliens)
+   for (Alien alien : m_Aliens)
    {
       if (food->ComparePosition(&alien))
       {
-         food = Foods.erase(food);
+         food = m_Foods.erase(food);
       }
    }
    food++;
    }
 
-   pacman = Pacman();
+   m_Pacman = Pacman();
 }
 
 void MoveAliens()
 {
-   for (auto alien = Aliens.begin(); alien != Aliens.end(); alien++)
+   for (auto alien = m_Aliens.begin(); alien != m_Aliens.end(); alien++)
    {
-      alien->PositionMoveTowards::MoveTowards(&pacman);
+      alien->PositionMoveTowards::MoveTowards(&m_Pacman);
    }
 }
 
@@ -328,21 +328,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       render_mode = RenderMode::TRIANGLES;
       break;
 
-      // move pacman
+      // move m_Pacman
    case GLFW_KEY_D:
-      pacman.Move(Pacman::Direction::D_KEY, grid_size);
+      m_Pacman.Move(Pacman::Direction::D_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_A:
-      pacman.Move(Pacman::Direction::A_KEY, grid_size);
+      m_Pacman.Move(Pacman::Direction::A_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_S:
-      pacman.Move(Pacman::Direction::S_KEY, grid_size);
+      m_Pacman.Move(Pacman::Direction::S_KEY, grid_size);
       MoveAliens();
       break;
    case GLFW_KEY_W:
-      pacman.Move(Pacman::Direction::W_KEY, grid_size);
+      m_Pacman.Move(Pacman::Direction::W_KEY, grid_size);
       MoveAliens();
       break;
    default:
@@ -414,7 +414,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    {
       float xoffset = static_cast<float>(xpos - lastX);
       lastX = xpos;
-      xoffset *= sensitivity / 10.0f;
+      xoffset *= SENSITIVITY / 10.0f;
 
       Camera::GetInstance()->AdjustPanX(xoffset);
    }
@@ -422,7 +422,7 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    {
       float yoffset = static_cast<float>(lastY - ypos);
       lastY = ypos;
-      yoffset *= sensitivity;
+      yoffset *= SENSITIVITY;
 
       Camera::GetInstance()->AdjustTiltY(yoffset);
    }
@@ -430,9 +430,163 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
    {
       float xoffset = static_cast<float>(xpos - lastX);
       lastX = xpos;
-      xoffset *= sensitivity;
+      xoffset *= SENSITIVITY;
 
       Camera::GetInstance()->AdjustZoomZ(xoffset);
    }
 }
 */
+
+#include "Shader.h"
+#include "Camera.h"
+
+#include <iostream>
+#include <string>
+
+// ------------------------------------------------------------------------------------------------ //
+//                                         Game::Elements                                           //
+// ------------------------------------------------------------------------------------------------ //
+
+void Game::Elements::Draw(const RenderMode & render_mode) const
+{
+   m_Grid.Draw();
+   m_Axises.Draw();
+   for (Food food : m_Foods) food.Draw(render_mode);
+   for (Alien alien : m_Aliens) alien.Draw(render_mode);
+   m_Pacman.Draw(render_mode);
+}
+
+void Game::Elements::IncrementScalars() const
+{
+   Pacman::IncrementScalar();
+   Alien::IncrementScalar();
+   Food::IncrementScalar();
+}
+
+void Game::Elements::DecrementScalars() const
+{
+   Pacman::DecrementScalar();
+   Alien::DecrementScalar();
+   Food::DecrementScalar();
+}
+
+Game::Outcome Game::Elements::Process()
+{
+   for (std::vector<Food>::iterator itor = m_Foods.begin(); itor != m_Foods.end(); /* no itor */) // lets eat food =)
+   {
+      if (itor->ComparePosition(&m_Pacman))
+         itor = m_Foods.erase(itor);
+      else
+         itor++;
+   }
+
+   for (auto alien = m_Aliens.begin(); alien != m_Aliens.end(); alien++) // lets not touch aliens =S
+   {
+      if (alien->ComparePosition(&m_Pacman))
+      {
+         return Outcome::ALIEN_ATE_PACMAN;
+      }
+   }
+
+   if (m_Foods.empty()) // game won =)
+   {
+      return Outcome::PACMAN_ATE_FOODS;
+   }
+   return Outcome::PROGRESSION;
+}
+
+// ------------------------------------------------------------------------------------------------ //
+//                                          Game::Engine                                            //
+// ------------------------------------------------------------------------------------------------ //
+
+bool Game::Engine::Play()
+{
+   // Try to initialize the game engine
+   if(!Init()) return false;
+
+   auto shaderProgram = ShaderLinker::GetInstance();
+
+   while (!m_Window->ShouldClose())
+   {
+      GlfwWindow::TriggerCallbacks();           // For all windows check callbacks
+      ClearFrame();                             // Reset background color and z buffer test
+
+      shaderProgram->SetUniformMat4("projection_matrix", m_Window->GetProjectionMatrix());
+      shaderProgram->SetUniformMat4("view_matrix", Camera::GetInstance()->GetViewMatrix());
+
+      m_Game.Draw(m_RenderMode);
+
+      // Main game logic
+      switch (m_Game.Process())
+      {
+      case Outcome::PACMAN_ATE_FOODS: return true;
+      case Outcome::ALIEN_ATE_PACMAN: return false;
+      default: break;
+      }
+
+      m_Window->NextBuffer(); // Swap buffers
+   }
+
+   return false;
+}
+
+bool Game::Engine::Init()
+{
+   // Create a GLFWwindow
+   m_Window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
+   if (!m_Window->IsValid()) return ExitOnEnter();
+   SetCalbacks();
+
+   if (!SetupGlew()) return ExitOnEnter();
+
+   if (!SetupShaders()) return ExitOnEnter();
+
+   return true;
+}
+
+void Game::Engine::ClearFrame()
+{
+   glClearColor(0.05f, 0.075f, 0.075f, 1.0f);
+   glClear(GL_COLOR_BUFFER_BIT);             // Clear the depth buffer
+}
+
+bool Game::Engine::SetupGlew()
+{
+   // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+   glewExperimental = GL_TRUE;
+   // Initialize GLEW to setup the OpenGL Function pointers
+   if (glewInit() != GLEW_OK)
+   {
+      std::cout << "Failed to initialize GLEW" << std::endl;
+      return false;
+   }
+   return true;
+}
+
+bool Game::Engine::SetupShaders()
+{
+   VertexShader vertexShader("shaders/vertex.shader");
+   FragmentShader fragmentShader("shaders/fragment.shader");
+   // make sure they are ready to use
+   if (!vertexShader() || !fragmentShader()) return false;
+
+   auto shaderProgram = ShaderLinker::GetInstance();
+   if (!shaderProgram->Link(&vertexShader, &fragmentShader)) return false;
+
+   return true;
+}
+
+bool Game::Engine::ExitOnEnter()
+{
+   std::cout << "Press 'enter' to exit." << std::endl;
+   std::getline(std::cin, std::string());
+   return false;
+}
+
+void Game::Engine::SetCalbacks()
+{
+   // Set the required callback functions
+   m_Window->SetKeyCallback(key_callback);
+   m_Window->SetMouseButtonCallback(mouse_callback);
+   m_Window->SetCursorPosCallback(cursor_callback);
+}

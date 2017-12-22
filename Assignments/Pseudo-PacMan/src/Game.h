@@ -29,40 +29,79 @@ SOFTWARE.
 #include "Alien.h"
 #include "Axis.h"
 #include "Grid.h"
+#include "GlfwWindow.h"
 #include <vector>
 
-class GameEngine
+namespace Game
 {
+   enum class Outcome
+   {
+      ALIEN_ATE_PACMAN,
+      PACMAN_ATE_FOODS,
+      PROGRESSION
+   };
+
+   class Elements
+   {
    public:
-      GameEngine(const unsigned int& grid_size) : m_GridSize(grid_size), m_RenderMode(RenderMode::TRIANGLES){}
-      ~GameEngine() = default;
+      Elements(const unsigned int& grid_size) : m_Grid(grid_size) {}
+      ~Elements() = default;
+
+      void Draw(const RenderMode& render_mode) const;
+
+      void IncrementScalars() const;
+      void DecrementScalars() const;
+
+      Outcome Process();
+
+   private:
+      Pacman m_Pacman;
+      std::vector<Food> m_Foods;
+      std::vector<Alien> m_Aliens;
+      XYZ_Axis m_Axises;
+      Grid m_Grid;
+   };
+
+   class Engine
+   {
+   public:
+      Engine(const unsigned int& grid_size) : m_GridSize(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size) {}
+      ~Engine() = default;
+
+      // Launches a new Pseudo-PacMan game
+      // true if game won, otherwise false
+      bool Play();
 
    private:
       class InputTracker;
-      class Game
-      {
-         public:
-            Pacman pacman;
-            std::vector<Food> Foods;
-            std::vector<Alien> Aliens;
-            XYZ_Axis axises;
-            Grid grid(grid_size);
-      };
 
       unsigned int m_GridSize;
       RenderMode m_RenderMode;
 
-      Game m_Game;
-};
+      Elements m_Game;
+      std::shared_ptr<GlfwWindow> m_Window;
 
-class GameEngine::InputTracker
-{
+      bool Init();
+      static void ClearFrame();
+      static bool SetupGlew();
+      static bool SetupShaders();
+      static bool ExitOnEnter();
+      void SetCalbacks();
+   };
+
+   class Engine::InputTracker
+   {
    public:
       InputTracker() = default;
       ~InputTracker() = default;
 
+      void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+      void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+      void cursor_callback(GLFWwindow* window, double xpos, double ypos);
+
    private:
       bool zoom = false, tilt = false, pan = false;
       double lastX, lastY;
-      const float sensitivity = 0.05f;
-};
+      static constexpr float SENSITIVITY = 0.05f;
+   };
+}
