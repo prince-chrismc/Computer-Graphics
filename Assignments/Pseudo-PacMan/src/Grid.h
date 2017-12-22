@@ -31,7 +31,7 @@ public:
    Grid(const unsigned int& grid_size);
    ~Grid();
 
-   void Draw();
+   void Draw() const;
 
 protected:
    GLuint m_VAO;
