@@ -27,7 +27,7 @@ SOFTWARE.
 #include "RenderMode.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-Axis::Axis(std::initializer_list<glm::vec3> pts, const ObjectColors& col) : m_Color(col)
+Line::Line(std::initializer_list<glm::vec3> pts, const ObjectColors& col) : m_Color(col)
 {
    if (pts.size() >= 2)
    {
@@ -49,13 +49,13 @@ Axis::Axis(std::initializer_list<glm::vec3> pts, const ObjectColors& col) : m_Co
    }
 }
 
-Axis::~Axis()
+Line::~Line()
 {
    glDeleteBuffers(1, &m_Vertices);
    glDeleteVertexArrays(1, &m_VAO);
 }
 
-void Axis::Draw() const
+void Line::Draw() const
 {
    auto shaderProgram = ShaderLinker::GetInstance();
    shaderProgram->SetUniformInt("object_color", (GLint)m_Color);

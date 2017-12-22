@@ -28,11 +28,11 @@ SOFTWARE.
 #include <gl\glew.h>
 #include <initializer_list>
 
-class Axis
+class Line
 {
 public:
-   Axis(std::initializer_list<glm::vec3> pts, const ObjectColors& col);
-   ~Axis();
+   Line(std::initializer_list<glm::vec3> pts, const ObjectColors& col);
+   ~Line();
 
    void Draw() const;
 
@@ -43,4 +43,18 @@ public:
       GLsizei m_NumVertices;
 
       const ObjectColors m_Color;
+};
+
+class XYZ_Axis
+{
+   public:
+      XYZ_Axis() : m_X({ { -0.5f, 0.0f, 0.0f },{ 2.5f, 0.0f, 0.0f } }, ObjectColors::RED), m_Y({ { 0.0f, -0.5f, 0.0f },{ 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN),
+                   m_Z({ { 0.0f, 0.0f, -0.5f },{ 0.0f, 0.0f, 2.5f } }, ObjectColors::BLUE) {}
+
+      void Draw() const { m_X.Draw(); m_Y.Draw(); m_Z.Draw(); }
+
+   private:
+      Line m_X;
+      Line m_Y;
+      Line m_Z;
 };
