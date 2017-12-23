@@ -41,10 +41,13 @@ namespace Game
       PROGRESSION
    };
 
+   class Engine;
+
    class Elements
    {
+   friend class Engine;
    public:
-      Elements(const unsigned int& grid_size) : m_Grid(grid_size) {}
+      Elements(const unsigned int& grid_size);
       ~Elements() = default;
 
       void Draw(const RenderMode& render_mode) const;
@@ -62,46 +65,63 @@ namespace Game
       Grid m_Grid;
    };
 
-   class Engine
+   class Engine;
+
+   // Sadly due to the limitations of GLFW callbacks this calls is just static
+   class InputTracker abstract
    {
    public:
-      Engine(const unsigned int& grid_size) : m_GridSize(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size) {}
+      static void SetEngine(Engine* engine) { s_Engine = engine; }
+
+      static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+      static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+      static void cursor_callback(GLFWwindow* window, double xpos, double ypos);
+
+   private:
+      static Engine* s_Engine;
+
+      static bool zoom, tilt, pan;
+      static double lastX, lastY;
+      static constexpr float SENSITIVITY = 0.05f;
+   };
+
+   class Initalizer
+   {
+      public:
+         Initalizer();
+
+         bool DidInitFail() { return m_Result == false; }
+
+      protected:
+         std::shared_ptr<GlfwWindow> m_Window;
+
+      private:
+         bool m_Result;
+
+         static bool SetupShaders();
+         static bool SetupGlew();
+   };
+
+   class Engine : private Initalizer
+   {
+   friend class InputTracker;
+   public:
+      Engine(const unsigned int& grid_size);
       ~Engine() = default;
 
       // Launches a new Pseudo-PacMan game
       // true if game won, otherwise false
       bool Play();
 
-   private:
-      class InputTracker;
 
-      unsigned int m_GridSize;
+   private:
+      unsigned int grid_size;
       RenderMode m_RenderMode;
 
       Elements m_Game;
-      std::shared_ptr<GlfwWindow> m_Window;
 
-      bool Init();
+      void MoveElements(const Pacman::Direction& dir);
+
       static void ClearFrame();
-      static bool SetupGlew();
-      static bool SetupShaders();
-      static bool ExitOnEnter();
-      void SetCalbacks();
-   };
-
-   class Engine::InputTracker
-   {
-   public:
-      InputTracker() = default;
-      ~InputTracker() = default;
-
-      void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-      void mouse_callback(GLFWwindow* window, int button, int action, int mods);
-      void cursor_callback(GLFWwindow* window, double xpos, double ypos);
-
-   private:
-      bool zoom = false, tilt = false, pan = false;
-      double lastX, lastY;
-      static constexpr float SENSITIVITY = 0.05f;
    };
 }
