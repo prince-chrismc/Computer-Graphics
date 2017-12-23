@@ -122,17 +122,18 @@ Game::Outcome Game::Engine::Play()
       shaderProgram->SetUniformMat4("projection_matrix", m_Window->GetProjectionMatrix());
       shaderProgram->SetUniformMat4("view_matrix", Camera::GetInstance()->GetViewMatrix());
 
-      m_Game.Draw(m_RenderMode);
-
       // Main game logic
       m_Status = m_Game.Process();
+
+      m_Game.Draw(m_RenderMode);
+      m_Window->NextBuffer(); // Swap buffers
+
       switch (m_Status)
       {
       case Outcome::PROGRESSION: break;
       default: return m_Status;
       }
 
-      m_Window->NextBuffer(); // Swap buffers
    }
 
    return Outcome::USER_EXIT;
