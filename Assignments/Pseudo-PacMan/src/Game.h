@@ -38,7 +38,10 @@ namespace Game
    {
       ALIEN_ATE_PACMAN,
       PACMAN_ATE_FOODS,
-      PROGRESSION
+      PROGRESSION,
+
+      USER_EXIT,
+      SYSTEM_ERROR
    };
 
    class Engine;
@@ -106,19 +109,21 @@ namespace Game
    {
    friend class InputTracker;
    public:
-      Engine(const unsigned int& grid_size) : Initalizer(), grid_size(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size) { InputTracker::SetEngine(this); }
+      Engine(const unsigned int& grid_size) : Initalizer(), grid_size(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size), m_Status(Outcome::PROGRESSION) { InputTracker::SetEngine(this); }
       ~Engine() = default;
+
+      Outcome GetStatus() const { return m_Status; }
 
       // Launches a new Pseudo-PacMan game
       // true if game won, otherwise false
-      bool Play();
-
+      Outcome Play();
 
    private:
       unsigned int grid_size;
       RenderMode m_RenderMode;
 
       Elements m_Game;
+      Outcome m_Status;
 
       void MoveElements(const Pacman::Direction& dir);
 

@@ -40,9 +40,21 @@ int main()
       unsigned int grid_size = GetUserInputOddNum(9, 35) - 1;
 
       Game::Engine game(grid_size);
-      bool retval = game.Play();
+      Game::Outcome retval = game.Play();
 
-      std::cout << (retval ? " You won! " : " Aww you lost. ") << "Would you like to play again? (y/n)" << std::endl;
+      switch (retval)
+      {
+      case Game::Outcome::USER_EXIT: return 1;
+      case Game::Outcome::PACMAN_ATE_FOODS: std::cout << "   You won! "; break;
+      case Game::Outcome::ALIEN_ATE_PACMAN: std::cout << "   Oh no! You Lost. "; break;
+      case Game::Outcome::SYSTEM_ERROR:
+         std::cout << "   Something seems to of gone wrong =? ";
+         std::cout << "Would you like to quit the game? (y/n)" << std::endl;
+         if(GetUserInputYesNo()) return -1;
+         break;
+      default: break;
+      }
+      std::cout << "Would you like to play again? (y/n)" << std::endl;
    } while ( GetUserInputYesNo() );
 
    return 0;

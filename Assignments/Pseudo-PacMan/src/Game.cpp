@@ -107,10 +107,10 @@ Game::Outcome Game::Elements::Process()
 //                                          Game::Engine                                            //
 // ------------------------------------------------------------------------------------------------ //
 
-bool Game::Engine::Play()
+Game::Outcome Game::Engine::Play()
 {
    // Try to initialize the game engine
-   if(DidInitFail() || !m_Window->IsValid()) return false;
+   if(DidInitFail() || !m_Window->IsValid()) return Outcome::SYSTEM_ERROR;
 
    auto shaderProgram = ShaderLinker::GetInstance();
 
@@ -125,17 +125,17 @@ bool Game::Engine::Play()
       m_Game.Draw(m_RenderMode);
 
       // Main game logic
-      switch (m_Game.Process())
+      m_Status = m_Game.Process();
+      switch (m_Status)
       {
-      case Outcome::PACMAN_ATE_FOODS: return true;
-      case Outcome::ALIEN_ATE_PACMAN: return false;
-      default: break;
+      case Outcome::PROGRESSION: break;
+      default: return m_Status;
       }
 
       m_Window->NextBuffer(); // Swap buffers
    }
 
-   return false;
+   return Outcome::USER_EXIT;
 }
 
 void Game::Engine::MoveElements(const Pacman::Direction & dir)
