@@ -23,200 +23,6 @@ SOFTWARE.
 */
 
 #include "Game.h"
-
-
-/*
-
-void GenerateFood();
-void GenerateAlien();
-void ResetGame();
-void MoveAliens();
-void ClearFrame();
-bool SetupGlew();
-bool SetupShaders();
-int ExitOnEnter();
-void SetCalbacks(std::shared_ptr<GlfwWindow> window);
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void mouse_callback(GLFWwindow* window, int button, int action, int mods);
-void cursor_callback(GLFWwindow* window, double xpos, double ypos);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Create a GLFWwindow
-std::shared_ptr<GlfwWindow> window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
-if (!window->IsValid()) return ExitOnEnter();
-SetCalbacks(window);
-
-if (!SetupGlew()) return ExitOnEnter();
-
-if (!SetupShaders()) return ExitOnEnter();
-auto shaderProgram = ShaderLinker::GetInstance();
-
-Line xaxis({ { -0.5f, 0.0f, 0.0f }, { 2.5f, 0.0f, 0.0f } }, ObjectColors::RED);
-Line yaxis({ { 0.0f, -0.5f, 0.0f }, { 0.0f, 2.5f, 0.0f } }, ObjectColors::GREEN);
-Line zaxis({ { 0.0f, 0.0f, -0.5f }, { 0.0f, 0.0f, 2.5f } }, ObjectColors::BLUE);
-Grid m_Grid(grid_size);
-
-// Elements loop
-while (!window->ShouldClose())
-{
-GlfwWindow::TriggerCallbacks();           // For all windows check callbacks
-ClearFrame();                             // Reset background color and z buffer test
-
-shaderProgram->SetUniformMat4("projection_matrix", window->GetProjectionMatrix());
-shaderProgram->SetUniformMat4("view_matrix", Camera::GetInstance()->GetViewMatrix());
-
-m_Grid.Draw();
-xaxis.Draw();
-yaxis.Draw();
-zaxis.Draw();
-
-for (Food food : m_Foods) food.Draw(render_mode);
-for (Alien alien : m_Aliens) alien.Draw(render_mode);
-m_Pacman.Draw(render_mode);
-
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-/*                    *
-*     GAME LOGIC     *
-*                    *
-for (std::vector<Food>::iterator itor = m_Foods.begin(); itor != m_Foods.end(); /* no itor *) // lets eat food =)
-{
-   if (itor->ComparePosition(&m_Pacman))
-      itor = m_Foods.erase(itor);
-   else
-      itor++;
-}
-
-for (auto alien = m_Aliens.begin(); alien != m_Aliens.end(); alien++) // lets not touch aliens =S
-{
-   if (alien->ComparePosition(&m_Pacman))
-   {
-      ResetGame();
-      break;
-   }
-}
-
-if (m_Foods.empty()) // game won =)
-{
-   ResetGame();
-}
-
-
-window->NextBuffer(); // swap buffers
-   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   void GenerateFood()
-   {
-   std::random_device rd;
-   std::mt19937 rand_gen(rd());
-
-   unsigned int num_food = ((rand_gen() % 9) + 10)*(grid_size / 20);
-   for (unsigned int new_food = 0; new_food <= num_food; new_food += 1)
-   {
-   m_Foods.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
-   }
-   }
-
-   void GenerateAlien()
-   {
-   std::random_device rd;
-   std::mt19937 rand_gen(rd());
-
-   unsigned int num_alien = static_cast<unsigned int>(std::floor(4.0*(grid_size / 20.0)));
-   for (unsigned int new_alien = 0; new_alien < num_alien; new_alien += 1)
-   {
-   m_Aliens.emplace_back(float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f, float(float(rand_gen() % grid_size) - float(grid_size / 2))*0.25f);
-   }
-   }
-
-   void ResetGame()
-   {
-   m_Foods.clear();
-   m_Aliens.clear();
-
-   GenerateFood();
-   GenerateAlien();
-
-   for (std::vector<Food>::iterator food = m_Foods.begin(); food != m_Foods.end(); )
-   {
-   for (Alien alien : m_Aliens)
-   {
-      if (food->ComparePosition(&alien))
-      {
-         food = m_Foods.erase(food);
-      }
-   }
-   food++;
-   }
-
-   m_Pacman = Pacman();
-}
-
-void MoveAliens()
-{
-   for (auto alien = m_Aliens.begin(); alien != m_Aliens.end(); alien++)
-   {
-      alien->PositionMoveTowards::MoveTowards(&m_Pacman);
-   }
-}
-
-
-*/
-
 #include "Shader.h"
 #include "Camera.h"
 
@@ -293,17 +99,13 @@ Game::Outcome Game::Elements::Process()
    {
       return Outcome::PACMAN_ATE_FOODS;
    }
+
    return Outcome::PROGRESSION;
 }
 
 // ------------------------------------------------------------------------------------------------ //
 //                                          Game::Engine                                            //
 // ------------------------------------------------------------------------------------------------ //
-
-Game::Engine::Engine(const unsigned int & grid_size) : Initalizer(), grid_size(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size)
-{
-   InputTracker::SetEngine(this);
-}
 
 bool Game::Engine::Play()
 {
@@ -530,6 +332,7 @@ Game::Initalizer::Initalizer() : m_Result(true)
          m_Window->SetMouseButtonCallback(InputTracker::mouse_callback);
          m_Window->SetCursorPosCallback(InputTracker::cursor_callback);
       }
+      else m_Result = false;
 
       if (!SetupGlew()) m_Result = false;
       if (!SetupShaders()) m_Result = false;

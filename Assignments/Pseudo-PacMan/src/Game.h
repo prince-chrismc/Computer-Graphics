@@ -106,7 +106,7 @@ namespace Game
    {
    friend class InputTracker;
    public:
-      Engine(const unsigned int& grid_size);
+      Engine(const unsigned int& grid_size) : Initalizer(), grid_size(grid_size), m_RenderMode(RenderMode::TRIANGLES), m_Game(grid_size) { InputTracker::SetEngine(this); }
       ~Engine() = default;
 
       // Launches a new Pseudo-PacMan game
