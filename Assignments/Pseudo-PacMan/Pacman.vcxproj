@@ -164,6 +164,7 @@
     <ClInclude Include="src\Alien.h" />
     <ClInclude Include="src\Axis.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Pacman.h" />
     <ClInclude Include="src\Positioning.h" />
     <ClInclude Include="src\Food.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="src\Axis.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Food.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GlfwWindow.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Main.cpp" />

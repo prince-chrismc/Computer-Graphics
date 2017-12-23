@@ -72,7 +72,7 @@ Grid::~Grid()
    glDeleteVertexArrays(1, &m_VAO);
 }
 
-void Grid::Draw()
+void Grid::Draw() const
 {
    auto shaderProgram = ShaderLinker::GetInstance();
    shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
