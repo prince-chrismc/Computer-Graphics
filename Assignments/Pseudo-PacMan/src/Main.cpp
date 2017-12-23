@@ -78,6 +78,7 @@ const bool GetUserInputYesNo()
    {
       std::cout << "Selcetion: ";
       std::string input;
+      std::getline(std::cin, input);
 
       if (input == "y" || input == "Y" || input ==  "yes" || input == "Yes")
          return true;
