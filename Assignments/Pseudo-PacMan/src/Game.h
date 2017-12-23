@@ -93,7 +93,7 @@ namespace Game
          bool DidInitFail() { return m_Result == false; }
 
       protected:
-         std::shared_ptr<GlfwWindow> m_Window;
+         static std::shared_ptr<GlfwWindow> m_Window;
 
       private:
          bool m_Result;
@@ -107,7 +107,7 @@ namespace Game
    friend class InputTracker;
    public:
       Engine(const unsigned int& grid_size);
-      ~Engine() { m_Window->CloseWindow(); };
+      ~Engine() = default;
 
       // Launches a new Pseudo-PacMan game
       // true if game won, otherwise false
