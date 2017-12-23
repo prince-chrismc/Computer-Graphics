@@ -41,6 +41,7 @@ public:
    constexpr bool IsValid() const { return m_window != nullptr; }          // Make sure windows exists
    void NextBuffer() { glfwSwapBuffers(m_window); }                        // Swap the screen buffers
    bool ShouldClose() const { return glfwWindowShouldClose(m_window); }    // window should close
+   void CloseWindow() const { glfwSetWindowShouldClose(m_window, GLFW_TRUE); }
 
    const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 

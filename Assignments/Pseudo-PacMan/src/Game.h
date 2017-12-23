@@ -107,7 +107,7 @@ namespace Game
    friend class InputTracker;
    public:
       Engine(const unsigned int& grid_size);
-      ~Engine() = default;
+      ~Engine() { m_Window->CloseWindow(); };
 
       // Launches a new Pseudo-PacMan game
       // true if game won, otherwise false
