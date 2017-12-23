@@ -519,16 +519,19 @@ void Game::InputTracker::cursor_callback(GLFWwindow * window, double xpos, doubl
 
 Game::Initalizer::Initalizer() : m_Result(true)
 {
-   m_Window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
-   if (m_Window->IsValid())
-   {
-      m_Window->SetKeyCallback(InputTracker::key_callback);
-      m_Window->SetMouseButtonCallback(InputTracker::mouse_callback);
-      m_Window->SetCursorPosCallback(InputTracker::cursor_callback);
-   }
+      m_Window = GlfwWindowFactory::GetInstance()->CreateNewWindow("Pseudo Pac-Man - Munch away!");
+      if (m_Window->IsValid())
+      {
+         m_Window->SetKeyCallback(InputTracker::key_callback);
+         m_Window->SetMouseButtonCallback(InputTracker::mouse_callback);
+         m_Window->SetCursorPosCallback(InputTracker::cursor_callback);
+      }
 
-   if (!SetupGlew()) m_Result = false;
-   if (!SetupShaders()) m_Result = false;
+   static std::once_flag flag;
+   std::call_once(flag, [this] {
+      if (!SetupGlew()) m_Result = false;
+      if (!SetupShaders()) m_Result = false;
+   });
 }
 
 bool Game::Initalizer::SetupGlew()
