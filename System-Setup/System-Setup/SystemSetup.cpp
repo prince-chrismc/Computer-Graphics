@@ -154,12 +154,13 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
 
 std::wstring GetPathToFile(const std::wstring& file_path)
 {
-
-   std::wstring dir = BrowseFolder(L"C:\\WINDOWS\\System32\\");
-   std::cout << "Testing: " << dir.c_str() << " for " << file_path.c_str() << "...";
+   static std::wstring last_dir_used = L"C:\\WINDOWS\\System32\\";
+   std::wstring dir = BrowseFolder(last_dir_used);
+   std::cout << "Testing: " << std::string(dir.begin(), dir.end()) << " for " << std::string(file_path.begin(), file_path.end()) << "...";
    if (TryToOpenFile(dir + file_path))
    {
       std::cout << "  PASS!" << std::endl;
+      last_dir_used = dir;
       return std::wstring(L"\"" + dir + L"\"\\"); // why extra backslash https://stackoverflow.com/questions/29190444/invalid-syntax-with-setx-for-having-more-than-two-arguments-when-there-are-onl && https://github.com/prince-chrismc/Computer-Graphics/issues/13
    }
    else
