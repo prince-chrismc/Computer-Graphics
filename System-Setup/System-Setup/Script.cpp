@@ -62,10 +62,12 @@ BOOL SetEnvVarScript::CreateScript()
 
    for (auto env_path : m_VarsAndPaths)
    {
-      script += std::wstring(L"setx " + env_path.first + env_path.second + L" /m\n");
+      script += std::wstring(L"setx " + env_path.first + L" " + env_path.second + L" /m\n");
    }
 
-   DWORD dwBytesToWrite = (DWORD)script.length();
+   std::string buff = std::string(script.begin(), script.end());
+
+   DWORD dwBytesToWrite = (DWORD)strlen(buff.c_str());
    DWORD dwBytesWritten = 0;
    BOOL bErrorFlag = FALSE;
 
@@ -86,7 +88,7 @@ BOOL SetEnvVarScript::CreateScript()
    std::cout << "Writing " << dwBytesToWrite << " bytes to " << m_FileName.c_str() << ".\n";
 
    bErrorFlag = WriteFile(hFile,                // open file handle
-      script.c_str(),                           // start of data to write
+      buff.c_str(),                             // start of data to write
       dwBytesToWrite,                           // number of bytes to write
       &dwBytesWritten,                          // number of bytes that were written
       NULL);                                    // no overlapped structure
