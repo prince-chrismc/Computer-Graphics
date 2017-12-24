@@ -1,15 +1,36 @@
-// SystemSetup.cpp : Defines the entry point for the console application.
-//
+/*
+MIT License
 
+Copyright (c) 2017 Chris McArthur, prince.chrismc(at)gmail(dot)com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#include "Script.h"
 #include <iostream>
-#include <sstream>
+#include <string>
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <shlobj.h>
-#include <tchar.h>
-
-#include "SystemSetup.h"                        // only contains func declarations
+BOOL IsElevated();
+std::wstring BrowseFolder(const std::wstring& saved_path);
+static int BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
+std::wstring GetPathToFile(const std::wstring & file_path);
+BOOL TryToOpenFile(const std::wstring & full_path);
 
 int main()
 {
@@ -22,36 +43,41 @@ int main()
       return -1;
    }
 
-   std::cout << std::endl << "This setup application is to only configure your enviroment variables, you must manually install the libraries yourself." << std::endl << " If you have any question on what to do check out the repository this was developed in." << std::endl;
+   std::cout << std::endl << "This setup application is to only configure your enviroment variables, you must manually install the libraries yourself." << std::endl
+             << " If you have any question on what to do check out the repository this was developed in." << std::endl;
 
    Sleep(1000);
 
+   SetEnvVarScript script;
+
    std::cout << std::endl << "First of GLM 9.8.5 include directory..." << std::endl;
-   std::string glm_inc_dir = GetPathToFile("\\glm\\glm.hpp");
+   script.AddVarAndPath(L"GLM_INC_DIR", GetPathToFile(L"\\glm\\glm.hpp"));
 
    std::cout << std::endl << "Now For GLEW 2.1.0 include directory..." << std::endl;
-   std::string glew_inc_dir = GetPathToFile("\\GL\\glew.h");
+   script.AddVarAndPath(L"GLEW_INC_DIR", GetPathToFile(L"\\GL\\glew.h"));
 
    std::cout << std::endl << "Now For GLEW 2.1.0 library directory..." << std::endl;
-   std::string glew_lib_dir = GetPathToFile("\\Debug\\glew32d.lib");
+   script.AddVarAndPath(L"GLEW_LIB_DIR", GetPathToFile(L"\\Debug\\glew32d.lib"));
 
    std::cout << std::endl << "Continuing with GLFW 3.2.1 include directory..." << std::endl;
-   std::string glfw_inc_dir = GetPathToFile("\\GLFW\\glfw3.h");
+   script.AddVarAndPath(L"GLFW_INC_DIR", GetPathToFile(L"\\GLFW\\glfw3.h"));
 
    std::cout << std::endl << "Continuing with GLFW 3.2.1 library directory..." << std::endl;
-   std::string glfw_lib_dir = GetPathToFile("\\Debug\\glfw3.lib");
+   script.AddVarAndPath(L"GLFW_LIB_DIR", GetPathToFile(L"\\Debug\\glfw3.lib"));
 
    std::cout << "Creating batch file...";
-   if (!CreateScript(glm_inc_dir, glew_inc_dir, glew_lib_dir, glfw_inc_dir, glfw_lib_dir))
+   if (!script.CreateScript())
    {
-      std::cout << "   FAILED!" << std::endl;
+      std::cout << "   FAILED!" << std::endl << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
    std::cout << "   PASS!" << std::endl;
 
-   if (!ExecuteScript())
+   if (!script.ExecuteScript())
    {
-      std::cout << "FAILED to execute script!" << std::endl;
+      std::cout << "FAILED to execute script!" << std::endl << "Press 'enter' to exit." << std::endl;
+      std::getline(std::cin, std::string());
       return -1;
    }
 
@@ -81,17 +107,15 @@ BOOL IsElevated()
 
 // https://stackoverflow.com/a/21978398/8480874
 // https://www.codeproject.com/Articles/2604/Browse-Folder-dialog-search-folder-and-all-sub-fol
-std::string BrowseFolder(std::string saved_path)
+std::wstring BrowseFolder(const std::wstring& saved_path)
 {
    TCHAR path[MAX_PATH];
-
-   const char* path_param = saved_path.c_str();
 
    BROWSEINFO bi = { 0 };
    bi.lpszTitle = L"Browse for folder...";
    bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
    bi.lpfn = BrowseCallbackProc;
-   bi.lParam = (LPARAM)path_param;
+   bi.lParam = (LPARAM)saved_path.c_str();
 
    LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
 
@@ -109,11 +133,10 @@ std::string BrowseFolder(std::string saved_path)
       }
 
       // https://stackoverflow.com/a/12097772/8480874
-      std::wstring raw(path);
-      return std::string(raw.begin(), raw.end());
+      return std::wstring(path);
    }
 
-   return "";
+   return L"";
 }
 
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
@@ -129,15 +152,15 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
    return 0;
 }
 
-std::string GetPathToFile(const std::string& file_path)
+std::wstring GetPathToFile(const std::wstring& file_path)
 {
 
-   std::string dir = BrowseFolder("C:\\WINDOWS\\System32\\");
-   std::cout << "Testing: " << dir << " for " << file_path << "...";
+   std::wstring dir = BrowseFolder(L"C:\\WINDOWS\\System32\\");
+   std::cout << "Testing: " << dir.c_str() << " for " << file_path.c_str() << "...";
    if (TryToOpenFile(dir + file_path))
    {
       std::cout << "  PASS!" << std::endl;
-      return "\"" + dir += "\"\\"; // why extra backslash https://stackoverflow.com/questions/29190444/invalid-syntax-with-setx-for-having-more-than-two-arguments-when-there-are-onl && https://github.com/prince-chrismc/Computer-Graphics/issues/13
+      return std::wstring(L"\"" + dir + L"\"\\"); // why extra backslash https://stackoverflow.com/questions/29190444/invalid-syntax-with-setx-for-having-more-than-two-arguments-when-there-are-onl && https://github.com/prince-chrismc/Computer-Graphics/issues/13
    }
    else
    {
@@ -147,7 +170,7 @@ std::string GetPathToFile(const std::string& file_path)
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540534(v=vs.85).aspx
-BOOL TryToOpenFile(const std::string& full_path)
+BOOL TryToOpenFile(const std::wstring& full_path)
 {
    const DWORD BUFFERSIZE = 5;
    HANDLE hFile;
@@ -155,109 +178,19 @@ BOOL TryToOpenFile(const std::string& full_path)
    char   ReadBuffer[BUFFERSIZE] = { 0 };
    OVERLAPPED ol = { 0 };
 
-   std::wstring w_path(full_path.begin(), full_path.end());
-
-   hFile = CreateFile(w_path.c_str(),               // file to open
-      GENERIC_READ,          // open for reading
-      FILE_SHARE_READ,       // share for reading
-      NULL,                  // default security
-      OPEN_EXISTING,         // existing file only
+   hFile = CreateFile(full_path.c_str(),        // file to open
+      GENERIC_READ,                             // open for reading
+      FILE_SHARE_READ,                          // share for reading
+      NULL,                                     // default security
+      OPEN_EXISTING,                            // existing file only
       FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, // normal file
-      NULL);                 // no attr. template
+      NULL);                                    // no attr. template
 
    if (hFile == INVALID_HANDLE_VALUE)
    {
-      //printf("Terminal failure: unable to open file \"%s\" for read.\n", full_path.c_str());
       return FALSE;
    }
 
    CloseHandle(hFile);
-   return TRUE;
-}
-
-// https://msdn.microsoft.com/en-us/library/windows/desktop/bb540534(v=vs.85).aspx
-// https://stackoverflow.com/a/21606502/8480874
-BOOL CreateScript(const std::string& glm_inc_dir, const std::string& glew_inc_dir, const std::string& glew_lib_dir, const std::string& glfw_inc_dir, const std::string& glfw_lib_dir)
-{
-   HANDLE hFile;
-
-   std::string script = "@ECHO OFF\n\n:: Setting Env Vars For COMP371\nsetx GLM_INC_DIR " + glm_inc_dir + " /m\nsetx GLEW_INC_DIR " + glew_inc_dir + " /m\nsetx GLFW_INC_DIR " + glfw_inc_dir + " /m\nsetx GLFW_LIB_DIR " + glfw_lib_dir + " /m\nsetx GLEW_LIB_DIR " + glew_lib_dir + " /m\n";
-
-   DWORD dwBytesToWrite = (DWORD)strlen(script.c_str());
-   DWORD dwBytesWritten = 0;
-   BOOL bErrorFlag = FALSE;
-
-   hFile = CreateFile(L"setup.bat",           // name of the write
-                      GENERIC_WRITE,          // open for writing
-                      0,                      // do not share
-                      NULL,                   // default security
-                      CREATE_ALWAYS,          // create new file only
-                      FILE_ATTRIBUTE_NORMAL,  // normal file
-                      NULL);                  // no attr. template
-
-   if (hFile == INVALID_HANDLE_VALUE)
-   {
-      printf("Terminal failure: Unable to create file \"setup.bat\" for write.\n");
-      return FALSE;
-   }
-
-   printf("Writing %d bytes to %s.\n", dwBytesToWrite, "setup.bat");
-
-   bErrorFlag = WriteFile(hFile,            // open file handle
-                          script.c_str(),   // start of data to write
-                          dwBytesToWrite,   // number of bytes to write
-                          &dwBytesWritten,  // number of bytes that were written
-                          NULL);            // no overlapped structure
-
-   if (FALSE == bErrorFlag)
-   {
-      printf("Terminal failure: Unable to write to file.\n");
-      return FALSE;
-   }
-   else
-   {
-      if (dwBytesWritten != dwBytesToWrite)
-      {
-         // This is an error because a synchronous write that results in
-         // success (WriteFile returns TRUE) should write all data as
-         // requested. This would not necessarily be the case for
-         // asynchronous writes.
-         printf("Error: dwBytesWritten != dwBytesToWrite\n");
-         return FALSE;
-      }
-      else
-      {
-         printf("Wrote %d bytes to %s successfully.\n", dwBytesWritten, "setup.bat");
-      }
-   }
-
-   CloseHandle(hFile);
-   return TRUE;
-}
-
-// http://www.cplusplus.com/forum/general/102587/#msg551994
-// https://stackoverflow.com/a/10044348/8480874
-BOOL ExecuteScript()
-{
-   STARTUPINFO si;
-   PROCESS_INFORMATION pi;
-   LPTSTR szCmdline = _tcsdup(TEXT("cmd /C  setup.bat"));
-
-   ZeroMemory(&si, sizeof(si));
-   si.cb = sizeof(si);
-   ZeroMemory(&pi, sizeof(pi));
-   if (!CreateProcess(NULL, szCmdline,
-      NULL, NULL, FALSE, 0, NULL, NULL,
-      &si, &pi)
-      )
-   {
-      printf("CreateProcess failed (%d)\n", GetLastError());
-      return FALSE;
-   }
-
-   WaitForSingleObject(pi.hProcess, INFINITE);
-   CloseHandle(pi.hProcess);
-   CloseHandle(pi.hThread);
-
    return TRUE;
 }

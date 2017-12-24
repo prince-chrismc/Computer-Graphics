@@ -18,12 +18,15 @@
     <ClCompile Include="SystemSetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SystemSetup.h">
+    <ClInclude Include="Script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
