@@ -50,7 +50,7 @@ int main()
 
    SetEnvVarScript script;
 
-   std::cout << std::endl << "First of GLM 9.8.5 include directory..." << std::endl;
+   std::cout << std::endl << "First off, GLM 9.8.5 include directory..." << std::endl;
    script.AddVarAndPath(L"GLM_INC_DIR", GetPathToFile(L"\\glm\\glm.hpp"));
 
    std::cout << std::endl << "Now For GLEW 2.1.0 include directory..." << std::endl;
@@ -64,6 +64,12 @@ int main()
 
    std::cout << std::endl << "Continuing with GLFW 3.2.1 library directory..." << std::endl;
    script.AddVarAndPath(L"GLFW_LIB_DIR", GetPathToFile(L"\\Debug\\glfw3.lib"));
+
+   std::cout << std::endl << "Moving on to FreeType 2.8.1 include directory..." << std::endl;
+   script.AddVarAndPath(L"FT_INC_DIR", GetPathToFile(L"\\ft2build.h"));
+
+   std::cout << std::endl << "Moving on to FreeType 2.8.1 library directory..." << std::endl;
+   script.AddVarAndPath(L"FT_LIB_DIR", GetPathToFile(L"\\Debug\\freetype.lib"));
 
    std::cout << "Creating batch file...";
    if (!script.CreateScript())
