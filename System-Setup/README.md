@@ -1,5 +1,11 @@
-# System Setup
-This Section of the repository is to facilitate configure the enviroment variables. The app is very limited in terms of functionality. The app is looking for a file tree like [this](#file-tree-example); however the testing is only a single base file for each module. The [`Libraries.zip`](https://github.com/prince-chrismc/Computer-Graphics/releases/download/Setup-v1.1.0/Libraries.zip) pacakge provided in the releases is tailored for the setup app. The template is a basic outline for any project and is very generic but is built using the enviroment variables set by the setup.
+## System Setup
+This section of the repository is to facilitate the configuration of the enviroment variables used by the OpenGL app in the [Assignments](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments) section. The reason to go this route was base upon having multiple machines being used during the development process; all of which required the libraries may of which being installed in different locations -- thus hardcoded paths would have possed challenges.
+
+##### Warnings
+This app is very _limited_ in terms of functionality. It is looking for the file tree like [show below](#file-tree). **WARNIGN:** The testing/veryfication of you selection is checking only a single file.
+
+##### Recommendations
+The [`Libraries.zip`](https://github.com/prince-chrismc/Computer-Graphics/releases/download/Setup-v1.2.0/Libraries.zip) pacakge provided in the releases is tailored for the setup app. The template is a basic outline for any project and is very generic and is built using the enviroment variables. It is **HIGHLY RECOMENDED** To use the .zip provided when configuring the enviroment variables.
 
 ### File Tree
 ```
