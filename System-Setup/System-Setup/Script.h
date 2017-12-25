@@ -41,7 +41,7 @@ public:
 protected:
    std::wstring m_FileName;
 
-   const char* GetPrintableFileName() { return std::string(m_FileName.begin(), m_FileName.end()).c_str(); }
+   std::string GetPrintableFileName() { return std::string(m_FileName.begin(), m_FileName.end()); }
 };
 
 class SetEnvVarScript final : public Script

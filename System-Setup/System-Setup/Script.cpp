@@ -81,11 +81,11 @@ BOOL SetEnvVarScript::CreateScript()
 
    if (hFile == INVALID_HANDLE_VALUE)
    {
-      std::cout << "Terminal failure: Unable to create file \"" << GetPrintableFileName() << "\" for write.\n";
+      std::cout << "Terminal failure: Unable to create file \"" << GetPrintableFileName().c_str() << "\" for write.\n";
       return FALSE;
    }
 
-   std::cout << "Writing " << dwBytesToWrite << " bytes to " << GetPrintableFileName() << ".\n";
+   std::cout << "Writing " << dwBytesToWrite << " bytes to \"" << GetPrintableFileName().c_str() << "\"\n";
 
    bErrorFlag = WriteFile(hFile,                // open file handle
       buff.c_str(),                             // start of data to write
@@ -111,7 +111,7 @@ BOOL SetEnvVarScript::CreateScript()
       }
       else
       {
-         std::cout << "Wrote " << dwBytesToWrite << " bytes to " << GetPrintableFileName() << "successfully.\n";
+         std::cout << "Wrote " << dwBytesToWrite << " bytes to \"" << GetPrintableFileName().c_str() << "\" successfully.\n";
       }
    }
 
