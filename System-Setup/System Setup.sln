@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Template", "Template\Template.vcxproj", "{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}"
 EndProject
@@ -15,12 +15,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Debug|x64.ActiveCfg = Debug|x64
 		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Debug|x64.Build.0 = Debug|x64
-		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Release|x64.ActiveCfg = Debug|x64
-		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Release|x64.Build.0 = Debug|x64
+		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Release|x64.ActiveCfg = Release|x64
+		{D9B3DEE0-195F-4E9D-865C-22A335DC2C2B}.Release|x64.Build.0 = Release|x64
 		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Debug|x64.ActiveCfg = Debug|x64
 		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Debug|x64.Build.0 = Debug|x64
-		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Release|x64.ActiveCfg = Debug|x64
-		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Release|x64.Build.0 = Debug|x64
+		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Release|x64.ActiveCfg = Release|x64
+		{6BCB75D6-471B-41E1-86C0-F39EC8A508B1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
