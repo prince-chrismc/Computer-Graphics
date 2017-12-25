@@ -10,7 +10,7 @@ It is possible for the script to terminate successfully while having errors repo
 * And the path to which you are trying to save
 
 ##### Recommendations
-The [`Libraries.zip`](https://github.com/prince-chrismc/Computer-Graphics/releases/download/Setup-v1.2.0/Libraries.zip) pacakge provided in the releases is tailored for the setup app. The template is a basic outline for any project and is very generic and is built using the enviroment variables. It is **HIGHLY RECOMENDED** To use the .zip provided when configuring the enviroment variables.
+The [`Libraries.zip`](https://github.com/prince-chrismc/Computer-Graphics/releases/download/Setup-v1.2.1/Libraries.zip) pacakge provided in the releases is tailored for the setup app. The template is a basic outline for any project and is very generic and is built using the enviroment variables. It is **HIGHLY RECOMENDED** To use the .zip provided when configuring the enviroment variables.
 
 ### File Tree
 ```
