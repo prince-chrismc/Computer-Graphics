@@ -45,4 +45,16 @@ Libraries
 ```
 
 ### Screenshot
+
+###### Successful Termination
+![image](https://user-images.githubusercontent.com/16867443/34343481-fbb2fb94-e99d-11e7-8cc1-2b77a4d7fa0f.png)
+
+###### General
 ![image](https://user-images.githubusercontent.com/16867443/31201517-f1a53fba-a92c-11e7-93f9-8553e5f03a3a.png)
+
+###### Remembers Previous Selection
+![image](https://user-images.githubusercontent.com/16867443/34343423-0ec33cf0-e99c-11e7-824d-65646c833305.png)
+
+###### Failed Selection
+![image](https://user-images.githubusercontent.com/16867443/34343437-5a975152-e99c-11e7-83f2-e1157a9b66fd.png)
+
