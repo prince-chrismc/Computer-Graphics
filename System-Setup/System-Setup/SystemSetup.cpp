@@ -138,7 +138,6 @@ std::wstring BrowseFolder(const std::wstring& saved_path)
          imalloc->Release();
       }
 
-      // https://stackoverflow.com/a/12097772/8480874
       return std::wstring(path);
    }
 
@@ -162,6 +161,8 @@ std::wstring GetPathToFile(const std::wstring& file_path)
 {
    static std::wstring last_dir_used = L"C:\\WINDOWS\\System32\\";
    std::wstring dir = BrowseFolder(last_dir_used);
+
+   // https://stackoverflow.com/a/12097772/8480874
    std::cout << "Testing: " << std::string(dir.begin(), dir.end()) << " for " << std::string(file_path.begin(), file_path.end()) << "...";
    if (TryToOpenFile(dir + file_path))
    {
