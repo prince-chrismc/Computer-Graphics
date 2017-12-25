@@ -8,6 +8,10 @@ To track modifications to the system setup application
 
 > x.x.0 - Fix:   Small tweaks which do not impact stability
 
+## Setup 1.2.1
+- Correcting bad output of filename
+- Improved documentation
+
 ## Setup 1.2.0
 - Script concept is now encapsulated in an object, allows for adding variables, creating file and executing
 - Sets Enviroment variables - include directory { GLM, GLEW, GLFW, **FT** } library directory { GLEW, GLFW, **FT** }
