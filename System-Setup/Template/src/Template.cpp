@@ -31,6 +31,9 @@ SOFTWARE.
 #include "GL/glew.h"                            // include GL Extension Wrangler
 #include "glm/gtc/matrix_transform.hpp"         //glm::lookAt
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include "GlfwWindow.h"
 #include "Shader.h"
 
@@ -77,6 +80,22 @@ int main()
       std::getline(std::cin, std::string());
       return -1;
    }
+
+   FT_Library ft;
+   if (FT_Init_FreeType(&ft))
+      std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+   // Sample code for using freetype
+   /*
+   FT_Face face;
+   if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+      std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+
+   FT_Set_Pixel_Sizes(face, 0, 48);
+
+   if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+      std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+   */
 
    // Constant vectors
    const glm::vec3 center(0.0f, 0.0f, 0.0f);
