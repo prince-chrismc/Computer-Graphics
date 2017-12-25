@@ -4,6 +4,11 @@ This section of the repository is to facilitate the configuration of the envirom
 ##### Warnings
 This app is very _limited_ in terms of functionality. It is looking for the file tree like [show below](#file-tree). **WARNIGN:** The testing/veryfication of you selection is checking only a single file.
 
+It is possible for the script to terminate successfully while having errors reported. The most likely is the "Invalid Syntax" which can be seen [here](#False-Positive-Termination). _Please_ report this issue and lable it a bug and attach the following information
+* Screenshot of the console
+* Copy of the setup.bat (should be present with the app)
+* And the path to which you are trying to save
+
 ##### Recommendations
 The [`Libraries.zip`](https://github.com/prince-chrismc/Computer-Graphics/releases/download/Setup-v1.2.0/Libraries.zip) pacakge provided in the releases is tailored for the setup app. The template is a basic outline for any project and is very generic and is built using the enviroment variables. It is **HIGHLY RECOMENDED** To use the .zip provided when configuring the enviroment variables.
 
@@ -58,3 +63,5 @@ Libraries
 ###### Failed Selection
 ![image](https://user-images.githubusercontent.com/16867443/34343437-5a975152-e99c-11e7-83f2-e1157a9b66fd.png)
 
+###### False Positive Termination
+![image](https://user-images.githubusercontent.com/16867443/34343499-e90899bc-e99e-11e7-850a-d155261df3d2.png)
