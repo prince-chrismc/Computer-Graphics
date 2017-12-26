@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Linked.h" />
+    <ClInclude Include="src\Program.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Linked.cpp" />
+    <ClCompile Include="src\Program.cpp" />
     <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
