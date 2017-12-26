@@ -2,7 +2,7 @@
 This section of the repository is to facilitate the configuration of the enviroment variables used by the OpenGL app in the [Assignments](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments) section. The reason to go this route was base upon having multiple machines being used during the development process; all of which required the libraries may of which being installed in different locations -- thus hardcoded paths would have possed challenges.
 
 ##### Warnings
-This app is very _limited_ in terms of functionality. It is looking for the file tree like [show below](#file-tree). **WARNIGN:** The testing/veryfication of you selection is checking only a single file.
+This app is very _limited_ in terms of functionality. It is looking for the file tree like [show below](#file-tree). **WARNING:** The testing/veryfication of you selection is checking only a single file.
 
 It is possible for the script to terminate successfully while having errors reported. The most likely is the "Invalid Syntax" which can be seen [here](#False-Positive-Termination). _Please_ report this issue and lable it a bug and attach the following information
 * Screenshot of the console
