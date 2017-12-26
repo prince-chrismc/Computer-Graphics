@@ -24,45 +24,39 @@ SOFTWARE.
 
 #pragma once
 
+#include "glm/gtc/type_ptr.hpp"                 // glm::value_ptr
 #include "GL/glew.h"                            // include GL Extension Wrangler
-#include <string>
+#include <mutex>
 
 namespace Shader
 {
-   class IShader abstract
-   {
-      friend class Linked;
-   public:
-      IShader(const std::string& rel_path);
-      ~IShader();
+   class IShader;
 
-      bool operator()() const { return m_Status; }
-
-   protected:
-      virtual bool Compile(const std::string& ShaderCode) = 0;
-
-      const std::string m_ShaderRelPath;
-      std::string m_ShaderCode;
-      bool m_Status;
-      GLuint m_Shader;
-   };
-
-   class VertexShader : public IShader
+   class Linked final
    {
    public:
-      VertexShader(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_ShaderCode); }
-      VertexShader(const char* rel_path) : VertexShader(std::string(rel_path)) {}
+      ~Linked() = default;
+      Linked(const Linked&) = delete;
+      Linked& operator=(const Linked&) = delete;
 
-      bool Compile(const std::string& ShaderCode);
-   };
+      static std::shared_ptr<Linked> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Linked()); }); return s_Instance; }
 
-   class FragmentShader : public IShader
-   {
-   public:
-      FragmentShader(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_ShaderCode); }
-      FragmentShader(const char* rel_path) : FragmentShader(std::string(rel_path)) {}
+      bool Link(IShader* vertex, IShader* frag);
 
-      bool Compile(const std::string& ShaderCode);
+      GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
+      GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ShaderProgram, shader_obj); }
+
+      void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
+      void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
+
+   private:
+      Linked() { m_ShaderProgram = glCreateProgram(); }
+
+      void AddShader(IShader * shader);
+
+      static std::once_flag s_Flag;
+      static std::shared_ptr<Linked> s_Instance;
+
+      GLuint m_ShaderProgram;
    };
 }
-

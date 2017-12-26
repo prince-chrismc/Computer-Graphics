@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Linked.h" />
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Linked.cpp" />
     <ClCompile Include="src\Shader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

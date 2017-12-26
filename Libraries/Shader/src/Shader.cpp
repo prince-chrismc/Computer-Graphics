@@ -26,10 +26,7 @@ SOFTWARE.
 #include <fstream>
 #include "Shader.h"
 
-std::once_flag ShaderLinker::s_Flag;
-std::shared_ptr<ShaderLinker> ShaderLinker::s_Instance;
-
-Shader::Shader(const std::string& rel_path) : m_ShaderRelPath(rel_path), m_Status(false)
+Shader::IShader::IShader(const std::string& rel_path) : m_ShaderRelPath(rel_path), m_Status(false)
 {
    std::ifstream ShaderStream(m_ShaderRelPath, std::ios::in);
 
@@ -50,12 +47,12 @@ Shader::Shader(const std::string& rel_path) : m_ShaderRelPath(rel_path), m_Statu
    }
 }
 
-Shader::~Shader()
+Shader::IShader::~IShader()
 {
    glDeleteShader(m_Shader); //free up memory
 }
 
-bool VertexShader::Compile(const std::string& ShaderCode)
+bool Shader::VertexShader::Compile(const std::string& ShaderCode)
 {
    m_Shader = glCreateShader(GL_VERTEX_SHADER);
    char const * VertexSourcePointer = ShaderCode.c_str();
@@ -75,7 +72,8 @@ bool VertexShader::Compile(const std::string& ShaderCode)
    return true;
 }
 
-bool FragmentShader::Compile(const std::string & ShaderCode)
+
+bool Shader::FragmentShader::Compile(const std::string & ShaderCode)
 {
    m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
    char const * FragmentSourcePointer = ShaderCode.c_str();
@@ -92,26 +90,5 @@ bool FragmentShader::Compile(const std::string & ShaderCode)
       std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
       return false;
    }
-   return true;
-}
-
-bool ShaderLinker::Link(VertexShader* vertex, FragmentShader* frag)
-{
-   AddShader(vertex);
-   AddShader(frag);
-
-   glLinkProgram(m_ShaderProgram);
-
-   // Check for linking errors
-   GLint success;
-   GLchar infoLog[512];
-   glGetProgramiv(m_ShaderProgram, GL_LINK_STATUS, &success);
-   if (!success) {
-      glGetProgramInfoLog(m_ShaderProgram, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-      return false;
-   }
-
-   glUseProgram(m_ShaderProgram);
    return true;
 }
