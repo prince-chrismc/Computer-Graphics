@@ -24,45 +24,26 @@ SOFTWARE.
 
 #pragma once
 
-#include "GL/glew.h"                            // include GL Extension Wrangler
-#include <string>
+#include "Interface.h"
 
 namespace Shader
 {
-   class IShader abstract
+   class Vertex : public IShader
    {
-      friend class Linked;
    public:
-      IShader(const std::string& rel_path);
-      ~IShader();
+      Vertex(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_Code); }
+      Vertex(const char* rel_path) : Vertex(std::string(rel_path)) {}
 
-      bool operator()() const { return m_Status; }
-
-   protected:
-      virtual bool Compile(const std::string& ShaderCode) = 0;
-
-      const std::string m_ShaderRelPath;
-      std::string m_ShaderCode;
-      bool m_Status;
-      GLuint m_Shader;
+      bool Compile(const std::string& glsl_code);
    };
 
-   class VertexShader : public IShader
+   class Fragment : public IShader
    {
    public:
-      VertexShader(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_ShaderCode); }
-      VertexShader(const char* rel_path) : VertexShader(std::string(rel_path)) {}
+      Fragment(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_Code); }
+      Fragment(const char* rel_path) : Fragment(std::string(rel_path)) {}
 
-      bool Compile(const std::string& ShaderCode);
-   };
-
-   class FragmentShader : public IShader
-   {
-   public:
-      FragmentShader(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_ShaderCode); }
-      FragmentShader(const char* rel_path) : FragmentShader(std::string(rel_path)) {}
-
-      bool Compile(const std::string& ShaderCode);
+      bool Compile(const std::string& glsl_code);
    };
 }
 

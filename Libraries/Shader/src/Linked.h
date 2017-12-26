@@ -43,20 +43,20 @@ namespace Shader
 
       bool Link(IShader* vertex, IShader* frag);
 
-      GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ShaderProgram, shader_obj); }
-      GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ShaderProgram, shader_obj); }
+      GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
+      GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
 
       void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
       void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
 
    private:
-      Linked() { m_ShaderProgram = glCreateProgram(); }
+      Linked() { m_ProgramId = glCreateProgram(); }
 
       void AddShader(IShader * shader);
 
       static std::once_flag s_Flag;
       static std::shared_ptr<Linked> s_Instance;
 
-      GLuint m_ShaderProgram;
+      GLuint m_ProgramId;
    };
 }

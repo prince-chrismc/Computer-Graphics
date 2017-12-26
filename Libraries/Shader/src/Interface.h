@@ -22,35 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Linked.h"
-#include "Interface.h"
-#include <iostream>
+#pragma once
 
-std::once_flag Shader::Linked::s_Flag;
-std::shared_ptr<Shader::Linked> Shader::Linked::s_Instance;
+#include "GL/glew.h"                            // include GL Extension Wrangler
+#include <string>
 
-bool Shader::Linked::Link(IShader* vertex, IShader* frag)
+namespace Shader
 {
-   AddShader(vertex);
-   AddShader(frag);
+   class IShader abstract
+   {
+      friend class Linked;
+   public:
+      IShader(const std::string& rel_path);
+      ~IShader();
 
-   glLinkProgram(m_ProgramId);
+   private:
+      virtual bool Compile(const std::string& glsl_code) = 0;
 
-   // Check for linking errors
-   GLint success;
-   GLchar infoLog[512];
-   glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
-   if (!success) {
-      glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-      return false;
-   }
-
-   glUseProgram(m_ProgramId);
-   return true;
+   protected:
+      GLuint m_Id;
+      bool m_Status;
+      std::string m_Code;
+   };
 }
 
-void Shader::Linked::AddShader(IShader* shader)
-{
-   glAttachShader(m_ProgramId, shader->m_Id);
-}

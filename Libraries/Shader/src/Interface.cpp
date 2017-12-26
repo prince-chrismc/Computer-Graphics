@@ -22,35 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Linked.h"
 #include "Interface.h"
 #include <iostream>
+#include <fstream>
 
-std::once_flag Shader::Linked::s_Flag;
-std::shared_ptr<Shader::Linked> Shader::Linked::s_Instance;
-
-bool Shader::Linked::Link(IShader* vertex, IShader* frag)
+Shader::IShader::IShader(const std::string& rel_path) : m_Status(false)
 {
-   AddShader(vertex);
-   AddShader(frag);
+   std::ifstream glsl_file(rel_path, std::ios::in);
 
-   glLinkProgram(m_ProgramId);
-
-   // Check for linking errors
-   GLint success;
-   GLchar infoLog[512];
-   glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
-   if (!success) {
-      glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-      return false;
+   if (glsl_file.is_open())
+   {
+      std::string line_buffer = "";
+      while (std::getline(glsl_file, line_buffer))
+      {
+         m_Code += "\n" + line_buffer;
+      }
+      glsl_file.close();
+      m_Status = true;
    }
-
-   glUseProgram(m_ProgramId);
-   return true;
+   else
+   {
+      std::cout << "Impossible to open " << rel_path.c_str() << ". Are you in the right directory ?" << std::endl;
+      std::getline(std::cin, std::string());
+      m_Status = false;
+   }
 }
 
-void Shader::Linked::AddShader(IShader* shader)
+Shader::IShader::~IShader()
 {
-   glAttachShader(m_ProgramId, shader->m_Id);
+   glDeleteShader(m_Id); //free up memory
 }

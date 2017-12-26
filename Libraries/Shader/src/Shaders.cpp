@@ -22,35 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Linked.h"
-#include "Interface.h"
+#include "Shaders.h"
 #include <iostream>
 
-std::once_flag Shader::Linked::s_Flag;
-std::shared_ptr<Shader::Linked> Shader::Linked::s_Instance;
-
-bool Shader::Linked::Link(IShader* vertex, IShader* frag)
+bool Shader::Vertex::Compile(const std::string& glsl_code)
 {
-   AddShader(vertex);
-   AddShader(frag);
+   m_Id = glCreateShader(GL_VERTEX_SHADER);
+   char const* glsl_buffer = glsl_code.c_str();
+   glShaderSource(m_Id, 1, &glsl_buffer, NULL);
+   glCompileShader(m_Id);
 
-   glLinkProgram(m_ProgramId);
-
-   // Check for linking errors
+   // Check for compile time errors
    GLint success;
-   GLchar infoLog[512];
-   glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
-   if (!success) {
-      glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+   GLchar info_log[512];
+   glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
+   if (!success)
+   {
+      glGetShaderInfoLog(m_Id, 512, NULL, info_log);
+      std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << std::endl;
       return false;
    }
-
-   glUseProgram(m_ProgramId);
    return true;
 }
 
-void Shader::Linked::AddShader(IShader* shader)
+bool Shader::Fragment::Compile(const std::string & glsl_code)
 {
-   glAttachShader(m_ProgramId, shader->m_Id);
+   m_Id = glCreateShader(GL_FRAGMENT_SHADER);
+   char const* glsl_buffer = glsl_code.c_str();
+   glShaderSource(m_Id, 1, &glsl_buffer, NULL);
+   glCompileShader(m_Id);
+
+   // Check for compile time errors
+   GLint success;
+   GLchar info_log[512];
+   glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
+   if (!success)
+   {
+      glGetShaderInfoLog(m_Id, 512, NULL, info_log);
+      std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << std::endl;
+      return false;
+   }
+   return true;
 }
