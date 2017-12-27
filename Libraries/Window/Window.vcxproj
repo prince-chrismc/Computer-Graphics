@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Factory.h" />
+    <ClInclude Include="src\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Factory.cpp" />
+    <ClCompile Include="src\Singleton.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
