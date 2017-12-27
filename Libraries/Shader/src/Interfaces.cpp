@@ -58,7 +58,6 @@ void Shader::IProgram::Link(IShader* vertex, IShader* frag)
    if (frag->m_Status && m_Status)
    {
       AddShader(frag);
-      m_Status = true;
    }
 
    // Now lets link the program
@@ -68,11 +67,12 @@ void Shader::IProgram::Link(IShader* vertex, IShader* frag)
 
       // Check for linking errors
       GLint success;
-      GLchar infoLog[512];
+      GLchar log_buffer[512];
       glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
-      if (!success) {
-         glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
-         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+      if (!success)
+      {
+         glGetProgramInfoLog(m_ProgramId, 512, NULL, log_buffer);
+         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << log_buffer << std::endl;
          m_Status = false;
       }
    }

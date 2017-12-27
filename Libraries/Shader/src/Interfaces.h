@@ -33,17 +33,16 @@ namespace Shader
    class IShader abstract
    {
       friend class IProgram;
-   public:
-      IShader(const std::string& rel_path);
-      ~IShader() { glDeleteShader(m_Id); }
+      public:
+         IShader(const std::string& rel_path);
+         ~IShader() { glDeleteShader(m_Id); }
 
-   private:
-      virtual void Compile() = 0;
+      protected:
+         virtual void Compile() = 0;
 
-   protected:
-      GLuint m_Id;
-      bool m_Status;
-      std::string m_Code;
+         GLuint m_Id;
+         bool m_Status;
+         std::string m_Code;
    };
 
    class IProgram abstract
