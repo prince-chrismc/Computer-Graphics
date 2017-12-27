@@ -18,6 +18,11 @@ This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) 
 - [Image Height Map](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments/Image-Height-Map)
 - [Ray Tracing](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Assignments/Ray-Tracing)
 
+#### [Libraries](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries)
+- [Shader](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/Shader)
+- [Window](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/Window)
+- [Object Loader](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/ObjLoader) _TBA_
+
 ## System Setup
 - Visual Studio 15.2+ (though any c++14 compliant should work)
 - OpenGL Libraries
