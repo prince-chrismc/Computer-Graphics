@@ -24,9 +24,42 @@ SOFTWARE.
 
 #pragma once
 
-class Program
+#include "Interfaces.h"
+
+#ifndef SHADER_PROGRAM
+#define SHADER_PROGRAM // To prevent inclusion of both Singleton and Multiple implementations
+
+#include <mutex>
+#include <map>
+
+namespace Shader
 {
-public:
-   Program();
-   ~Program();
-};
+   // Allows for multiple shader programs to exist
+   class Program final : public IProgram
+   {
+      // Everything is defined in the base class
+   };
+
+   class Map final
+   {
+   public:
+      ~Map() = default;
+      Map(const Map&) = delete;
+      Map& operator=(const Map&) = delete;
+
+      static std::shared_ptr<Map> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Map()); }); return s_Instance; }
+
+      std::shared_ptr<Program> GetProgram(const unsigned long& id) const { try { return m_IdAndPrograms.at(id); } catch(std::out_of_range) { return nullptr; } }
+      std::shared_ptr<Program> MakeProgram(const unsigned long& id) { std::shared_ptr<Program> prg = std::make_shared<Program>(); if(m_IdAndPrograms.emplace(id, prg).second) return prg; else return nullptr; }
+
+   private:
+      Map() = default;
+
+      std::map<unsigned long, std::shared_ptr<Program>> m_IdAndPrograms;
+
+      static std::once_flag s_Flag;
+      static std::shared_ptr<Map> s_Instance;
+   };
+}
+
+#endif // SHADER_PROGRAM

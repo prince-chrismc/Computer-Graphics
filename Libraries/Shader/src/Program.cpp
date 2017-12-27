@@ -24,10 +24,5 @@ SOFTWARE.
 
 #include "Program.h"
 
-Program::Program()
-{
-}
-
-Program::~Program()
-{
-}
+std::once_flag Shader::Map::s_Flag;
+std::shared_ptr<Shader::Map> Shader::Map::s_Instance;
