@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "Interface.h"
+#include "Interfaces.h"
 #include <iostream>
 #include <fstream>
 
@@ -47,5 +47,33 @@ Shader::IShader::IShader(const std::string& rel_path) : m_Status(false)
    }
 }
 
+void Shader::IProgram::Link(IShader* vertex, IShader* frag)
+{
+   if (vertex->m_Status)
    {
+      AddShader(vertex);
+      m_Status = true;
+   }
+
+   if (frag->m_Status && m_Status)
+   {
+      AddShader(frag);
+      m_Status = true;
+   }
+
+   // Now lets link the program
+   if (m_Status)
+   {
+      glLinkProgram(m_ProgramId);
+
+      // Check for linking errors
+      GLint success;
+      GLchar infoLog[512];
+      glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
+      if (!success) {
+         glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
+         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+         m_Status = false;
+      }
+   }
 }

@@ -25,13 +25,14 @@ SOFTWARE.
 #pragma once
 
 #include "GL/glew.h"                            // include GL Extension Wrangler
+#include "glm/gtc/type_ptr.hpp"                 // glm::value_ptr
 #include <string>
 
 namespace Shader
 {
    class IShader abstract
    {
-      friend class Linked;
+      friend class IProgram;
    public:
       IShader(const std::string& rel_path);
       ~IShader() { glDeleteShader(m_Id); }
@@ -43,6 +44,30 @@ namespace Shader
       GLuint m_Id;
       bool m_Status;
       std::string m_Code;
+   };
+
+   class IProgram abstract
+   {
+      public:
+         IProgram() : m_Status(false) { m_ProgramId = glCreateProgram(); }
+         ~IProgram() { glDeleteProgram(m_ProgramId); }
+
+         void AddShader(IShader* shader) const { glAttachShader(m_ProgramId, shader->m_Id); }
+         void Link(IShader* vertex, IShader* frag);
+         void Activate() const { glUseProgram(m_ProgramId); }
+
+         virtual bool operator()() const { return m_Status; }
+
+         GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
+         GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
+
+         void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
+         void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
+         void SetUniformVec3(const char* shader_obj, const glm::vec3& vec) const { glUniform3fv(GetUniformLocation(shader_obj), 1, glm::value_ptr(vec)); }
+
+      private:
+         GLuint m_ProgramId;
+         bool m_Status;
    };
 }
 

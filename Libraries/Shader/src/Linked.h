@@ -24,39 +24,35 @@ SOFTWARE.
 
 #pragma once
 
-#include "glm/gtc/type_ptr.hpp"                 // glm::value_ptr
-#include "GL/glew.h"                            // include GL Extension Wrangler
+#include "Interfaces.h"
+
+#ifndef SHADER_PROGRAM
+#define SHADER_PROGRAM // To prevent inclusion of both Singleton and Multiple implementations
+
 #include <mutex>
 
 namespace Shader
 {
-   class IShader;
-
-   class Linked final
+   // A singleton shader program access able everywhere
+   class Linked final : protected IProgram
    {
-   public:
-      ~Linked() = default;
-      Linked(const Linked&) = delete;
-      Linked& operator=(const Linked&) = delete;
+      public:
+         ~Linked() = default;
+         Linked(const Linked&) = delete;
+         Linked& operator=(const Linked&) = delete;
 
-      static std::shared_ptr<Linked> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Linked()); }); return s_Instance; }
+         static std::shared_ptr<Linked> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Linked()); }); return s_Instance; }
 
-      bool Link(IShader* vertex, IShader* frag);
+         void Init(IShader* vertex, IShader* frag) { Link(vertex, frag); Activate(); }
 
-      GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
-      GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
+         bool operator()() const { return IProgram::operator()(); }
 
-      void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
-      void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
+      private:
+         Linked() = default;
 
-   private:
-      Linked() { m_ProgramId = glCreateProgram(); }
-
-      void AddShader(IShader * shader);
-
-      static std::once_flag s_Flag;
-      static std::shared_ptr<Linked> s_Instance;
-
-      GLuint m_ProgramId;
+         static std::once_flag s_Flag;
+         static std::shared_ptr<Linked> s_Instance;
    };
 }
+
+#endif // SHADER_PROGRAM

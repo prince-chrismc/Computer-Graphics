@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Interface.h" />
+    <ClInclude Include="src\Interfaces.h" />
     <ClInclude Include="src\Linked.h" />
     <ClInclude Include="src\Program.h" />
     <ClInclude Include="src\Shaders.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Interface.cpp" />
+    <ClCompile Include="src\Interfaces.cpp" />
     <ClCompile Include="src\Linked.cpp" />
     <ClCompile Include="src\Program.cpp" />
     <ClCompile Include="src\Shaders.cpp" />

@@ -21,10 +21,10 @@
     <ClInclude Include="src\Linked.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Interface.h">
+    <ClInclude Include="src\Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shaders.h">
+    <ClInclude Include="src\Interfaces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,10 +35,10 @@
     <ClCompile Include="src\Linked.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Interface.cpp">
+    <ClCompile Include="src\Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shaders.cpp">
+    <ClCompile Include="src\Interfaces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

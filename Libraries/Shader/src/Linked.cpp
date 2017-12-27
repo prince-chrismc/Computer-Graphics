@@ -23,34 +23,6 @@ SOFTWARE.
 */
 
 #include "Linked.h"
-#include "Interface.h"
-#include <iostream>
 
 std::once_flag Shader::Linked::s_Flag;
 std::shared_ptr<Shader::Linked> Shader::Linked::s_Instance;
-
-bool Shader::Linked::Link(IShader* vertex, IShader* frag)
-{
-   AddShader(vertex);
-   AddShader(frag);
-
-   glLinkProgram(m_ProgramId);
-
-   // Check for linking errors
-   GLint success;
-   GLchar infoLog[512];
-   glGetProgramiv(m_ProgramId, GL_LINK_STATUS, &success);
-   if (!success) {
-      glGetProgramInfoLog(m_ProgramId, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-      return false;
-   }
-
-   glUseProgram(m_ProgramId);
-   return true;
-}
-
-void Shader::Linked::AddShader(IShader* shader)
-{
-   glAttachShader(m_ProgramId, shader->m_Id);
-}

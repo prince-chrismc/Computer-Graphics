@@ -24,7 +24,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "Interface.h"
+#include "Interfaces.h"
 
 namespace Shader
 {
