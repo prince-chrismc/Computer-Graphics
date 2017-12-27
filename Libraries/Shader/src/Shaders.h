@@ -30,20 +30,22 @@ namespace Shader
 {
    class Vertex : public IShader
    {
-   public:
-      Vertex(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_Code); }
-      Vertex(const char* rel_path) : Vertex(std::string(rel_path)) {}
+      public:
+         Vertex(const std::string& rel_path) : IShader(rel_path) { m_Id = glCreateShader(GL_VERTEX_SHADER); Compile(); }
+         Vertex(const char* rel_path) : Vertex(std::string(rel_path)) {}
 
-      bool Compile(const std::string& glsl_code);
+      private:
+         void Compile();
    };
 
    class Fragment : public IShader
    {
-   public:
-      Fragment(const std::string& rel_path) : IShader(rel_path) { m_Status = Compile(m_Code); }
-      Fragment(const char* rel_path) : Fragment(std::string(rel_path)) {}
+      public:
+         Fragment(const std::string& rel_path) : IShader(rel_path) { m_Id = glCreateShader(GL_FRAGMENT_SHADER); Compile(); }
+         Fragment(const char* rel_path) : Fragment(std::string(rel_path)) {}
 
-      bool Compile(const std::string& glsl_code);
+      private:
+         void Compile();
    };
 }
 

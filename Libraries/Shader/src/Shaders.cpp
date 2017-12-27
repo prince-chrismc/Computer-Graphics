@@ -25,42 +25,44 @@ SOFTWARE.
 #include "Shaders.h"
 #include <iostream>
 
-bool Shader::Vertex::Compile(const std::string& glsl_code)
+void Shader::Vertex::Compile()
 {
-   m_Id = glCreateShader(GL_VERTEX_SHADER);
-   char const* glsl_buffer = glsl_code.c_str();
-   glShaderSource(m_Id, 1, &glsl_buffer, NULL);
-   glCompileShader(m_Id);
-
-   // Check for compile time errors
-   GLint success;
-   GLchar info_log[512];
-   glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
-   if (!success)
+   if (m_Status) // If the code was loaded by the base class
    {
-      glGetShaderInfoLog(m_Id, 512, NULL, info_log);
-      std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << std::endl;
-      return false;
+      char const* glsl_buffer = m_Code.c_str();
+      glShaderSource(m_Id, 1, &glsl_buffer, NULL);
+      glCompileShader(m_Id);
+
+      // Check for compile time errors
+      GLint success;
+      GLchar info_log[512];
+      glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
+      if (!success)
+      {
+         glGetShaderInfoLog(m_Id, 512, NULL, info_log);
+         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << std::endl;
+         m_Status = false;
+      }
    }
-   return true;
 }
 
-bool Shader::Fragment::Compile(const std::string & glsl_code)
+void Shader::Fragment::Compile()
 {
-   m_Id = glCreateShader(GL_FRAGMENT_SHADER);
-   char const* glsl_buffer = glsl_code.c_str();
-   glShaderSource(m_Id, 1, &glsl_buffer, NULL);
-   glCompileShader(m_Id);
-
-   // Check for compile time errors
-   GLint success;
-   GLchar info_log[512];
-   glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
-   if (!success)
+   if (m_Status) // If the code was loaded by the base class
    {
-      glGetShaderInfoLog(m_Id, 512, NULL, info_log);
-      std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << std::endl;
-      return false;
+      char const* glsl_buffer = m_Code.c_str();
+      glShaderSource(m_Id, 1, &glsl_buffer, NULL);
+      glCompileShader(m_Id);
+
+      // Check for compile time errors
+      GLint success;
+      GLchar info_log[512];
+      glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
+      if (!success)
+      {
+         glGetShaderInfoLog(m_Id, 512, NULL, info_log);
+         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << std::endl;
+         m_Status = false;
+      }
    }
-   return true;
 }

@@ -34,10 +34,10 @@ namespace Shader
       friend class Linked;
    public:
       IShader(const std::string& rel_path);
-      ~IShader();
+      ~IShader() { glDeleteShader(m_Id); }
 
    private:
-      virtual bool Compile(const std::string& glsl_code) = 0;
+      virtual void Compile() = 0;
 
    protected:
       GLuint m_Id;

@@ -44,11 +44,8 @@ Shader::IShader::IShader(const std::string& rel_path) : m_Status(false)
    {
       std::cout << "Impossible to open " << rel_path.c_str() << ". Are you in the right directory ?" << std::endl;
       std::getline(std::cin, std::string());
-      m_Status = false;
    }
 }
 
-Shader::IShader::~IShader()
-{
-   glDeleteShader(m_Id); //free up memory
+   {
 }
