@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GlfwWindow.h" />
+    <ClInclude Include="src\Factory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GlfwWindow.cpp" />
+    <ClCompile Include="src\Factory.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
