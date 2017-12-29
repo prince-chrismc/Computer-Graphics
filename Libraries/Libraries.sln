@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shader", "Shader\Shader.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Window", "Window\Window.vcxproj", "{BCEEF0B0-AF49-48A5-86A3-FFDD33B69541}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectLoader", "ObjectLoader\ObjectLoader.vcxproj", "{B2EB44DF-85D3-4F64-8B56-ADCE59E20F20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{BCEEF0B0-AF49-48A5-86A3-FFDD33B69541}.Debug|x64.Build.0 = Debug|x64
 		{BCEEF0B0-AF49-48A5-86A3-FFDD33B69541}.Release|x64.ActiveCfg = Release|x64
 		{BCEEF0B0-AF49-48A5-86A3-FFDD33B69541}.Release|x64.Build.0 = Release|x64
+		{B2EB44DF-85D3-4F64-8B56-ADCE59E20F20}.Debug|x64.ActiveCfg = Debug|x64
+		{B2EB44DF-85D3-4F64-8B56-ADCE59E20F20}.Debug|x64.Build.0 = Debug|x64
+		{B2EB44DF-85D3-4F64-8B56-ADCE59E20F20}.Release|x64.ActiveCfg = Release|x64
+		{B2EB44DF-85D3-4F64-8B56-ADCE59E20F20}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
