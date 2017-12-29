@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "ObjLoader.h"
 #include <vector>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 
 bool LoadObjFile(const char* path, std::vector<glm::vec3>* out_vertices, std::vector<glm::vec3>* out_normals,
@@ -35,9 +35,8 @@ bool LoadObjFile(const char* path, std::vector<glm::vec3>* out_vertices, std::ve
    std::vector<glm::vec2> temp_uvs;
    std::vector<glm::vec3> temp_normals;
 
-   FILE* file;
-   errno_t err = fopen_s(&file, path, "r");
-   if (err)
+   std::FILE* file = std::fopen(path, "r");
+   if (!file)
    {
       printf("Impossible to open the file! Are you in the right path ?\n");
       getchar();
