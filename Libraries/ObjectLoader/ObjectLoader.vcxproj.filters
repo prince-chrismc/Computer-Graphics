@@ -18,9 +18,15 @@
     <ClInclude Include="src\ObjLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\File.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

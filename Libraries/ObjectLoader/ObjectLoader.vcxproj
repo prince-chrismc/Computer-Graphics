@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\File.h" />
     <ClInclude Include="src\ObjLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\File.cpp" />
     <ClCompile Include="src\ObjLoader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
