@@ -22,19 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-/*
-      THIS CODE ORIGINATED FROM THE STAFF OF THE COURSE WHICH
-      THE PROJECT BELONGS TO BUT HAS SINCE BEEN _HEAVILY_ MODIFIED
-      TO MEET TODAY'S STANDARDS.
-*/
-
 #include "ObjLoader.h"
 #include <vector>
 #include <stdio.h>
 #include <string>
 
-#ifdef _WIN32
 bool LoadObjFile(const char* path, std::vector<glm::vec3>* out_vertices, std::vector<glm::vec3>* out_normals,
    std::vector<glm::vec2>* out_uvs)
 {
@@ -126,4 +118,3 @@ bool LoadObjFile(const char* path, std::vector<glm::vec3>* out_vertices, std::ve
 
    return true;
 }
-#endif

@@ -24,17 +24,10 @@ SOFTWARE.
 
 #pragma once
 
-/*
-      THIS CODE ORIGINATED FROM THE STAFF OF THE COURSE WHICH
-      THE PROJECT BELONGS TO BUT HAS SINCE BEEN _HEAVILY_ MODIFIED
-      TO MEET TODAY'S STANDARDS.
-*/
-
 #include <vector>
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
-#ifdef _WIN32
 // Loads a windows file .obj specialized for DDS textures
 bool LoadObjFile(
    const char* path,
@@ -42,4 +35,3 @@ bool LoadObjFile(
    std::vector<glm::vec3>* out_normals,
    std::vector<glm::vec2>* out_uvs
 );
-#endif // _WIN32
