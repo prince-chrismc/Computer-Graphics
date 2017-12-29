@@ -23,52 +23,6 @@ SOFTWARE.
 */
 
 #include "Factory.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include <iostream>
 
-std::once_flag GlfwWindow::s_InitFlag;
 std::once_flag GlfwWindowFactory::s_Flag;
-std::shared_ptr<GlfwWindowFactory> GlfwWindowFactory::s_Instance;
-
-GlfwWindow::GlfwWindow(const char* title, const int& width, const int& height) : m_window(nullptr), m_Projection()
-{
-   std::call_once(s_InitFlag, []() {
-      // Init GLFW
-      std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
-      glfwInit();
-      // Set all the required options for GLFW
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-   });
-
-   // try to create window
-   m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-   if (m_window == nullptr)
-   {
-      std::cout << "Failed to create GLFW window" << std::endl;
-      glfwTerminate();
-      return;
-   }
-
-   // select new window
-   glfwMakeContextCurrent(m_window);
-
-   // get frame bug from GLFW notify GL and calc Projection Matrix
-   {
-      int width, height;
-      glfwGetFramebufferSize(m_window, &width, &height);
-
-      glViewport(0, 0, width, height);
-      m_Projection = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
-   }
-
-   SetWindowSizeCallback([](GLFWwindow* window, int width, int height) { GlfwWindowFactory::GetInstance()->FindWindow(window)->UpdateFromResize(width, height); });
-}
-
-void GlfwWindow::UpdateFromResize(const int& width, const int& height)
-{
-   // notify GL and calc projection matrix using new size
-   glViewport(0, 0, width, height);
-   m_Projection = glm::perspective(45.0f, (GLfloat)width / (GLfloat)height, 0.0f, 100.0f);
-}
+std::shared_ptr<GlfwWindowFactory> GlfwWindowFactory::s_Instance = nullptr;

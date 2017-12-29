@@ -13,10 +13,12 @@
   <ItemGroup>
     <ClInclude Include="src\Factory.h" />
     <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Factory.cpp" />
     <ClCompile Include="src\Singleton.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -24,43 +24,21 @@ SOFTWARE.
 
 #pragma once
 
-#include "GLFW/glfw3.h"                   // include GLFW helper library
-#include "glm/detail/type_mat4x4.hpp"     // include glm::mat4 library
+#include "Window.h"
+
+#ifndef WINDOW_PROGRAM
+#define WINDOW_PROGRAM // To prevent inclusion of both Singleton and Multiple implementations
+
 #include <vector>
 #include <mutex>
 
-class GlfwWindow
+class GlfwWindow : public IWindow
 {
-   friend class GlfwWindowFactory;
+friend class GlfwWindowFactory;
 
 public:
-   GlfwWindow(const char* title, const int& width, const int& height);
+   GlfwWindow(const char* title, const int& width, const int& height) : IWindow(title, width, height) {}
    GlfwWindow(const char* title) : GlfwWindow(title, DEFAULT_WIDTH, DEFAULT_HEIGHT) {}
-
-   constexpr bool IsValid() const { return m_window != nullptr; }          // Make sure windows exists
-   void NextBuffer() { glfwSwapBuffers(m_window); }                        // Swap the screen buffers
-   bool ShouldClose() const { return glfwWindowShouldClose(m_window); }    // window should close
-   void CloseWindow() const { glfwSetWindowShouldClose(m_window, GLFW_TRUE); }
-
-   const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
-
-   // Allow the required callback functions
-   GLFWkeyfun         SetKeyCallback(GLFWkeyfun cbfun) { return glfwSetKeyCallback(m_window, cbfun); }
-   GLFWmousebuttonfun SetMouseButtonCallback(GLFWmousebuttonfun cbfun) { return glfwSetMouseButtonCallback(m_window, cbfun); }
-   GLFWcursorposfun   SetCursorPosCallback(GLFWcursorposfun cbfun) { return glfwSetCursorPosCallback(m_window, cbfun); }
-
-   static void TriggerCallbacks() { glfwPollEvents(); }                    // For all windows, trigger callback for any pending event
-
-   enum : GLuint { DEFAULT_WIDTH = 800, DEFAULT_HEIGHT = 600 };            // Default window dimensions
-
-private:
-   GLFWwindow* m_window;
-   glm::mat4   m_Projection;
-
-   static std::once_flag s_InitFlag;
-
-   void UpdateFromResize(const int& width, const int& height);
-   GLFWwindowsizefun  SetWindowSizeCallback(GLFWwindowsizefun cbfun) { return glfwSetWindowSizeCallback(m_window, cbfun); }
 };
 
 class GlfwWindowFactory
@@ -74,7 +52,7 @@ public:
 
    std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title, const int& width, const int& height) { m_Windows.push_back(std::make_shared<GlfwWindow>(title, width, height)); return m_Windows.back(); }
    std::shared_ptr<GlfwWindow> CreateNewWindow(const char* title) { m_Windows.push_back(std::make_shared<GlfwWindow>(title)); return m_Windows.back(); }
-   std::shared_ptr<GlfwWindow> FindWindow(GLFWwindow* window) const { for (std::shared_ptr<GlfwWindow> win : m_Windows) { if (win->m_window == window) return win; } return nullptr; }
+   std::shared_ptr<GlfwWindow> FindWindow(GLFWwindow* window) const { for (std::shared_ptr<GlfwWindow> win : m_Windows) { if (win->m_Window == window) return win; } return nullptr; }
 
 private:
    GlfwWindowFactory() = default;
@@ -84,3 +62,5 @@ private:
 
    std::vector<std::shared_ptr<GlfwWindow>> m_Windows;
 };
+
+#endif // WINDOW_PROGRAM

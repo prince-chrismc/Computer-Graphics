@@ -24,10 +24,13 @@ SOFTWARE.
 
 #include "Singleton.h"
 
-GlfwWindow::GlfwWindow()
-{
-}
+std::once_flag GlfwWindow::s_Flag;
+std::shared_ptr<GlfwWindow> GlfwWindow::s_Instance = nullptr;
 
-GlfwWindow::~GlfwWindow()
+std::shared_ptr<GlfwWindow> GlfwWindow::CreateInstance(const char * title, const int & width, const int & height)
 {
+   std::call_once(s_Flag, [title, width, height](){
+      s_Instance.reset(new GlfwWindow(title, width, height)); });
+
+   return s_Instance;
 }

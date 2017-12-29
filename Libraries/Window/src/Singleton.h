@@ -24,9 +24,31 @@ SOFTWARE.
 
 #pragma once
 
-class GlfwWindow
+#include "Window.h"
+
+#ifndef WINDOW_PROGRAM
+#define WINDOW_PROGRAM // To prevent inclusion of both Singleton and Multiple implementations
+
+#include<mutex>
+
+class GlfwWindow : public IWindow
 {
 public:
-   GlfwWindow();
-   ~GlfwWindow();
+   ~GlfwWindow() = default;
+   GlfwWindow(const GlfwWindow&) = delete;
+   GlfwWindow& operator=(const GlfwWindow&) = delete;
+
+   static std::shared_ptr<GlfwWindow> CreateInstance(const char* title, const int& width = DEFAULT_WIDTH, const int& height = DEFAULT_HEIGHT);
+   static std::shared_ptr<GlfwWindow> GetInstance() { return s_Instance; }
+
+   enum : unsigned int { DEFAULT_WIDTH = 800, DEFAULT_HEIGHT = 600 };            // Default window dimensions
+
+private:
+   GlfwWindow(const char* title, const int& width, const int& height) : IWindow(title, width, height) {}
+   GlfwWindow(const char* title) : GlfwWindow(title, DEFAULT_WIDTH, DEFAULT_HEIGHT) {}
+
+   static std::once_flag s_Flag;
+   static std::shared_ptr<GlfwWindow> s_Instance;
 };
+
+#endif // WINDOW_PROGRAM
