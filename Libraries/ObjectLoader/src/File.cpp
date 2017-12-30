@@ -78,7 +78,7 @@ bool ObjFormat::File::ExtractDate()
       }
    }
 
-   ExtractIndexing()
+   ExtractIndexing();
 
    return true;
 }
@@ -86,7 +86,7 @@ bool ObjFormat::File::ExtractDate()
 void ObjFormat::File::ExtractVertice(const std::string & line)
 {
    float buffer[3];
-   std::stringstream ss(line)
+   std::stringstream ss(line);
    for(int i = 0; i < 3; i++)
       ss >> buffer[i];
 
@@ -96,7 +96,7 @@ void ObjFormat::File::ExtractVertice(const std::string & line)
 void ObjFormat::File::ExtractNormal(const std::string & line)
 {
    float buffer[3];
-   std::stringstream ss(line)
+   std::stringstream ss(line);;
       for (int i = 0; i < 3; i++)
          ss >> buffer[i];
 
@@ -106,17 +106,18 @@ void ObjFormat::File::ExtractNormal(const std::string & line)
 void ObjFormat::File::ExtractTexture(const std::string & line)
 {
    float buffer[2];
-   std::stringstream ss(line)
+   std::stringstream ss(line);
       for (int i = 0; i < 2; i++)
          ss >> buffer[i];
 
    m_Textures.emplace_back(buffer[0], buffer[1]);
 }
 
-void ObjFormat::File::ExtractIndexing(const std::string & line)
+void ObjFormat::File::ExtractIndexing()
 {
    for (auto line : m_Indicies)
    {
+      std::stringstream ss(line);
       unsigned int vertex_index[3], uv_index[3], normal_index[3];
       for (int i = 0; i < 3; i++)
       {
@@ -126,7 +127,7 @@ void ObjFormat::File::ExtractIndexing(const std::string & line)
       }
 
       for (auto vertex : vertex_index) m_VerticeIndicies.push_back(vertex);
-      for (auto uv : uv_index) m_UvIndicies.push_back(uv);
+      for (auto uv : uv_index) m_TextureIndicies.push_back(uv);
       for (auto normal : normal_index) m_NormalsIndicies.push_back(normal);
    }
 }

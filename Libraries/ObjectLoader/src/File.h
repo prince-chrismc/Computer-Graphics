@@ -70,6 +70,6 @@ namespace ObjFormat
          void ExtractVertice(const std::string& line);
          void ExtractNormal(const std::string& line);
          void ExtractTexture(const std::string& line);
-         void ExtractIndexing(const std::string& line);
+         void ExtractIndexing();
    };
 }
