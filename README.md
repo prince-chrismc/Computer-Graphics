@@ -21,7 +21,7 @@ This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) 
 #### [Libraries](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries)
 - [Shader](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/Shader)
 - [Window](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/Window)
-- [Object Loader](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/ObjLoader) _TBA_
+- [Object Loader](https://github.com/prince-chrismc/Computer-Graphics/tree/master/Libraries/ObjectLoader)
 
 ## System Setup
 - Visual Studio 15.2+ (though any c++14 compliant should work)
