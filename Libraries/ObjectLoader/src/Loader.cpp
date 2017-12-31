@@ -24,19 +24,11 @@ SOFTWARE.
 
 #include "Loader.h"
 #include <sstream>
+#include <future>
 
 void Obj::Loader::ExtractDate()
 {
-   //for (int x = 0; x + BATCH_SIZE < m_Lines.size(); x += BATCH_SIZE)
-   //{
-   //   std::async(std::launch::async, [this, x] {
-   //      for (auto itor = m_Line.begin() + x; itor != m_Lines.begin() + 2 * x; itor++)
-   //      {
-
-   //      }
-   //   });
-   //}
-
+   /// This code can NOT be parallelized because the order needs to be maintained
    for (auto line : m_File.m_Lines)
    {
       switch (line.at(0))
