@@ -32,13 +32,13 @@ namespace Obj
    class File
    {
       friend class Loader;
-      public:
-         File(const char* file_path);
-         ~File() = default;
+   public:
+      File(const char* file_path);
+      ~File() = default;
 
-         explicit operator bool() const { return !m_Lines.empty(); }
+      explicit operator bool() const { return !m_Lines.empty(); }
 
-      private:
-         std::vector<std::string> m_Lines;
+   private:
+      std::vector<std::string> m_Lines;
    };
 }

@@ -47,4 +47,3 @@ namespace Obj
       std::vector<glm::vec3> m_Normals;
    };
 }
-

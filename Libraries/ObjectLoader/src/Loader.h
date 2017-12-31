@@ -38,7 +38,6 @@ namespace Obj
       Model GetModel() { return m_Model; }
 
    private:
-      //static constexpr int BATCH_SIZE = 25;
       File m_File;
       Model m_Model;
 
