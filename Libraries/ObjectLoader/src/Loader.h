@@ -32,8 +32,7 @@ namespace Obj
    class Loader
    {
    public:
-      Loader(const File& file) : m_File(file) {}
-      Loader(const char* path) : m_File(path) {}
+      Loader(const char* path) : m_File(path) { if(m_File) { ExtractDate(); SortCoords(); } }
       ~Loader() = default;
 
       Model GetModel() { return m_Model; }
