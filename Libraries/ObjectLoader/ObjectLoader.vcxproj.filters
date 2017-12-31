@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ObjLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\File.h">
@@ -23,7 +22,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ObjLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\File.cpp">
