@@ -25,7 +25,7 @@ This a C++ OpenGL repository to contain my work for Computer Graphics (COMP371) 
 
 ## System Setup
 - Visual Studio 15.2+ (though any c++14 compliant should work)
-- OpenGL Libraries
+- Open-Source Libraries
   - [GLFW 3.2.1](https://github.com/glfw/glfw/releases/tag/3.2.1)
   - [GLM 9.8.5](https://github.com/g-truc/glm/releases/tag/0.9.8.5)
   - [GLEW 2.1.0](https://github.com/nigels-com/glew/releases/tag/glew-2.1.0)
