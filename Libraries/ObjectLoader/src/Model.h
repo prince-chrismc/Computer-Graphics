@@ -37,6 +37,10 @@ namespace Obj
       Model() = default;
       ~Model() = default;
 
+      std::vector<glm::vec3> GetVertices() const { return m_Vertices; }
+      std::vector<glm::vec2> GetTextures() const { return m_Textures; }
+      std::vector<glm::vec3> GetNormals() const { return m_Normals; }
+
    private:
       std::vector<glm::vec3> m_Vertices;
       std::vector<glm::vec2> m_Textures;
