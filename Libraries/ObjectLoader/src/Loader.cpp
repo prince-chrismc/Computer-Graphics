@@ -102,19 +102,28 @@ void Obj::Loader::ExtractIndexing()
 
 void Obj::Loader::SortCoords()
 {
-   std::vector<glm::vec3> temp_vertices;
+   auto temp_vertices = std::async(std::launch::async, [this] {
+      std::vector<glm::vec3> temp_vertices;
+      for (unsigned int i = 0; i < m_VerticeIndicies.size(); i++)
+         temp_vertices.push_back(m_Model.m_Vertices.at(m_VerticeIndicies.at(i) - 1));
+      return temp_vertices;
+   });
+
+   auto temp_uvs = std::async(std::launch::async, [this] {
    std::vector<glm::vec2> temp_uvs;
-   std::vector<glm::vec3> temp_normals;
-
-   for (unsigned int i = 0; i < m_VerticeIndicies.size(); i++)
-   {
-      // Get the attributes in draw order thanks to the index
-      temp_vertices.push_back(m_Model.m_Vertices.at(m_VerticeIndicies.at(i) - 1));
+   for (unsigned int i = 0; i < m_TextureIndicies.size(); i++)
       temp_uvs.push_back(m_Model.m_Textures.at(m_TextureIndicies.at(i) - 1));
-      temp_normals.push_back(m_Model.m_Normals.at(m_NormalsIndicies.at(i) - 1));
-   }
+   return temp_uvs;
+   });
 
-   m_Model.m_Vertices = temp_vertices;
-   m_Model.m_Textures = temp_uvs;
-   m_Model.m_Normals = temp_normals;
+   auto temp_normals = std::async(std::launch::async, [this] {
+   std::vector<glm::vec3> temp_normals;
+   for (unsigned int i = 0; i < m_NormalsIndicies.size(); i++)
+      temp_normals.push_back(m_Model.m_Normals.at(m_NormalsIndicies.at(i) - 1));
+   return temp_normals;
+   });
+
+   m_Model.m_Vertices = temp_vertices.get();
+   m_Model.m_Textures = temp_uvs.get();
+   m_Model.m_Normals = temp_normals.get();
 }
