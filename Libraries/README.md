@@ -5,5 +5,5 @@ This solution contains utility libraries used by the assignments to eliminate du
 :---: | :---
 Shader | Code Complete / Untested
 Windows | Code Complete / Untested
-Object Loader | WIP
+Object Loader | Code Complete / Untested
 Test App | TBA
