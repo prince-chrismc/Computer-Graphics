@@ -24,21 +24,44 @@ SOFTWARE.
 
 #pragma once
 
-#include <string>
-#include <vector>
+#include "File.h"
+#include "Model.h"
 
 namespace Obj
 {
-   class File
+   class Loader
    {
-      friend class Loader;
-      public:
-         File(const char* file_path);
-         ~File() = default;
+   public:
+      Loader(const File& file) : m_File(file) {}
+      Loader(const char* path) : m_File(path) {}
+      ~Loader() = default;
 
-         explicit operator bool() const { return !m_Lines.empty(); }
+      Model GetModel() { return m_Model; }
 
-      private:
-         std::vector<std::string> m_Lines;
+   private:
+      //static constexpr int BATCH_SIZE = 25;
+      File m_File;
+      Model m_Model;
+
+      std::vector<std::string> m_Indicies;
+
+      std::vector<unsigned int> m_VerticeIndicies;
+      std::vector<unsigned int> m_TextureIndicies;
+      std::vector<unsigned int> m_NormalsIndicies;
+
+      enum class Offset : size_t
+      {
+         VERTICE = 2,
+         NORMAL = 3,
+         TEXTURE = 3,
+         INDEX = 2,
+      };
+
+      void ExtractDate();
+         void ExtractVertice(const std::string & line);
+         void ExtractNormal(const std::string & line);
+         void ExtractTexture(const std::string & line);
+         void ExtractIndexing();
+      void SortCoords();
    };
 }

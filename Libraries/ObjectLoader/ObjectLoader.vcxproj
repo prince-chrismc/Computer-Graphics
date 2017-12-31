@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\File.h" />
+    <ClInclude Include="src\Loader.h" />
     <ClInclude Include="src\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\File.cpp" />
+    <ClCompile Include="src\Loader.cpp" />
     <ClCompile Include="src\Model.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

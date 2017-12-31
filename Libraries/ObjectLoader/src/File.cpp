@@ -25,10 +25,8 @@ SOFTWARE.
 #include "File.h"
 #include <fstream>
 #include <iostream>
-#include <future>
-#include <sstream>
 
-ObjFormat::File::File(const char* file_path)
+Obj::File::File(const char* file_path)
 {
    std::ifstream obj_file(file_path, std::ios::in);
 
@@ -45,89 +43,4 @@ ObjFormat::File::File(const char* file_path)
    }
 
    obj_file.close();
-}
-
-bool ObjFormat::File::ExtractDate()
-{
-   //for (int x = 0; x + BATCH_SIZE < m_Lines.size(); x += BATCH_SIZE)
-   //{
-   //   std::async(std::launch::async, [this, x] {
-   //      for (auto itor = m_Line.begin() + x; itor != m_Lines.begin() + 2 * x; itor++)
-   //      {
-
-   //      }
-   //   });
-   //}
-
-   for (auto line : m_Lines)
-   {
-      switch (line.at(0))
-      {
-      case 'v':
-         switch (line.at(1))
-         {
-         case ' ': ExtractVertice(line.substr((size_t)Offset::VERTICE));
-         case 'n': ExtractNormal(line.substr((size_t)Offset::NORMAL));
-         case 't': ExtractTexture(line.substr((size_t)Offset::TEXTURE));
-         default:
-            break;
-         }
-      case 'f': m_Indicies.emplace_back(line.substr((size_t)Offset::INDEX));
-      default:
-         break;
-      }
-   }
-
-   ExtractIndexing();
-
-   return true;
-}
-
-void ObjFormat::File::ExtractVertice(const std::string & line)
-{
-   float buffer[3];
-   std::stringstream ss(line);
-   for(int i = 0; i < 3; i++)
-      ss >> buffer[i];
-
-   m_Vertices.emplace_back(buffer[0], buffer[1], buffer[2]);
-}
-
-void ObjFormat::File::ExtractNormal(const std::string & line)
-{
-   float buffer[3];
-   std::stringstream ss(line);;
-      for (int i = 0; i < 3; i++)
-         ss >> buffer[i];
-
-   m_Normals.emplace_back(buffer[0], buffer[1], buffer[2]);
-}
-
-void ObjFormat::File::ExtractTexture(const std::string & line)
-{
-   float buffer[2];
-   std::stringstream ss(line);
-      for (int i = 0; i < 2; i++)
-         ss >> buffer[i];
-
-   m_Textures.emplace_back(buffer[0], buffer[1]);
-}
-
-void ObjFormat::File::ExtractIndexing()
-{
-   for (auto line : m_Indicies)
-   {
-      std::stringstream ss(line);
-      unsigned int vertex_index[3], uv_index[3], normal_index[3];
-      for (int i = 0; i < 3; i++)
-      {
-         ss >> vertex_index[i];
-         ss >> uv_index[i];
-         ss >> normal_index[i];
-      }
-
-      for (auto vertex : vertex_index) m_VerticeIndicies.push_back(vertex);
-      for (auto uv : uv_index) m_TextureIndicies.push_back(uv);
-      for (auto normal : normal_index) m_NormalsIndicies.push_back(normal);
-   }
 }
