@@ -62,4 +62,6 @@ namespace Shader
    };
 }
 
+#else
+#error "Can NOT include both singleton and factory implementations"
 #endif // SHADER_PROGRAM
