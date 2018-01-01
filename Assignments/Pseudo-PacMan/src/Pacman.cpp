@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "Pacman.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "ObjectColors.h"
 #include "objloader.h"
@@ -35,7 +36,7 @@ std::shared_ptr<Pacman::Drawable> Pacman::Drawable::s_Instance;
 
 void Pacman::Draw(const RenderMode& render_mode) const
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
 
    glm::mat4 model_matrix;
    glm::vec3 Pacman_scale(BASE_SCALE_FACTOR + s_PacmanScalar);
@@ -82,7 +83,7 @@ void Pacman::Move(const Direction& dir, const unsigned int& grid_size)
 
 Pacman::Drawable::Drawable()
 {
-   GLuint PositonIndex = ShaderLinker::GetInstance()->GetAttributeLocation("position");
+   GLuint PositonIndex = Shader::Linked::GetInstance()->GetAttributeLocation("position");
 
    std::vector<glm::vec3> vertices;
    LoadObjFile("assets/pacman.obj", &vertices, &std::vector<glm::vec3>(), &std::vector<glm::vec2>()); // parse the .obj file for the vertices only

@@ -47,6 +47,13 @@ namespace Shader
 
          bool operator()() const { return IProgram::operator()(); }
 
+         GLuint GetUniformLocation(const char* shader_obj) const { return IProgram::GetUniformLocation(shader_obj); }
+         GLuint GetAttributeLocation(const char* shader_obj) const { return IProgram::GetAttributeLocation(shader_obj); }
+
+         void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
+         void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }
+         void SetUniformVec3(const char* shader_obj, const glm::vec3& vec) const { glUniform3fv(GetUniformLocation(shader_obj), 1, glm::value_ptr(vec)); }
+
       private:
          Linked() = default;
 

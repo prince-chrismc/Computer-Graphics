@@ -37,6 +37,8 @@ namespace Shader
          IShader(const std::string& rel_path);
          ~IShader() { glDeleteShader(m_Id); }
 
+         bool operator()() const { return m_Status; }
+
       protected:
          virtual void Compile() = 0;
 
@@ -57,8 +59,8 @@ namespace Shader
 
          virtual bool operator()() const { return m_Status; }
 
-         GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
-         GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
+         virtual GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
+         virtual GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
 
          void SetUniformInt(const char* shader_obj, const GLint& i) const { glUniform1i(GetUniformLocation(shader_obj), i); }
          void SetUniformMat4(const char* shader_obj, const glm::mat4& mat) const { glUniformMatrix4fv(GetUniformLocation(shader_obj), 1, GL_FALSE, glm::value_ptr(mat)); }

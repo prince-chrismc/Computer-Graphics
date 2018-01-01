@@ -24,6 +24,7 @@ SOFTWARE.
 
 
 #include "Grid.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "ObjectColors.h"
 #include "glm\vec3.hpp"
@@ -32,7 +33,7 @@ SOFTWARE.
 
 Grid::Grid(const unsigned int& grid_size)
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
    GLuint PositonIndex = shaderProgram->GetAttributeLocation("position");
 
    std::vector<glm::vec3> vertices;
@@ -74,7 +75,7 @@ Grid::~Grid()
 
 void Grid::Draw() const
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
    shaderProgram->SetUniformInt("object_color", (GLint)ObjectColors::GREY);
    shaderProgram->SetUniformMat4("model_matrix", glm::scale(glm::mat4(), glm::vec3(0.25f)));
 

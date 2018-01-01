@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "Alien.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "ObjectColors.h"
 #include "objloader.h"
@@ -35,7 +36,7 @@ std::shared_ptr<Alien::Drawable> Alien::Drawable::s_Instance;
 
 void Alien::Draw(const RenderMode& render_mode) const
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
 
    glm::mat4 model_matrix;
    glm::vec3 Alien_scale(BASE_SCALE_FACTOR + s_AlienScalar);
@@ -85,7 +86,7 @@ void Alien::MoveTowards(float trans_x, float trans_y)
 
 Alien::Drawable::Drawable()
 {
-   GLuint PositonIndex = ShaderLinker::GetInstance()->GetAttributeLocation("position");
+   GLuint PositonIndex = Shader::Linked::GetInstance()->GetAttributeLocation("position");
 
    std::vector<glm::vec3> vertices;
    LoadObjFile("assets/teapot.obj", &vertices, &std::vector<glm::vec3>(), &std::vector<glm::vec2>()); // parse the .obj file for the vertices only

@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "Food.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "ObjectColors.h"
 #include "objloader.h"
@@ -34,7 +35,7 @@ std::shared_ptr<Food::Drawable> Food::Drawable::s_Instance;
 
 void Food::Draw(const RenderMode& render_mode) const
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
 
    glm::mat4 model_matrix;
    glm::vec3 food_scale(BASE_SCALE_FACTOR + s_FoodScalar);
@@ -50,7 +51,7 @@ void Food::Draw(const RenderMode& render_mode) const
 
 Food::Drawable::Drawable()
 {
-   GLuint PositonIndex = ShaderLinker::GetInstance()->GetAttributeLocation("position");
+   GLuint PositonIndex = Shader::Linked::GetInstance()->GetAttributeLocation("position");
 
    std::vector<glm::vec3> vertices;
    LoadObjFile("assets/cube.obj", &vertices, &std::vector<glm::vec3>(), &std::vector<glm::vec2>()); // parse the cube.obj file for the vertices only

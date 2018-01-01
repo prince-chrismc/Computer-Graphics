@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include "Axis.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "RenderMode.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -31,7 +32,7 @@ Line::Line(std::initializer_list<glm::vec3> pts, const ObjectColors& col) : m_Co
 {
    if (pts.size() >= 2)
    {
-      GLuint PositonIndex = ShaderLinker::GetInstance()->GetAttributeLocation("position");
+      GLuint PositonIndex = Shader::Linked::GetInstance()->GetAttributeLocation("position");
 
       glGenVertexArrays(1, &m_VAO);
       glBindVertexArray(m_VAO);
@@ -57,7 +58,7 @@ Line::~Line()
 
 void Line::Draw() const
 {
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
    shaderProgram->SetUniformInt("object_color", (GLint)m_Color);
    shaderProgram->SetUniformMat4("model_matrix", glm::scale(glm::mat4(), glm::vec3(0.25f)));
 

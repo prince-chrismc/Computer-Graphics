@@ -23,7 +23,9 @@ SOFTWARE.
 */
 
 #include "Game.h"
+#define SINGLETON_SHADER 1
 #include "Shader.h"
+#include "Shaders.h"
 #include "Camera.h"
 
 #include <random>
@@ -112,7 +114,7 @@ Game::Outcome Game::Engine::Play()
    // Try to initialize the game engine
    if(DidInitFail() || !m_Window->IsValid()) return Outcome::SYSTEM_ERROR;
 
-   auto shaderProgram = ShaderLinker::GetInstance();
+   auto shaderProgram = Shader::Linked::GetInstance();
 
    while (!m_Window->ShouldClose())
    {
@@ -355,13 +357,12 @@ bool Game::Initalizer::SetupGlew()
 
 bool Game::Initalizer::SetupShaders()
 {
-   VertexShader vertexShader("shaders/vertex.shader");
-   FragmentShader fragmentShader("shaders/fragment.shader");
-   // make sure they are ready to use
-   if (!vertexShader() || !fragmentShader()) return false;
+   Shader::Vertex vertexShader("shaders/vertex.shader");
+   Shader::Fragment fragmentShader("shaders/fragment.shader");
 
-   auto shaderProgram = ShaderLinker::GetInstance();
-   if (!shaderProgram->Link(&vertexShader, &fragmentShader)) return false;
+   // make sure they are ready to use
+   if (vertexShader() && fragmentShader())
+      Shader::Linked::GetInstance()->Init(&vertexShader, &fragmentShader);
 
    return true;
 }
