@@ -26,6 +26,9 @@ SOFTWARE.
 
 #include "Window.h"
 
+#ifdef WINDOW_PROGRAM
+#endif // WINDOW_PROGRAM
+
 #ifndef WINDOW_PROGRAM
 #define WINDOW_PROGRAM // To prevent inclusion of both Singleton and Multiple implementations
 
@@ -63,4 +66,6 @@ private:
    std::vector<std::shared_ptr<GlfwWindow>> m_Windows;
 };
 
+#else
+#error "Can NOT include both factory and singleton implementations"
 #endif // WINDOW_PROGRAM

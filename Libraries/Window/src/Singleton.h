@@ -51,4 +51,6 @@ private:
    static std::shared_ptr<GlfwWindow> s_Instance;
 };
 
+#else
+#error "Can NOT include both singleton and factory implementations"
 #endif // WINDOW_PROGRAM
