@@ -29,9 +29,8 @@ SOFTWARE.
 #include "Alien.h"
 #include "Axis.h"
 #include "Grid.h"
-//#include "GlfwWindow.h"
-#include "Singleton.h"
-#include "Factory.h"
+#define WINDOW_FACTORY 1
+#include "GlfwWindow.h"
 #include <vector>
 
 namespace Game
