@@ -172,7 +172,6 @@
     <ClInclude Include="src\ObjectColors.h" />
     <ClInclude Include="src\objloader.h" />
     <ClInclude Include="src\RenderMode.h" />
-    <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alien.cpp" />
@@ -183,7 +182,6 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\objloader.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Pacman.cpp" />
   </ItemGroup>
   <ItemGroup>
