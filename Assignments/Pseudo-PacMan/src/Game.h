@@ -29,7 +29,7 @@ SOFTWARE.
 #include "Alien.h"
 #include "Axis.h"
 #include "Grid.h"
-#include "GlfwWindow.h"
+#include "Factory.h"
 #include <vector>
 
 namespace Game
