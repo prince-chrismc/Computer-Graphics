@@ -14,6 +14,7 @@
     <ClInclude Include="src\Interfaces.h" />
     <ClInclude Include="src\Linked.h" />
     <ClInclude Include="src\Program.h" />
+    <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Shaders.h" />
   </ItemGroup>
   <ItemGroup>
