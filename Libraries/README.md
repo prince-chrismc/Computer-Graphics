@@ -4,6 +4,6 @@ This solution contains utility libraries used by the assignments to eliminate du
 **Name** | **Status**
 :---: | :---
 Shader | Code Complete / Untested
-Windows | Code Complete / Untested
+Windows | Complete / Singleton Untested
 Object Loader | Code Complete / Untested
 Test App | TBA
