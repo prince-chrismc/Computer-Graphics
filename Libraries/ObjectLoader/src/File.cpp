@@ -39,6 +39,10 @@ Obj::File::File(const char* file_path)
    std::string line_buffer = "";
    while (std::getline(obj_file, line_buffer))
    {
+      if(line_buffer.empty()) continue;                     // lets not store empty lines
+      if(line_buffer.find_first_of("#") == 0) continue;     // ignore comments
+      if(line_buffer.length() < 2) continue;                // these shouldnt exist
+
       m_Lines.push_back(line_buffer);
    }
 
