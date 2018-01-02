@@ -86,6 +86,7 @@ void Obj::Loader::ExtractIndexing()
 {
    for (auto line : m_Indicies)
    {
+      std::replace(line.begin(), line.end(), '/', ' ');
       std::stringstream ss(line);
       unsigned int vertex_index[3], uv_index[3], normal_index[3];
       for (int i = 0; i < 3; i++)
