@@ -36,13 +36,14 @@ void Obj::Loader::ExtractData()
       case 'v':
          switch (line.at(1))
          {
-         case ' ': ExtractVertice(line.substr((size_t)Offset::VERTICE));
-         case 'n': ExtractNormal(line.substr((size_t)Offset::NORMAL));
-         case 't': ExtractTexture(line.substr((size_t)Offset::TEXTURE));
+         case ' ': ExtractVertice(line.substr((size_t)Offset::VERTICE)); break;
+         case 'n': ExtractNormal(line.substr((size_t)Offset::NORMAL)); break;
+         case 't': ExtractTexture(line.substr((size_t)Offset::TEXTURE)); break;
          default:
             break;
          }
-      case 'f': m_Indicies.emplace_back(line.substr((size_t)Offset::INDEX));
+         break;
+      case 'f': m_Indicies.emplace_back(line.substr((size_t)Offset::INDEX)); break;
       default:
          break;
       }
