@@ -3,7 +3,7 @@ This solution contains utility libraries used by the assignments to eliminate du
 
 **Name** | **Status**
 :---: | :---
-Shader | Code Complete / Untested
+Shader | Complete / Factory Untested
 Windows | Complete / Singleton Untested
-Object Loader | Code Complete / Untested
-Test App | TBA
+Object Loader | Complete
+Test App | _TBA_
