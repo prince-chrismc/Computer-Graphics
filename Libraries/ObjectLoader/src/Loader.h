@@ -32,7 +32,7 @@ namespace Obj
    class Loader
    {
    public:
-      Loader(const char* path) : m_File(path) { if(m_File) { ExtractDate(); SortCoords(); } }
+      Loader(const char* path) : m_File(path) { if(m_File) { ExtractData(); SortCoords(); } }
       ~Loader() = default;
 
       Model GetModel() { return m_Model; }
@@ -55,7 +55,7 @@ namespace Obj
          INDEX = 2,
       };
 
-      void ExtractDate();
+      void ExtractData();
          void ExtractVertice(const std::string & line);
          void ExtractNormal(const std::string & line);
          void ExtractTexture(const std::string & line);

@@ -26,7 +26,7 @@ SOFTWARE.
 #include <sstream>
 #include <future>
 
-void Obj::Loader::ExtractDate()
+void Obj::Loader::ExtractData()
 {
    /// This code can NOT be parallelized because the order needs to be maintained
    for (auto line : m_File.m_Lines)
