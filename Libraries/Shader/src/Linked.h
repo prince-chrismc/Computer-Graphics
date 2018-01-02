@@ -43,9 +43,9 @@ namespace Shader
 
          static std::shared_ptr<Linked> GetInstance() { std::call_once(s_Flag, []() { s_Instance.reset(new Linked()); }); return s_Instance; }
 
-         void Init(IShader* vertex, IShader* frag) { Link(vertex, frag); Activate(); }
+         bool Init(IShader* vertex, IShader* frag) { Link(vertex, frag); Activate(); return IProgram::operator()(); }
 
-         bool operator()() const { return IProgram::operator()(); }
+         explicit operator bool() const { return IProgram::operator()(); }
 
          GLuint GetUniformLocation(const char* shader_obj) const { return IProgram::GetUniformLocation(shader_obj); }
          GLuint GetAttributeLocation(const char* shader_obj) const { return IProgram::GetAttributeLocation(shader_obj); }

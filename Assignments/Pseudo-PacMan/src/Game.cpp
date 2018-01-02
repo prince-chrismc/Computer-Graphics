@@ -360,9 +360,5 @@ bool Game::Initalizer::SetupShaders()
    Shader::Vertex vertexShader("shaders/vertex.shader");
    Shader::Fragment fragmentShader("shaders/fragment.shader");
 
-   // make sure they are ready to use
-   if (vertexShader() && fragmentShader())
-      Shader::Linked::GetInstance()->Init(&vertexShader, &fragmentShader);
-
-   return true;
+   return Shader::Linked::GetInstance()->Init(&vertexShader, &fragmentShader);
 }

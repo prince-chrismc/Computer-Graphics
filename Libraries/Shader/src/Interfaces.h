@@ -50,14 +50,13 @@ namespace Shader
    class IProgram abstract
    {
       public:
-         IProgram() : m_Status(false) { m_ProgramId = glCreateProgram(); }
+         IProgram() : m_Status(false), m_ShaderCounter(0) { m_ProgramId = glCreateProgram(); }
          ~IProgram() { glDeleteProgram(m_ProgramId); }
 
-         void AddShader(IShader* shader) const { glAttachShader(m_ProgramId, shader->m_Id); }
-         void Link(IShader* vertex, IShader* frag);
+         bool Link(IShader* vertex, IShader* frag);
          void Activate() const { glUseProgram(m_ProgramId); }
 
-         virtual bool operator()() const { return m_Status; }
+         bool operator()() const { return m_Status; }
 
          virtual GLuint GetUniformLocation(const char* shader_obj) const { return glGetUniformLocation(m_ProgramId, shader_obj); }
          virtual GLuint GetAttributeLocation(const char* shader_obj) const { return glGetAttribLocation(m_ProgramId, shader_obj); }
@@ -69,6 +68,9 @@ namespace Shader
       private:
          GLuint m_ProgramId;
          bool m_Status;
+         unsigned int m_ShaderCounter;
+
+         bool AddShader(IShader* shader);
    };
 }
 
