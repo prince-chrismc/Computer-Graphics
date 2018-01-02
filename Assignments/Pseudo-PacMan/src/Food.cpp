@@ -26,7 +26,7 @@ SOFTWARE.
 #define SINGLETON_SHADER 1
 #include "Shader.h"
 #include "ObjectColors.h"
-#include "objloader.h"
+#include "Loader.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 float Food::s_FoodScalar = 0.0f;
@@ -53,8 +53,8 @@ Food::Drawable::Drawable()
 {
    GLuint PositonIndex = Shader::Linked::GetInstance()->GetAttributeLocation("position");
 
-   std::vector<glm::vec3> vertices;
-   LoadObjFile("assets/cube.obj", &vertices, &std::vector<glm::vec3>(), &std::vector<glm::vec2>()); // parse the cube.obj file for the vertices only
+   Obj::Loader loader("assets/cube.obj");
+   std::vector<glm::vec3> vertices = loader.GetModel().GetVertices();
 
    glGenVertexArrays(1, &m_VAO);
    glBindVertexArray(m_VAO);
