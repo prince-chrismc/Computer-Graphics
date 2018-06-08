@@ -16,17 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.md" />
-    <Text Include="assets\scene1.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="assets\scene2.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\RayTracing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SceneFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +40,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LogoGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,5 +74,16 @@
     <ClInclude Include="src\SceneElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CImg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\scene.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

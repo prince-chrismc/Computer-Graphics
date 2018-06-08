@@ -161,8 +161,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="assets\scene1.txt" />
-    <Text Include="assets\scene2.txt" />
     <Text Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +169,7 @@
     <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Light.cpp" />
-    <ClCompile Include="src\RayTracing.cpp" />
+    <ClCompile Include="src\LogoGen.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneFile.cpp" />
     <ClCompile Include="src\Triangle.cpp" />
@@ -179,6 +177,8 @@
   <ItemGroup>
     <ClInclude Include="src\BuilderUtility.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\CImg.h" />
+    <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\Plane.h" />
     <ClInclude Include="src\SceneElement.h" />
     <ClInclude Include="src\Sphere.h" />
@@ -186,6 +186,9 @@
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneFile.h" />
     <ClInclude Include="src\Triangle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\scene.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
