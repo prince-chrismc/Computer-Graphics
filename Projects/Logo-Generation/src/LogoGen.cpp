@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2017 Chris McArthur, prince.chrismc(at)gmail(dot)com
+Copyright (c) 2018 Chris McArthur, prince.chrismc(at)gmail(dot)com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@ SOFTWARE.
 */
 
 #include "Scene.h"
-#include "glm/gtc/matrix_transform.hpp" //glm::lookAt, scale, etc...
-#include <vector>
 #include <iostream>
 #include <sstream>
 
@@ -34,7 +32,7 @@ int main()
 
    // ---------------------------------------------------------------------------------------------
    std::cout << "Loading Scene....";
-   Scene scene("assets/scene2.txt");
+   Scene scene("assets/scene.json");
    std::cout << "  COMPLETE!" << std::endl;
 
    scene.Display();

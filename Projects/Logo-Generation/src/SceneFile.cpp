@@ -23,8 +23,11 @@ SOFTWARE.
 */
 
 #include "SceneFile.h"
+#include "json.hpp"
 #include <fstream>
 #include <sstream>
+
+using json = nlohmann::json;
 
 // Element types
 static const char* CAMERA = "camera";
@@ -36,28 +39,33 @@ static const char* TRIANGLE  = "triangle";
 
 SceneFile::SceneFile(const char* path)
 {
-   std::ifstream file(path);
-
-   unsigned int num_elem = 0;
+   json json_file;
    {
-      char buffer[512];
-      file.getline(buffer, 512, '\n');
-
-      std::stringstream line(buffer);
-      line >> std::dec >> num_elem;
+       std::ifstream raw_file(path);
+       raw_file >> json_file;
    }
 
-   while (!file.eof())
+   if(!json_file.is_array())
    {
-      std::string line = GetNextLine(&file);
-
-      if (!line.compare(CAMERA))        ExtractCamera(&file);
-      else if (!line.compare(SPHERE))   ExtractSphere(&file);
-      else if (!line.compare(MODEL))    ExtractModel(&file);
-      else if (!line.compare(LIGHT))    ExtractLight(&file);
-      else if (!line.compare(TRIANGLE)) ExtractTriangle(&file);
-      else if (!line.compare(PLANE))    ExtractPlane(&file);
+       return; // exit
    }
+
+   size_t num_elem = json_file.size();
+
+   {
+   }
+
+   //while (!raw_file.eof())
+   //{
+   //   std::string line = GetNextLine(&raw_file);
+
+   //   if (!line.compare(CAMERA))        ExtractCamera(&raw_file);
+   //   else if (!line.compare(SPHERE))   ExtractSphere(&raw_file);
+   //   else if (!line.compare(MODEL))    ExtractModel(&raw_file);
+   //   else if (!line.compare(LIGHT))    ExtractLight(&raw_file);
+   //   else if (!line.compare(TRIANGLE)) ExtractTriangle(&raw_file);
+   //   else if (!line.compare(PLANE))    ExtractPlane(&raw_file);
+   //}
 
    if(m_Elements.size() != num_elem) m_Elements.clear();
 }
