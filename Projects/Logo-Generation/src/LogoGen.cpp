@@ -24,18 +24,24 @@ SOFTWARE.
 
 #include "Scene.h"
 #include <iostream>
-#include <sstream>
 
 int main()
 {
-   std::cout << "Welcome to Ray Tracing Effect!" << std::endl;
+    std::cout << "Welcome to Logo Generation by Ray Tracing!" << std::endl;
 
-   // ---------------------------------------------------------------------------------------------
-   std::cout << "Loading Scene....";
-   Scene scene("assets/scene.json");
-   std::cout << "  COMPLETE!" << std::endl;
+    try
+    {
+        std::cout << "Loading Scene....";
+        Scene scene("assets/scene.json");
+        scene.Display();
+        std::cout << "  COMPLETE!" << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "Error: " << e.what();
+    }
 
-   scene.Display();
 
-   return 0;
+
+    return 0;
 }

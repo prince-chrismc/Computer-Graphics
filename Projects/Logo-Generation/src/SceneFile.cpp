@@ -23,138 +23,61 @@ SOFTWARE.
 */
 
 #include "SceneFile.h"
-#include "json.hpp"
 #include <fstream>
-#include <sstream>
+#include <iostream>
+#include "BuilderUtility.h"
+#include "BuilderUtility.h"
 
-using json = nlohmann::json;
-
-// Element types
-static const char* CAMERA = "camera";
-static const char* SPHERE = "sphere";
-static const char* MODEL  = "model";
-static const char* LIGHT = "light";
-static const char* PLANE = "plane";
-static const char* TRIANGLE  = "triangle";
 
 SceneFile::SceneFile(const char* path)
 {
    json json_file;
    {
-       std::ifstream raw_file(path);
-       raw_file >> json_file;
+      std::ifstream raw_file(path);
+      raw_file >> json_file;
    }
 
-   if(!json_file.is_array())
+   if (!json_file.is_array())
    {
-       return; // exit
+      throw std::exception("Invalid scene file format");
    }
 
-   size_t num_elem = json_file.size();
+   const auto num_elem = json_file.size();
 
+   for (auto& itor : json_file)
    {
+      if (!itor.is_object()) throw std::exception("Invalid scene file format");
+
+      for (json::iterator object = itor.begin(); object != itor.end(); ++object)
+      {
+#ifdef _DEBUG
+         const auto key = object.key();
+         std::cout << key << ":" << object.value() << std::endl;
+#endif
+         m_Elements.emplace_back(object.key(), object.value());
+      }
    }
 
-   //while (!raw_file.eof())
-   //{
-   //   std::string line = GetNextLine(&raw_file);
-
-   //   if (!line.compare(CAMERA))        ExtractCamera(&raw_file);
-   //   else if (!line.compare(SPHERE))   ExtractSphere(&raw_file);
-   //   else if (!line.compare(MODEL))    ExtractModel(&raw_file);
-   //   else if (!line.compare(LIGHT))    ExtractLight(&raw_file);
-   //   else if (!line.compare(TRIANGLE)) ExtractTriangle(&raw_file);
-   //   else if (!line.compare(PLANE))    ExtractPlane(&raw_file);
-   //}
-
-   if(m_Elements.size() != num_elem) m_Elements.clear();
+   if (m_Elements.size() != num_elem)
+   {
+      m_Elements.clear();
+      throw std::exception("Unknown");
+   }
 }
 
-std::string SceneFile::GetAttributes(const char* name)
+json SceneFile::GetAttributes(const char* name)
 {
-   std::string retval = "";
-   for (auto itor = m_Elements.begin(); itor != m_Elements.end(); itor++)
+   json retval;
+
+   for (auto itor = m_Elements.begin(); itor != m_Elements.end(); ++itor)
    {
       if (itor->DoesNameMatch(name))
       {
-         retval = itor->GetAttributes();;
+         retval = itor->GetAttributes();
          itor = m_Elements.erase(itor);
          break;
       }
    }
+
    return retval;
-}
-
-void SceneFile::ExtractCamera(std::ifstream* file)
-{
-   std::string pos = GetNextLine(file);
-   std::string fov = GetNextLine(file);
-   std::string f = GetNextLine(file);
-   std::string a = GetNextLine(file);
-
-   m_Elements.emplace_back(CAMERA, "{ " + pos + "," + fov + "," + f + "," + a + " }");
-}
-
-void SceneFile::ExtractSphere(std::ifstream * file)
-{
-   std::string path = GetNextLine(file);
-   std::string rad = GetNextLine(file);
-   std::string amb = GetNextLine(file);
-   std::string dif = GetNextLine(file);
-   std::string spe = GetNextLine(file);
-   std::string shi = GetNextLine(file);
-
-   m_Elements.emplace_back(SPHERE, "{ " + path + "," + rad + "," + amb + "," + dif + "," + spe + shi + " }");
-}
-
-void SceneFile::ExtractModel(std::ifstream * file)
-{
-   std::string path = GetNextLine(file);
-   std::string amb = GetNextLine(file);
-   std::string dif = GetNextLine(file);
-   std::string spe = GetNextLine(file);
-   std::string shi = GetNextLine(file);
-
-   m_Elements.emplace_back(MODEL, "{ " + path + "," + amb + "," + dif + "," + spe + shi + " }");
-}
-
-void SceneFile::ExtractLight(std::ifstream * file)
-{
-   std::string pos = GetNextLine(file);
-   std::string col = GetNextLine(file);
-
-   m_Elements.emplace_back(LIGHT, "{ " + pos + "," + col + " }");
-}
-
-void SceneFile::ExtractTriangle(std::ifstream * file)
-{
-   std::string v1 = GetNextLine(file);
-   std::string v2 = GetNextLine(file);
-   std::string v3 = GetNextLine(file);
-   std::string amb = GetNextLine(file);
-   std::string dif = GetNextLine(file);
-   std::string spe = GetNextLine(file);
-   std::string shi = GetNextLine(file);
-
-   m_Elements.emplace_back(TRIANGLE, "{ " + v1 + "," + v2 + "," + v3 + "," + amb + "," + dif + "," + spe + shi + " }");
-}
-
-void SceneFile::ExtractPlane(std::ifstream * file)
-{
-   std::string nor = GetNextLine(file);
-   std::string pos = GetNextLine(file);
-   std::string amb = GetNextLine(file);
-   std::string dif = GetNextLine(file);
-   std::string spe = GetNextLine(file);
-   std::string shi = GetNextLine(file);
-
-   m_Elements.emplace_back(PLANE, "{ " + nor + "," + pos + "," + amb + "," + dif + "," + spe + shi + " }");
-}
-
-std::string SceneFile::GetNextLine(std::ifstream* file)
-{
-   char buffer[512];
-   file->getline(buffer, 512, '\n');
-
-   return std::string(buffer);
 }
