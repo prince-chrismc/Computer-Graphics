@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "BuilderUtility.h"
 #include "glm\vec3.hpp"
-#include <string>
 
 class Camera
 {
@@ -52,9 +51,9 @@ class Camera
 
          private:
             glm::vec3 m_Pos;
-            unsigned int m_FOV;
-            unsigned int m_Focal;
-            double m_AspectRatio;
+            unsigned int m_FOV{};
+            unsigned int m_Focal{};
+            double m_AspectRatio{};
 
             static constexpr const char* FOV = "fov";
             static constexpr const char* F = "f";

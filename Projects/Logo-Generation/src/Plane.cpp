@@ -64,37 +64,17 @@ glm::vec3 Plane::CalcLightOuput(const glm::vec3 & ray_dir, const glm::vec3 & int
    return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
 }
 
-const Plane::Builder& Plane::Builder::ParsePlane(const std::string& data)
+const Plane::Builder& Plane::Builder::ParsePlane(const json& data)
 {
-   std::string cut = data.substr(2, data.length() - 4);
+   if (!data.is_object()) throw std::exception("Invalid format for plane element - not an object");
+   if (data.size() != 6)  throw std::exception("Invalid format for plane element - size not 6");
 
-   for (std::string attribute : ParseParams(cut))
-   {
-      if (attribute.find(POS) == 0)
-      {
-         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(NOR) == 0)
-      {
-         m_Normal = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(AMB) == 0)
-      {
-         m_Amb = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(DIF) == 0)
-      {
-         m_Dif = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(SPE) == 0)
-      {
-         m_Spe = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(SHI) == 0)
-      {
-         m_Shine = ParseFloat(attribute.substr(OFFSET_3CHAR));
-      }
-   }
+   m_Pos = ParseVec3(data[POS]);
+   m_Normal = ParseVec3(data[NOR]);
+   m_Amb = ParseVec3(data[AMB]);
+   m_Dif = ParseVec3(data[DIF]);
+   m_Spe = ParseVec3(data[SPE]);
+   m_Shine = ParseFloat(data[SHI]);
 
    return *this;
 }

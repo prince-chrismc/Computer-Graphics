@@ -40,7 +40,7 @@ class BuilderUtility abstract
       static constexpr const char* POS = "pos";
 
       static constexpr const char* AMB = "amb";
-      static constexpr const char* DIF = "dfi";
+      static constexpr const char* DIF = "dif";
       static constexpr const char* SPE = "spe";
       static constexpr const char* SHI = "shi";
 };

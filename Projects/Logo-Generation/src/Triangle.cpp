@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "Triangle.h"
 #include "Light.h"
-#include "glm\geometric.hpp"
+#include "glm/geometric.hpp"
 #include <algorithm>
 
 bool Triangle::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const
@@ -88,41 +88,18 @@ glm::vec3 Triangle::CalcLightOuput(const glm::vec3 & ray_dir, const glm::vec3 & 
    return light.GetColor() * (m_Dif*ln + (m_Spe*rv));
 }
 
-const Triangle::Builder& Triangle::Builder::ParseTriangle(const std::string& data)
+const Triangle::Builder& Triangle::Builder::ParseTriangle(const json& data)
 {
-   std::string cut = data.substr(2, data.length() - 4);
+   if (!data.is_object()) throw std::exception("Invalid format for triangle element - not an object");
+   if (data.size() != 7)  throw std::exception("Invalid format for triangle element - size not 7");
 
-   for (std::string attribute : ParseParams(cut))
-   {
-      if (attribute.find(V1) == 0)
-      {
-         m_Vert1 = ParseVec3(attribute.substr(OFFSET_2CHAR));
-      }
-      else if (attribute.find(V2) == 0)
-      {
-         m_Vert2 = ParseVec3(attribute.substr(OFFSET_2CHAR));
-      }
-      else if (attribute.find(V3) == 0)
-      {
-         m_Vert3 = ParseVec3(attribute.substr(OFFSET_2CHAR));
-      }
-      else if (attribute.find(AMB) == 0)
-      {
-         m_Amb = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(DIF) == 0)
-      {
-         m_Dif = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(SPE) == 0)
-      {
-         m_Spe = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(SHI) == 0)
-      {
-         m_Shine = ParseFloat(attribute.substr(OFFSET_3CHAR));
-      }
-   }
+   m_Vert1 = ParseVec3(data[V1]);
+   m_Vert2 = ParseVec3(data[V2]);
+   m_Vert3 = ParseVec3(data[V3]);
+   m_Amb = ParseVec3(data[AMB]);
+   m_Dif = ParseVec3(data[DIF]);
+   m_Spe = ParseVec3(data[SPE]);
+   m_Shine = ParseFloat(data[SHI]);
 
    return *this;
 }

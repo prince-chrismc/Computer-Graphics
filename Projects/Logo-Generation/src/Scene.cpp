@@ -48,7 +48,7 @@ static constexpr const float LIGHT_BIAS = 1e-3f;
 
 Scene::Scene(const char* path) : SceneFile(path)
 {
-   if(m_Elements.size() > 0)
+   if (m_Elements.size() > 0)
    {
       m_Camera = Camera::Builder().ParseCamera(GetAttributes(CAMERA)).GetCamera();
       ExtractLights();
@@ -64,42 +64,42 @@ void Scene::Display()
 {
    CImgDisplay display(m_Image, "Image");
 
-   while(!display.is_closed())
+   while (!display.is_closed())
    {
-      if(display.is_keyESC()) display.close();
+      if (display.is_keyESC()) display.close();
    }
 }
 
 void Scene::ExtractLights()
 {
    auto json_attr = "{}"_json;
-   while (!((json_attr = GetAttributes(LIGHT).empty())))
+   while ((json_attr = GetAttributes(LIGHT)) != "{}"_json)
    {
       m_Lights.push_back(Light::Builder().ParseLight(json_attr).GetLight());
    }
 }
 void Scene::ExtractSpheres()
 {
-   std::string sphere_attr = "";
-   while ((sphere_attr = GetAttributes("sphere")) != "")
+   auto json_attr = "{}"_json;
+   while ((json_attr = GetAttributes(SPHERE)) != "{}"_json)
    {
-      m_Objects.push_back(std::make_shared<Sphere>(Sphere::Builder().ParseSphere(sphere_attr).GetSphere()));
+      m_Objects.push_back(std::make_shared<Sphere>(Sphere::Builder().ParseSphere(json_attr).GetSphere()));
    }
 }
 void Scene::ExtractTrianlges()
 {
-   std::string triangle_attr = "";
-   while ((triangle_attr = GetAttributes("triangle")) != "")
+   auto json_attr = "{}"_json;
+   while ((json_attr = GetAttributes(TRIANGLE)) != "{}"_json)
    {
-      m_Objects.push_back(std::make_shared<Triangle>(Triangle::Builder().ParseTriangle(triangle_attr).GetTriangle()));
+      m_Objects.push_back(std::make_shared<Triangle>(Triangle::Builder().ParseTriangle(json_attr).GetTriangle()));
    }
 }
 void Scene::ExtractPlanes()
 {
-   std::string plane_attr = "";
-   while ((plane_attr = GetAttributes("plane")) != "")
+   auto json_attr = "{}"_json;
+   while ((json_attr = GetAttributes(PLANE)) != "{}"_json)
    {
-      m_Objects.push_back(std::make_shared<Plane>(Plane::Builder().ParsePlane(plane_attr).GetPlane()));
+      m_Objects.push_back(std::make_shared<Plane>(Plane::Builder().ParsePlane(json_attr).GetPlane()));
    }
 }
 
@@ -112,7 +112,7 @@ void Scene::GenerateScene()
    std::vector<std::future<std::vector<glm::vec3>>> results;
    for (int x = 0; x < width; x += 1)
    {
-      results.push_back( std::async(std::launch::async, [this, x, height]{
+      results.push_back(std::async(std::launch::async, [this, x, height] {
          std::vector<glm::vec3> retval;
          for (int y = 0; y < height; y += 1)
          {
@@ -141,7 +141,7 @@ void Scene::GenerateScene()
    int x = 0, y = 0;
    for (auto itor = results.begin(); itor != results.end(); itor++)
    {
-      for(auto pixelColor : itor->get())
+      for (auto pixelColor : itor->get())
       {
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
          m_Image.draw_point(x, y++, color);

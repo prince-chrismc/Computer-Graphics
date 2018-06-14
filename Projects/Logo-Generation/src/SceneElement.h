@@ -24,14 +24,15 @@ SOFTWARE.
 
 #pragma once
 
-#include "glm\vec3.hpp"
+#include "glm/vec3.hpp"
 
 class Light;
 
 class SceneElement abstract
 {
-   public:
-      virtual bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const = 0;
-      virtual glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light) const = 0;
-      virtual glm::vec3 GetAmbientlight() const = 0;
+public:
+   virtual ~SceneElement() = default;
+   virtual bool TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const = 0;
+   virtual glm::vec3 CalcLightOuput(const glm::vec3& ray_dir, const glm::vec3& intersection_point, const Light& light) const = 0;
+   virtual glm::vec3 GetAmbientlight() const = 0;
 };

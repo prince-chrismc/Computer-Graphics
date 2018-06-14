@@ -26,7 +26,6 @@ SOFTWARE.
 #include <fstream>
 #include <iostream>
 #include "BuilderUtility.h"
-#include "BuilderUtility.h"
 
 
 SceneFile::SceneFile(const char* path)
@@ -67,7 +66,7 @@ SceneFile::SceneFile(const char* path)
 
 json SceneFile::GetAttributes(const char* name)
 {
-   json retval;
+   json retval = "{}"_json;
 
    for (auto itor = m_Elements.begin(); itor != m_Elements.end(); ++itor)
    {

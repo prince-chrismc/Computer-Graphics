@@ -27,21 +27,20 @@ SOFTWARE.
 
 int main()
 {
-    std::cout << "Welcome to Logo Generation by Ray Tracing!" << std::endl;
+   std::cout << "Welcome to Logo Generation by Ray Tracing!" << std::endl;
 
-    try
-    {
-        std::cout << "Loading Scene....";
-        Scene scene("assets/scene.json");
-        scene.Display();
-        std::cout << "  COMPLETE!" << std::endl;
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "Error: " << e.what();
-    }
+   try
+   {
+      std::cout << "Loading Scene....";
+      Scene scene("assets/scene.json");
+      scene.Display();
+      std::cout << "  COMPLETE!" << std::endl;
+   }
+   catch (std::exception& e)
+   {
+      std::cout << "Error: " << e.what();
+      return -1;
+   }
 
-
-
-    return 0;
+   return 0;
 }
