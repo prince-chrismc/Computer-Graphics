@@ -24,21 +24,13 @@ SOFTWARE.
 
 #include "Light.h"
 
-const Light::Builder& Light::Builder::ParseLight(const std::string& data)
+const Light::Builder& Light::Builder::ParseLight(const json& data)
 {
-   std::string cut = data.substr(2, data.length() - 4);
+   if (!data.is_object()) throw std::exception("Invalid format for light element - not an object");
+   if (data.size() != 2)  throw std::exception("Invalid format for light element - size not 2");
 
-   for (std::string attribute : ParseParams(cut))
-   {
-      if (attribute.find(POS) == 0)
-      {
-         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(COL) == 0)
-      {
-         m_Col = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-   }
+   m_Pos = ParseVec3(data[POS]);
+   m_Col = ParseVec3(data[COL]);
 
    return *this;
 }

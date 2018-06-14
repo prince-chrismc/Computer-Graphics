@@ -25,35 +25,21 @@ SOFTWARE.
 #include "Camera.h"
 #include "glm\trigonometric.hpp"
 
-Camera::Builder& Camera::Builder::ParseCamera(const std::string& data)
+Camera::Builder& Camera::Builder::ParseCamera(const json& data)
 {
-   std::string cut = data.substr(2, data.length() - 4);
+   if (!data.is_object()) throw std::exception("Invalid format for camera element - not an object");
+   if (data.size() != 4)  throw std::exception("Invalid format for camera element - size not 4");
 
-   for (std::string attribute : ParseParams(cut))
-   {
-      if (attribute.find(POS) == 0)
-      {
-         m_Pos = ParseVec3(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(FOV) == 0)
-      {
-         m_FOV = ParseUint(attribute.substr(OFFSET_3CHAR));
-      }
-      else if (attribute.find(F) == 0)
-      {
-         m_Focal = ParseUint(attribute.substr(OFFSET_1CHAR));
-      }
-      else if (attribute.find(A) == 0)
-      {
-         m_AspectRatio = ParseDouble(attribute.substr(OFFSET_1CHAR));
-      }
-   }
+   m_Pos = ParseVec3(data[POS]);
+   m_FOV = ParseUint(data[FOV]);
+   m_Focal = ParseUint(data[F]);
+   m_AspectRatio = ParseDouble(data[A]);
 
    return *this;
 }
 
 void Camera::GetImageDimensions(int* out_width, int* out_height) const
 {
-   *out_height = 2*static_cast<int>(m_Focal * std::tan(glm::radians(m_FOV / 2.0)));
+   *out_height = 2 * static_cast<int>(m_Focal * std::tan(glm::radians(m_FOV / 2.0)));
    *out_width = static_cast<int>(*out_height * m_AspectRatio);
 }

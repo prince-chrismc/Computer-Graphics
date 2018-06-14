@@ -34,13 +34,23 @@ SOFTWARE.
 using cimg_library::CImg;
 using cimg_library::CImgDisplay;
 
-static const float LIGHT_BIAS = 1e-3f;
+
+// Element types
+static constexpr const char* CAMERA = "camera";
+static constexpr const char* SPHERE = "sphere";
+static constexpr const char* MODEL = "model";
+static constexpr const char* LIGHT = "light";
+static constexpr const char* PLANE = "plane";
+static constexpr const char* TRIANGLE = "triangle";
+
+
+static constexpr const float LIGHT_BIAS = 1e-3f;
 
 Scene::Scene(const char* path) : SceneFile(path)
 {
    if(m_Elements.size() > 0)
    {
-      m_Camera = Camera::Builder().ParseCamera(GetAttributes("camera")).GetCamera();
+      m_Camera = Camera::Builder().ParseCamera(GetAttributes(CAMERA)).GetCamera();
       ExtractLights();
       ExtractSpheres();
       ExtractTrianlges();
@@ -62,10 +72,10 @@ void Scene::Display()
 
 void Scene::ExtractLights()
 {
-   std::string light_attr = "";
-   while ((light_attr = GetAttributes("light")) != "")
+   auto json_attr = "{}"_json;
+   while (!((json_attr = GetAttributes(LIGHT).empty())))
    {
-      m_Lights.push_back(Light::Builder().ParseLight(light_attr).GetLight());
+      m_Lights.push_back(Light::Builder().ParseLight(json_attr).GetLight());
    }
 }
 void Scene::ExtractSpheres()

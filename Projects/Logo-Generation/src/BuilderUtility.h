@@ -24,25 +24,23 @@ SOFTWARE.
 
 #pragma once
 
-#include "glm\vec3.hpp"
-#include <string>
-#include <vector>
+#include "glm/vec3.hpp"
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 class BuilderUtility abstract
 {
    protected:
-      static std::vector<std::string> ParseParams(std::string cut);
-      static glm::vec3 ParseVec3(std::string attribute);
-      static unsigned int ParseUint(std::string attribute);
-      static double ParseDouble(std::string attribute);
-      static float ParseFloat(std::string attribute);
+      static glm::vec3    ParseVec3(json attribute);
+      static unsigned int ParseUint(json attribute);
+      static double       ParseDouble(json attribute);
+      static float        ParseFloat(json attribute);
 
-      const char* POS = "pos:";
+      static constexpr const char* POS = "pos";
 
-      const char* AMB = "amb:";
-      const char* DIF = "dfi:";
-      const char* SPE = "spe:";
-      const char* SHI = "shi:";
-
-      enum NameOffset { OFFSET_3CHAR = 5, OFFSET_2CHAR = 4, OFFSET_1CHAR = 3 };
+      static constexpr const char* AMB = "amb";
+      static constexpr const char* DIF = "dfi";
+      static constexpr const char* SPE = "spe";
+      static constexpr const char* SHI = "shi";
 };

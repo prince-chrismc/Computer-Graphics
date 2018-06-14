@@ -47,8 +47,8 @@ class Camera
             Builder(const Builder&) = delete;
             void operator=(const Builder&) = delete;
 
-            Builder& ParseCamera(const std::string& data);
-            Camera GetCamera() const { return Camera(m_Pos, m_FOV, m_Focal, m_AspectRatio); }
+            Builder& ParseCamera(const json& data);
+            Camera GetCamera() const { return { m_Pos, m_FOV, m_Focal, m_AspectRatio }; }
 
          private:
             glm::vec3 m_Pos;
@@ -56,9 +56,9 @@ class Camera
             unsigned int m_Focal;
             double m_AspectRatio;
 
-            const char* FOV = "fov:";
-            const char* F = "f:";
-            const char* A = "a:";
+            static constexpr const char* FOV = "fov";
+            static constexpr const char* F = "f";
+            static constexpr const char* A = "a";
       };
 
    private:
