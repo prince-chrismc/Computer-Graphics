@@ -169,7 +169,7 @@ Scene::IntersectingObject Scene::FindNearestIntersectingObject(const glm::vec3& 
 {
    IntersectingObject target;
 
-   for (const auto elem : m_Objects)
+   for (const auto& elem : m_Objects)
    {
       float distance;
       glm::vec3 intersectpoint;
