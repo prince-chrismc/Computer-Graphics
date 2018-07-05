@@ -28,7 +28,7 @@ SOFTWARE.
 #include "BuilderUtility.h"
 
 
-SceneFile::SceneFile(const char* path)
+SceneFile::SceneFile(const char* path) : m_FileName(path)
 {
    json json_file;
    {
@@ -50,8 +50,8 @@ SceneFile::SceneFile(const char* path)
       for (json::iterator object = itor.begin(); object != itor.end(); ++object)
       {
 #ifdef _DEBUG
-         const auto key = object.key();
-         std::cout << key << ":" << object.value() << std::endl;
+         //const auto key = object.key();
+         //std::cout << key << ":" << object.value() << std::endl;
 #endif
          m_Elements.emplace_back(object.key(), object.value());
       }

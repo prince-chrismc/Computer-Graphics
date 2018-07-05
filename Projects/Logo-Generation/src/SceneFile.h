@@ -51,4 +51,5 @@ class SceneFile
       };
 
       std::vector<ObjDescriptor> m_Elements;
+      std::string m_FileName;
 };

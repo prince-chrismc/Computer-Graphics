@@ -47,7 +47,7 @@ public:
       void operator=(const Builder&) = delete;
 
       const Builder& ParseSphere(const json& data);
-      Sphere GetSphere() const { return Sphere(m_Pos, m_Radius, m_Amb, m_Dif, m_Spe, m_Shine); }
+      Sphere GetSphere() const { return { m_Pos, m_Radius, m_Amb, m_Dif, m_Spe, m_Shine }; }
 
    private:
       glm::vec3 m_Pos;

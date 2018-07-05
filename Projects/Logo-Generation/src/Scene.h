@@ -29,6 +29,7 @@ SOFTWARE.
 #include "Light.h"
 #include "SceneElement.h"
 #include <memory>
+#include <utility>
 
 #include "CImg.h"
 
@@ -53,7 +54,8 @@ class Scene : private SceneFile
 
       struct IntersectingObject
       {
-         IntersectingObject(const glm::vec3& point, const float& dis, const std::shared_ptr<SceneElement>& elem) : m_Point(point), m_Distance(dis), m_Element(elem) {}
+         IntersectingObject(const glm::vec3& point, const float& dis, std::shared_ptr<SceneElement> elem)
+            : m_Point(point), m_Distance(dis), m_Element(std::move(elem)) {}
          IntersectingObject() : IntersectingObject(glm::vec3(0.0f), 0.0f, nullptr) {}
 
          glm::vec3 m_Point;
@@ -62,7 +64,7 @@ class Scene : private SceneFile
       };
 
       void GenerateScene();
-      glm::vec3 CalcRayDirection(const int x_val, const int y_val);
+      glm::vec3 CalcRayDirection(const int x_val, const int y_val) const;
       IntersectingObject FindNearestIntersectingObject(const glm::vec3& ray_dir);
       bool IsLightObstructed(const Light& light, const IntersectingObject& target);
 };

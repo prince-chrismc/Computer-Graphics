@@ -29,7 +29,7 @@ SOFTWARE.
 
 bool Plane::TestIntersection(const glm::vec3& cam_pos, const glm::vec3& ray_dir, glm::vec3* out_intersection, float* out_distance) const
 {
-   auto normal = glm::normalize(m_Normal);
+   glm::vec3 normal = glm::normalize(m_Normal);
    float denom = glm::dot(normal, ray_dir);
 
    if (abs(denom) > 1e-6)

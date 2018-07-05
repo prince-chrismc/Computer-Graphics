@@ -139,9 +139,9 @@ void Scene::GenerateScene()
    }
 
    int x = 0, y = 0;
-   for (auto itor = results.begin(); itor != results.end(); itor++)
+   for (auto itor = results.begin(); itor != results.end(); ++itor)
    {
-      for (auto pixelColor : itor->get())
+      for (const auto pixelColor : itor->get())
       {
          float color[3] = { pixelColor.r, pixelColor.g, pixelColor.b };
          m_Image.draw_point(x, y++, color);
@@ -151,10 +151,10 @@ void Scene::GenerateScene()
    }
 
    m_Image.normalize(0, 255);
-   m_Image.save("render2.bmp", true);
+   m_Image.save(std::string(m_FileName.substr(0, m_FileName.find_first_of('.')) + ".bmp").c_str(), true);
 }
 
-glm::vec3 Scene::CalcRayDirection(const int x_val, const int y_val)
+glm::vec3 Scene::CalcRayDirection(const int x_val, const int y_val) const
 {
    int width = 0, height = 0;
    m_Camera.GetImageDimensions(&width, &height);
