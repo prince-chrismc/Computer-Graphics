@@ -36,7 +36,7 @@ void CommandLineParser::_parse( int argc, char** argv )
    m_sCommand = argv[ 0 ];                                 // Save filename
    for(auto iCounter = 1; iCounter < argc; iCounter++ )    // Then save each arg
    {
-      m_vecArgs.emplace_back(argv[ iCounter ] );
+      m_vecArgs.emplace_back( argv[ iCounter ] );
    }
 }
 
@@ -61,7 +61,7 @@ bool CommandLineParser::DoesSwitchExists( const std::string & name ) const
 
    for( auto& sArg : m_vecArgs )
    {
-      if( sArg.front() != '-' || sArg.front() != '/' ) continue; // Skip args which are not switches
+      if( sArg.front() != '-' && sArg.front() != '/' ) continue; // Skip args which are not switches
 
       if( sArg.find( name ) != std::string::npos )         // case insensitive search
       {
@@ -82,7 +82,7 @@ std::string CommandLineParser::GetPairValue(const std::string& name ) const
       const size_t nSwitchIndex = oPair.find( name + "=" );
       if( nSwitchIndex != std::string::npos )
       {
-         sRetval = oPair.substr( nSwitchIndex + name.size() + 2 );    // Return string after =.
+         sRetval = oPair.substr( nSwitchIndex + name.size() + 1 );    // Return string after =.
          break;
       }
    }
